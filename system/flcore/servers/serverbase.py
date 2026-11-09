@@ -379,6 +379,20 @@ class Server(object):
                     self.writer.add_scalar(f"clients_acc/client_{c_id}", c_acc, self.current_round)
 
             log_server_eval(self, train_loss, test_acc, test_auc, test_acc_std, test_auc_std, client_accs=client_accs, extra_metrics=mot_metrics)
+
+        # Trực quan hóa t-SNE tự động cho client 0 trên tất cả các thuật toán
+        if not getattr(self.args, 'no_tsne', False) and len(self.clients) > 0:
+            tsne_gap = getattr(self.args, 'tsne_gap', None)
+            if tsne_gap is None or tsne_gap <= 0:
+                tsne_gap = 20 if (self.global_rounds >= 20) else self.eval_gap
+            
+            is_final_round = (self.current_round >= self.global_rounds - 1)
+            if self.current_round % tsne_gap == 0 or is_final_round:
+                if hasattr(self.clients[0], 'visualize_tsne'):
+                    try:
+                        self.clients[0].visualize_tsne(round_idx=self.current_round)
+                    except Exception as e_tsne:
+                        print(f"[{self.algorithm}] Cảnh báo t-SNE: {e_tsne}")
         
         # self.evaluate_global() disabled for PFL
         self.current_round += 1

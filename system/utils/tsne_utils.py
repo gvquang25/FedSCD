@@ -2,6 +2,8 @@ import os
 import random
 import matplotlib
 matplotlib.use("Agg")
+matplotlib.rcParams["pdf.fonttype"] = 42
+matplotlib.rcParams["ps.fonttype"] = 42
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -44,7 +46,16 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
 
             for x, y in testloader:
                 x = x[0].to(client.device) if isinstance(x, list) else x.to(client.device)
-                rep_raw = client.encoder(x)
+                if hasattr(client, 'encoder') and client.encoder is not None:
+                    rep_raw = client.encoder(x)
+                elif hasattr(client, 'base') and client.base is not None:
+                    rep_raw = client.base(x)
+                elif hasattr(client.model, 'base') and client.model.base is not None:
+                    rep_raw = client.model.base(x)
+                elif hasattr(client.model, 'features') and client.model.features is not None:
+                    rep_raw = client.model.features(x)
+                else:
+                    rep_raw = client.model(x)
                 rep = rep_raw.view(rep_raw.size(0), -1)
                 all_reps.append(rep.cpu())
                 all_labels.append(y.cpu())
@@ -80,37 +91,60 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             global_phis = getattr(client, 'global_phis', {}) or {}
             base_temp = float(getattr(client, 'infoNCET', 0.1) or 0.1)
 
+            # Trích xuất Prototypes từ các thuộc tính đa dạng của các baseline (FedTGP, FedSA, FedCOF, FedORGP, v.v.)
+            raw_protos_dict = None
             if hasattr(client, 'global_prototypes') and client.global_prototypes:
-                valid_proto_classes = sorted([
-                    int(k) for k, v in client.global_prototypes.items()
-                    if v is not None and torch.norm(v.float()) > 1e-8
-                ])
-                for c in valid_proto_classes:
-                    g_vec = client.global_prototypes[c].detach().cpu().float().view(-1)
-                    if (
-                        is_scd_client
-                        and isinstance(local_stats, dict)
-                        and c in local_stats
-                        and local_stats[c].get('count', 0) > 0
-                        and local_stats[c].get('mean') is not None
-                    ):
-                        n_c = float(local_stats[c]['count'])
-                        l_vec = local_stats[c]['mean'].detach().cpu().float().view(-1)
-                        # Căn chỉnh mỏ neo theo phân phối hậu nghiệm của Client
-                        gamma_c = 0.55 * (n_c / (n_c + 25.0))
-                        p_vec = (1.0 - gamma_c) * g_vec + gamma_c * l_vec
-                    else:
-                        p_vec = g_vec
+                raw_protos_dict = client.global_prototypes
+            elif hasattr(client, 'global_protos') and client.global_protos:
+                raw_protos_dict = client.global_protos
+            elif hasattr(client, 'anchors') and client.anchors:
+                raw_protos_dict = client.anchors
+            elif hasattr(client, 'cluster_protos') and client.cluster_protos:
+                raw_protos_dict = client.cluster_protos
+            elif hasattr(client, 'local_stats') and isinstance(client.local_stats, dict) and 'class_means' in client.local_stats:
+                raw_protos_dict = client.local_stats['class_means']
 
-                    proto_feats.append(p_vec.unsqueeze(0))
-                    proto_classes.append(c)
+            if raw_protos_dict is not None:
+                if isinstance(raw_protos_dict, dict):
+                    valid_proto_classes = sorted([
+                        int(k) for k, v in raw_protos_dict.items()
+                        if v is not None and torch.is_tensor(v) and torch.norm(v.float()) > 1e-8
+                    ])
+                    for c in valid_proto_classes:
+                        g_vec = raw_protos_dict[c].detach().cpu().float().view(-1)
+                        if (
+                            is_scd_client
+                            and isinstance(local_stats, dict)
+                            and c in local_stats
+                            and local_stats[c].get('count', 0) > 0
+                            and local_stats[c].get('mean') is not None
+                        ):
+                            n_c = float(local_stats[c]['count'])
+                            l_vec = local_stats[c]['mean'].detach().cpu().float().view(-1)
+                            # Căn chỉnh mỏ neo theo phân phối hậu nghiệm của Client
+                            gamma_c = 0.55 * (n_c / (n_c + 25.0))
+                            p_vec = (1.0 - gamma_c) * g_vec + gamma_c * l_vec
+                        else:
+                            p_vec = g_vec
 
-                    if c in global_stds and global_stds[c] is not None:
-                        s_vec = global_stds[c].detach().cpu().float().view(1, -1)
-                    else:
-                        s_vec = torch.full_like(p_vec.unsqueeze(0), 0.1)
-                    std_feats.append(s_vec)
-                    phi_list.append(float(global_phis.get(c, base_temp)))
+                        proto_feats.append(p_vec.unsqueeze(0))
+                        proto_classes.append(c)
+
+                        if c in global_stds and global_stds[c] is not None:
+                            s_vec = global_stds[c].detach().cpu().float().view(1, -1)
+                        else:
+                            s_vec = torch.full_like(p_vec.unsqueeze(0), 0.1)
+                        std_feats.append(s_vec)
+                        phi_list.append(float(global_phis.get(c, base_temp)))
+                elif torch.is_tensor(raw_protos_dict):
+                    # Trường hợp prototypes dạng tensor 2D (K, D)
+                    for c in range(raw_protos_dict.size(0)):
+                        g_vec = raw_protos_dict[c].detach().cpu().float().view(-1)
+                        if torch.norm(g_vec) > 1e-8:
+                            proto_feats.append(g_vec.unsqueeze(0))
+                            proto_classes.append(c)
+                            std_feats.append(torch.full_like(g_vec.unsqueeze(0), 0.1))
+                            phi_list.append(float(base_temp))
 
             has_protos = len(proto_feats) > 0
             has_valid_center = len(proto_classes) >= 2
@@ -219,6 +253,8 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             )
             plt.colorbar(sc, ax=ax, label='Class Label')
 
+            proto_emb = None
+            active_class_counts = {}
             if has_protos:
                 proto_emb = X_emb[n_samples:]
                 span_x = float(np.ptp(X_emb[:, 0]))
@@ -307,6 +343,13 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
 
             ax.margins(0.08)
 
+            algo_name = str(getattr(client.args, 'algorithm', 'FedSCD'))
+            if save_dir is None or save_dir == "./tsne_results":
+                if algo_name.lower() in ['fedscd', 'scd']:
+                    save_dir = "./tsne_resultsscd"
+                else:
+                    save_dir = f"./tsne_results_{algo_name.lower()}"
+
             if round_idx == 0:
                 model_info = "model chưa train"
             else:
@@ -320,27 +363,57 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 proto_info = "chưa có prototype"
 
             sil_text = f" (Sil: {sil:.3f})" if sil is not None else ""
-            title = f"client {client.id}, {model_info}, {proto_info}{sil_text}"
+            title = f"{algo_name}: client {client.id}, {model_info}, {proto_info}{sil_text}"
             ax.set_title(title)
             ax.set_xlabel("t-SNE 1")
             ax.set_ylabel("t-SNE 2")
 
             os.makedirs(save_dir, exist_ok=True)
-            save_path = os.path.join(save_dir, f"client_{client.id}_round_{round_idx}_tsne.png")
-            fig.savefig(save_path, dpi=150, bbox_inches='tight')
-            plt.close(fig)
+            # Lưu file ảnh dạng PDF vector chuẩn xuất bản bài báo
+            save_path = os.path.join(save_dir, f"client_{client.id}_round_{round_idx}_tsne.pdf")
+            fig.savefig(save_path, format="pdf", dpi=300, bbox_inches='tight')
 
-            # Ghi log WandB an toàn
+            # Lưu dữ liệu t-SNE dạng .npz để tái sử dụng và vẽ lại (replot) sau này
+            npz_save_path = os.path.join(save_dir, f"client_{client.id}_round_{round_idx}_tsne.npz")
+            try:
+                np.savez_compressed(
+                    npz_save_path,
+                    sample_emb=X_emb[:n_samples],
+                    sample_labels=sample_labels_np,
+                    proto_emb=proto_emb if has_protos else np.empty((0, 2)),
+                    proto_classes=np.array(proto_classes) if has_protos else np.empty((0,), dtype=int),
+                    active_class_counts=np.array([active_class_counts.get(c, 0) for c in proto_classes]) if has_protos else np.empty((0,), dtype=int),
+                    sil=float(sil) if sil is not None else np.nan,
+                    client_id=int(client.id),
+                    round_idx=int(round_idx),
+                    algorithm=algo_name
+                )
+            except Exception as e_npz:
+                print(f"[{algo_name} Client {client.id}] Cảnh báo lưu file t-SNE .npz: {e_npz}")
+
+            # Ghi log WandB an toàn:
+            # - wandb.Image(fig) hiển thị trực tiếp trên web UI
+            # - wandb.save() đẩy cả file .pdf vector và file .npz lên mục Files của Run
             if getattr(client.args, 'log', False):
                 try:
                     if wandb.run is not None:
-                        log_dict = {f"tsne/client_{client.id}": wandb.Image(save_path)}
+                        log_dict = {
+                            f"tsne/{algo_name.lower()}_client_{client.id}": wandb.Image(fig),
+                            f"tsne/client_{client.id}": wandb.Image(fig)
+                        }
                         if sil is not None:
+                            log_dict[f"tsne/{algo_name.lower()}_client_{client.id}_silhouette"] = sil
                             log_dict[f"tsne/client_{client.id}_silhouette"] = sil
                         wandb.log(log_dict, commit=False)
+                        # Lưu file PDF và NPZ lên WandB Run Files
+                        if os.path.exists(save_path):
+                            wandb.save(save_path, base_path=save_dir)
+                        if os.path.exists(npz_save_path):
+                            wandb.save(npz_save_path, base_path=save_dir)
                 except Exception:
                     pass
 
+            plt.close(fig)
             return save_path
     finally:
         random.setstate(py_rng_state)

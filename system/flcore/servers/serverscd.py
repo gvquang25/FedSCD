@@ -73,13 +73,6 @@ class FedSCD(Server):
             if i % self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
                 print("\nEvaluate personalized models")
-
-                tsne_gap = getattr(self.args, 'tsne_gap', None)
-                tsne_gap = self.eval_gap if (tsne_gap is None or tsne_gap <= 0) else tsne_gap
-                if i % tsne_gap == 0 and len(self.clients) > 0:
-                    # Trực quan hóa t-SNE trên client 0 lưu vào ./tsne_resultsscd
-                    self.clients[0].visualize_tsne(round_idx=i)
-
                 self.evaluate()
 
             self.Budget.append(time.time() - s_t)

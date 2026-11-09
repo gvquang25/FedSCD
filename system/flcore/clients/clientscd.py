@@ -526,6 +526,9 @@ class clientSCD(DecoupledClient):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def visualize_tsne(self, round_idx=0, max_samples=1000, save_dir="./tsne_resultsscd"):
+        if getattr(self, '_last_tsne_round', None) == round_idx:
+            return None
+        self._last_tsne_round = round_idx
         return plot_client_tsne(self, round_idx=round_idx, max_samples=max_samples, save_dir=save_dir)
 
 

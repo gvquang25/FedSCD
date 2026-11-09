@@ -294,4 +294,33 @@ for file in sorted(glob.glob("results/*.h5")):
 ```
 
 ---
-*Tài liệu được sinh tự động bởi Antigravity phục vụ công trình nghiên cứu FedSCD (ICML 2026).*
+
+## 7. Tự Động Trực Quan Hóa t-SNE (Định Dạng Vector PDF & Dữ Liệu .npz)
+
+Mỗi khi huấn luyện (bất kể thuật toán nào trong 7 thuật toán), hệ thống sẽ **tự động vẽ biểu đồ t-SNE của client 0** tại các mốc vòng (Round 0, 20, 40, 60, 80 và Round 99/100 cuối cùng):
+* **Định dạng ảnh xuất ra:** File vector **`.pdf`** chất lượng cao (DPI 300, font chuẩn TrueType Type-42 không bị vỡ hạt, chèn trực tiếp vào LaTeX).
+* **Dữ liệu thô:** File **`.npz`** đi kèm chứa tọa độ 2D của các điểm dữ liệu và Prototype $P_c$.
+* **Đồng bộ:** Cả file `.pdf` và `.npz` được tự động upload lên tab Files của WandB Run.
+
+### Thư mục lưu trữ t-SNE theo thuật toán:
+* **FedSCD**: `./tsne_resultsscd/client_0_round_99_tsne.pdf` & `.npz`
+* **FedTGP**: `./tsne_results_fedtgp/client_0_round_99_tsne.pdf` & `.npz`
+* **FedCOF**: `./tsne_results_fedcof/client_0_round_99_tsne.pdf` & `.npz`
+* **FedSA**: `./tsne_results_fedsa/client_0_round_99_tsne.pdf` & `.npz`
+* **FedORGP**: `./tsne_results_fedorgp/client_0_round_99_tsne.pdf` & `.npz`
+* **FedPLVM**: `./tsne_results_fedplvm/client_0_round_99_tsne.pdf` & `.npz`
+* **FedGMKD**: `./tsne_results_fedgmkd/client_0_round_99_tsne.pdf` & `.npz`
+
+### Lệnh ghép hình so sánh nhiều thuật toán cạnh nhau (Dành cho bài báo ICML):
+Sau khi chạy xong các baseline, bạn có thể ghép các hình t-SNE thành 1 hàng ngang chuẩn publication để chèn vào `Overleaf/icml2026.tex`:
+```bash
+cd system
+python replot_for_icml.py --compare \
+    ./tsne_results_fedtgp/client_0_round_99_tsne.npz \
+    ./tsne_results_fedcof/client_0_round_99_tsne.npz \
+    ./tsne_resultsscd/client_0_round_99_tsne.npz \
+    --output ../Overleaf/figures/tsne_comparison.pdf
+```
+
+---
+*Tài liệu được cập nhật tự động bởi Antigravity phục vụ công trình nghiên cứu FedSCD (ICML 2026).*

@@ -267,3 +267,20 @@ class Client(object):
             params_model2 = params_model1
         # for new_param, old_param in zip(model.parameters(), self.model.parameters()):
         #     old_param.data = new_param.data.clone()
+
+    def visualize_tsne(self, round_idx=0, max_samples=1000, save_dir=None):
+        """
+        Trực quan hóa không gian đặc trưng t-SNE cho client (hỗ trợ mọi baseline).
+        """
+        if getattr(self, '_last_tsne_round', None) == round_idx:
+            return None
+        self._last_tsne_round = round_idx
+
+        from utils.tsne_utils import plot_client_tsne
+        if save_dir is None:
+            algo_str = str(getattr(self.args, 'algorithm', 'baseline')).lower()
+            if algo_str in ['fedscd', 'scd']:
+                save_dir = "./tsne_resultsscd"
+            else:
+                save_dir = f"./tsne_results_{algo_str}"
+        return plot_client_tsne(self, round_idx=round_idx, max_samples=max_samples, save_dir=save_dir)
