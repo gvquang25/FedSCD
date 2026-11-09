@@ -1,0 +1,1623 @@
+
+============= Running time: 0th (Seed: 747203) =============
+Creating server and clients ...
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /Users/phucvu/.netrc.
+wandb: Currently logged in as: vudinhphuc26 (gvquang25-hanoi-university-of-science-and-technology) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run hfx27zds
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /Users/phucvu/Library/CloudStorage/GoogleDrive-vudinhphuc269@gmail.com/My Drive/2. Study/6. WicomLab/Federated Learning/FedSCD/system/wandb/run-20261031_221547-hfx27zds
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run FedTGP_Cifar10_cnn_nc20_alpha0.5
+wandb: ⭐️ View project at https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD
+wandb: 🚀 View run at https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD/runs/hfx27zds
+
+Join ratio / total clients: 1.0 / 20
+Finished creating FedTGP server and clients.
+
+==============================================================================
+                    FEDERATED LEARNING EXPERIMENT SUMMARY                     
+==============================================================================
+ [1]  CONFIGURATION
+  * Algorithm         : FedTGP
+  * Dataset          : Cifar10 (10 classes)
+  * Backbone      : cnn
+  * Device    : mps
+  * Current Run       : Run 1/1 (Time index: 0)
+  * Random Seed       : 747203
+  * Shuffle Train     : Disabled
+------------------------------------------------------------------------------
+ [2] NON-IID SETTINGS
+  * Distribution: Non-IID (Dirichlet partition)
+  * Dirichlet Alpha  : 0.5
+  * Balance     : False
+  * Number Client (-nc)           : 20
+  * join_ratio    : 1.0 (~20 clients/round)
+  * Random Join Ratio              : False
+------------------------------------------------------------------------------
+ [3] HYPERPARAMETERS
+  * Global Rounds (-gr)           : 100
+  * Local Epochs (-ls)            : 1
+  * Local Batch Size (-lbs)        : 10
+  * Head Learning Rate (-lr)       : 0.01 (Fixed)
+  * Encoder Learning Rate          : Inherited lr=0.01 (Separate Optimizer)
+  * Prototype Loss Weight (-lp)    : 1.0 (InfoNCE + MSE)
+  * InfoNCE Temperature (-nct)    : 0.1
+  * Proto Warmup Rounds            : 1 round(s)
+  * Regularization Weight (-lam)   : 0.1
+  * Evaluation Frequency (-eg)     : Every 1 round(s)
+  * WandB Logging (-log)           : Enabled
+==============================================================================
+
+
+-------------Round number: 0-------------
+
+Evaluate models
+Averaged Train Loss: 2.3032
+Averaged Test Accurancy: 0.1185
+Averaged Test AUC: 0.5078
+Std Test Accurancy: 0.1191
+Std Test AUC: 0.1435
+Prototype Margin: 0.1169 (Norm: 0.1021) | Bhattacharyya Overlap: 0.6846
+class-wise minimum distance: [1.1807, 1.3055, 0.5987, 0.5285, 0.8058, 0.5285, 1.0796, 0.9345, 1.1807, 1.5206]
+min_gap: 0.5285
+max_gap: 1.5206
+Server loss: 3.5418
+-------------------------------------------------- 41.086535930633545
+
+-------------Round number: 1-------------
+
+Evaluate models
+Averaged Train Loss: 1.4385
+Averaged Test Accurancy: 0.3460
+Averaged Test AUC: 0.7777
+Std Test Accurancy: 0.1567
+Std Test AUC: 0.0708
+Prototype Margin: 6.9539 (Norm: 0.7132) | Bhattacharyya Overlap: 0.1069
+class-wise minimum distance: [1.2204, 1.7839, 0.6906, 0.5581, 0.9305, 0.5581, 1.1897, 1.0048, 1.2204, 1.8012]
+min_gap: 0.5581
+max_gap: 1.8012
+Server loss: 3.1191
+-------------------------------------------------- 55.39265990257263
+
+-------------Round number: 2-------------
+
+Evaluate models
+Averaged Train Loss: 1.3174
+Averaged Test Accurancy: 0.4169
+Averaged Test AUC: 0.8103
+Std Test Accurancy: 0.1217
+Std Test AUC: 0.0444
+Prototype Margin: 7.1602 (Norm: 0.7336) | Bhattacharyya Overlap: 0.0995
+class-wise minimum distance: [1.3361, 2.1367, 0.8107, 0.6364, 1.0176, 0.6364, 1.2963, 1.1131, 1.3361, 1.9105]
+min_gap: 0.6364
+max_gap: 2.1367
+Server loss: 4.1144
+-------------------------------------------------- 55.13231706619263
+
+-------------Round number: 3-------------
+
+Evaluate models
+Averaged Train Loss: 1.2217
+Averaged Test Accurancy: 0.4892
+Averaged Test AUC: 0.8420
+Std Test Accurancy: 0.1185
+Std Test AUC: 0.0450
+Prototype Margin: 7.3513 (Norm: 0.7677) | Bhattacharyya Overlap: 0.0957
+class-wise minimum distance: [1.4694, 2.2744, 0.9375, 0.7251, 1.0791, 0.7251, 1.4089, 1.2358, 1.4694, 2.0293]
+min_gap: 0.7251
+max_gap: 2.2744
+Server loss: 4.5823
+-------------------------------------------------- 55.883628129959106
+
+-------------Round number: 4-------------
+
+Evaluate models
+Averaged Train Loss: 1.1438
+Averaged Test Accurancy: 0.5337
+Averaged Test AUC: 0.8602
+Std Test Accurancy: 0.1176
+Std Test AUC: 0.0404
+Prototype Margin: 7.5337 (Norm: 0.8000) | Bhattacharyya Overlap: 0.0926
+class-wise minimum distance: [1.5758, 2.3537, 1.0695, 0.8162, 1.1212, 0.8162, 1.5255, 1.3634, 1.5758, 2.1609]
+min_gap: 0.8162
+max_gap: 2.3537
+Server loss: 2.8688
+-------------------------------------------------- 55.135990142822266
+
+-------------Round number: 5-------------
+
+Evaluate models
+Averaged Train Loss: 1.0808
+Averaged Test Accurancy: 0.5342
+Averaged Test AUC: 0.8625
+Std Test Accurancy: 0.0809
+Std Test AUC: 0.0309
+Prototype Margin: 7.9528 (Norm: 0.8316) | Bhattacharyya Overlap: 0.0899
+class-wise minimum distance: [1.6774, 2.4415, 1.1593, 0.9145, 1.1593, 0.9145, 1.6367, 1.4882, 1.6774, 2.3029]
+min_gap: 0.9145
+max_gap: 2.4415
+Server loss: 3.7631
+-------------------------------------------------- 56.38658308982849
+
+-------------Round number: 6-------------
+
+Evaluate models
+Averaged Train Loss: 1.0266
+Averaged Test Accurancy: 0.5597
+Averaged Test AUC: 0.8781
+Std Test Accurancy: 0.1016
+Std Test AUC: 0.0350
+Prototype Margin: 8.2125 (Norm: 0.8406) | Bhattacharyya Overlap: 0.0875
+class-wise minimum distance: [1.7685, 2.5363, 1.1996, 1.0085, 1.1996, 1.0085, 1.7431, 1.613, 1.7685, 2.4344]
+min_gap: 1.0085
+max_gap: 2.5363
+Server loss: 2.6578
+-------------------------------------------------- 56.414469957351685
+
+-------------Round number: 7-------------
+
+Evaluate models
+Averaged Train Loss: 0.9795
+Averaged Test Accurancy: 0.5725
+Averaged Test AUC: 0.8806
+Std Test Accurancy: 0.0997
+Std Test AUC: 0.0363
+Prototype Margin: 8.4721 (Norm: 0.8660) | Bhattacharyya Overlap: 0.0855
+class-wise minimum distance: [1.8404, 2.6216, 1.2363, 1.0906, 1.2363, 1.0906, 1.8393, 1.7444, 1.8404, 2.548]
+min_gap: 1.0906
+max_gap: 2.6216
+Server loss: 3.5009
+-------------------------------------------------- 57.499289989471436
+
+-------------Round number: 8-------------
+
+Evaluate models
+Averaged Train Loss: 0.9373
+Averaged Test Accurancy: 0.5968
+Averaged Test AUC: 0.8921
+Std Test Accurancy: 0.0822
+Std Test AUC: 0.0234
+Prototype Margin: 8.8507 (Norm: 0.8917) | Bhattacharyya Overlap: 0.0840
+class-wise minimum distance: [1.9213, 2.724, 1.2818, 1.1702, 1.2818, 1.1702, 1.9373, 1.8851, 1.9213, 2.6602]
+min_gap: 1.1702
+max_gap: 2.724
+Server loss: 2.9807
+-------------------------------------------------- 57.12714099884033
+
+-------------Round number: 9-------------
+
+Evaluate models
+Averaged Train Loss: 0.8980
+Averaged Test Accurancy: 0.6089
+Averaged Test AUC: 0.8952
+Std Test Accurancy: 0.0989
+Std Test AUC: 0.0303
+Prototype Margin: 9.0948 (Norm: 0.9083) | Bhattacharyya Overlap: 0.0834
+class-wise minimum distance: [2.0002, 2.8321, 1.3302, 1.2496, 1.3302, 1.2496, 2.0345, 2.0243, 2.0002, 2.7761]
+min_gap: 1.2496
+max_gap: 2.8321
+Server loss: 3.8547
+-------------------------------------------------- 56.94164776802063
+
+-------------Round number: 10-------------
+
+Evaluate models
+Averaged Train Loss: 0.8599
+Averaged Test Accurancy: 0.5950
+Averaged Test AUC: 0.8940
+Std Test Accurancy: 0.1157
+Std Test AUC: 0.0358
+Prototype Margin: 9.2842 (Norm: 0.9206) | Bhattacharyya Overlap: 0.0838
+class-wise minimum distance: [2.0842, 2.9325, 1.3803, 1.3276, 1.3803, 1.3276, 2.1357, 2.1564, 2.0842, 2.8891]
+min_gap: 1.3276
+max_gap: 2.9325
+Server loss: 3.4688
+-------------------------------------------------- 56.93159294128418
+
+-------------Round number: 11-------------
+
+Evaluate models
+Averaged Train Loss: 0.8229
+Averaged Test Accurancy: 0.6158
+Averaged Test AUC: 0.8975
+Std Test Accurancy: 0.0900
+Std Test AUC: 0.0261
+Prototype Margin: 9.6470 (Norm: 0.9349) | Bhattacharyya Overlap: 0.0846
+class-wise minimum distance: [2.1763, 3.0492, 1.4388, 1.4156, 1.4388, 1.4156, 2.2505, 2.2962, 2.1763, 3.0151]
+min_gap: 1.4156
+max_gap: 3.0492
+Server loss: 4.0182
+-------------------------------------------------- 56.52487397193909
+
+-------------Round number: 12-------------
+
+Evaluate models
+Averaged Train Loss: 0.7853
+Averaged Test Accurancy: 0.6261
+Averaged Test AUC: 0.9064
+Std Test Accurancy: 0.0772
+Std Test AUC: 0.0213
+Prototype Margin: 9.9262 (Norm: 0.9479) | Bhattacharyya Overlap: 0.0858
+class-wise minimum distance: [2.2825, 3.1697, 1.5027, 1.5101, 1.5027, 1.5101, 2.3749, 2.4474, 2.2825, 3.1535]
+min_gap: 1.5027
+max_gap: 3.1697
+Server loss: 3.2362
+-------------------------------------------------- 57.16793990135193
+
+-------------Round number: 13-------------
+
+Evaluate models
+Averaged Train Loss: 0.7485
+Averaged Test Accurancy: 0.5886
+Averaged Test AUC: 0.8969
+Std Test Accurancy: 0.0959
+Std Test AUC: 0.0290
+Prototype Margin: 10.2173 (Norm: 0.9417) | Bhattacharyya Overlap: 0.0877
+class-wise minimum distance: [2.3992, 3.305, 1.5766, 1.612, 1.5766, 1.612, 2.5092, 2.6025, 2.3992, 3.305]
+min_gap: 1.5766
+max_gap: 3.305
+Server loss: 2.5942
+-------------------------------------------------- 56.945114850997925
+
+-------------Round number: 14-------------
+
+Evaluate models
+Averaged Train Loss: 0.7104
+Averaged Test Accurancy: 0.6308
+Averaged Test AUC: 0.9093
+Std Test Accurancy: 0.0809
+Std Test AUC: 0.0225
+Prototype Margin: 10.6798 (Norm: 0.9734) | Bhattacharyya Overlap: 0.0895
+class-wise minimum distance: [2.5367, 3.4518, 1.6538, 1.737, 1.6538, 1.737, 2.653, 2.7697, 2.5367, 3.4518]
+min_gap: 1.6538
+max_gap: 3.4518
+Server loss: 2.7094
+-------------------------------------------------- 56.151535987854004
+
+-------------Round number: 15-------------
+
+Evaluate models
+Averaged Train Loss: 0.6725
+Averaged Test Accurancy: 0.6163
+Averaged Test AUC: 0.9052
+Std Test Accurancy: 0.0673
+Std Test AUC: 0.0181
+Prototype Margin: 11.2598 (Norm: 0.9862) | Bhattacharyya Overlap: 0.0912
+class-wise minimum distance: [2.6837, 3.6163, 1.7511, 1.8747, 1.7511, 1.8747, 2.8114, 2.9561, 2.6837, 3.6163]
+min_gap: 1.7511
+max_gap: 3.6163
+Server loss: 3.4991
+-------------------------------------------------- 56.74347519874573
+
+-------------Round number: 16-------------
+
+Evaluate models
+Averaged Train Loss: 0.6352
+Averaged Test Accurancy: 0.6314
+Averaged Test AUC: 0.9107
+Std Test Accurancy: 0.0968
+Std Test AUC: 0.0285
+Prototype Margin: 11.9350 (Norm: 1.0083) | Bhattacharyya Overlap: 0.0937
+class-wise minimum distance: [2.8424, 3.782, 1.8575, 2.0144, 1.8575, 2.0144, 2.9737, 3.1462, 2.8424, 3.782]
+min_gap: 1.8575
+max_gap: 3.782
+Server loss: 3.4413
+-------------------------------------------------- 57.01173686981201
+
+-------------Round number: 17-------------
+
+Evaluate models
+Averaged Train Loss: 0.5984
+Averaged Test Accurancy: 0.6364
+Averaged Test AUC: 0.9115
+Std Test Accurancy: 0.0738
+Std Test AUC: 0.0232
+Prototype Margin: 12.4792 (Norm: 1.0313) | Bhattacharyya Overlap: 0.0966
+class-wise minimum distance: [3.0138, 3.9805, 1.9774, 2.1814, 1.9774, 2.1814, 3.1453, 3.3564, 3.0138, 3.9805]
+min_gap: 1.9774
+max_gap: 3.9805
+Server loss: 4.5657
+-------------------------------------------------- 56.51694917678833
+
+-------------Round number: 18-------------
+
+Evaluate models
+Averaged Train Loss: 0.5608
+Averaged Test Accurancy: 0.6357
+Averaged Test AUC: 0.9124
+Std Test Accurancy: 0.0791
+Std Test AUC: 0.0218
+Prototype Margin: 13.1685 (Norm: 1.0428) | Bhattacharyya Overlap: 0.0995
+class-wise minimum distance: [3.2139, 4.1814, 2.1071, 2.3588, 2.1071, 2.3588, 3.3361, 3.5692, 3.2139, 4.1814]
+min_gap: 2.1071
+max_gap: 4.1814
+Server loss: 3.5004
+-------------------------------------------------- 57.254217863082886
+
+-------------Round number: 19-------------
+
+Evaluate models
+Averaged Train Loss: 0.5247
+Averaged Test Accurancy: 0.5946
+Averaged Test AUC: 0.9054
+Std Test Accurancy: 0.0726
+Std Test AUC: 0.0220
+Prototype Margin: 13.8175 (Norm: 1.0554) | Bhattacharyya Overlap: 0.1029
+class-wise minimum distance: [3.4193, 4.4004, 2.2567, 2.5511, 2.2567, 2.5511, 3.526, 3.7851, 3.4193, 4.4004]
+min_gap: 2.2567
+max_gap: 4.4004
+Server loss: 4.6880
+-------------------------------------------------- 57.278218030929565
+
+-------------Round number: 20-------------
+
+Evaluate models
+Averaged Train Loss: 0.4842
+Averaged Test Accurancy: 0.6306
+Averaged Test AUC: 0.9143
+Std Test Accurancy: 0.0803
+Std Test AUC: 0.0230
+Prototype Margin: 14.5120 (Norm: 1.0621) | Bhattacharyya Overlap: 0.1068
+class-wise minimum distance: [3.646, 4.6215, 2.4128, 2.7577, 2.4128, 2.7577, 3.7285, 4.0124, 3.646, 4.6215]
+min_gap: 2.4128
+max_gap: 4.6215
+Server loss: 2.8856
+-------------------------------------------------- 57.41775298118591
+
+-------------Round number: 21-------------
+
+Evaluate models
+Averaged Train Loss: 0.4423
+Averaged Test Accurancy: 0.6155
+Averaged Test AUC: 0.9073
+Std Test Accurancy: 0.0978
+Std Test AUC: 0.0308
+Prototype Margin: 14.8474 (Norm: 1.0429) | Bhattacharyya Overlap: 0.1107
+class-wise minimum distance: [3.8915, 4.8749, 2.584, 2.9779, 2.584, 2.9779, 3.9557, 4.2564, 3.8915, 4.8749]
+min_gap: 2.584
+max_gap: 4.8749
+Server loss: 4.9979
+-------------------------------------------------- 57.297065019607544
+
+-------------Round number: 22-------------
+
+Evaluate models
+Averaged Train Loss: 0.4000
+Averaged Test Accurancy: 0.6393
+Averaged Test AUC: 0.9144
+Std Test Accurancy: 0.0707
+Std Test AUC: 0.0217
+Prototype Margin: 15.7926 (Norm: 1.0838) | Bhattacharyya Overlap: 0.1141
+class-wise minimum distance: [4.147, 5.1229, 2.7636, 3.2044, 2.7636, 3.2044, 4.1789, 4.4914, 4.147, 5.1229]
+min_gap: 2.7636
+max_gap: 5.1229
+Server loss: 2.4733
+-------------------------------------------------- 57.6789391040802
+
+-------------Round number: 23-------------
+
+Evaluate models
+Averaged Train Loss: 0.3634
+Averaged Test Accurancy: 0.6361
+Averaged Test AUC: 0.9145
+Std Test Accurancy: 0.0716
+Std Test AUC: 0.0214
+Prototype Margin: 16.7271 (Norm: 1.0938) | Bhattacharyya Overlap: 0.1175
+class-wise minimum distance: [4.4117, 5.3899, 2.9512, 3.4318, 2.9512, 3.4318, 4.4178, 4.7352, 4.4117, 5.3899]
+min_gap: 2.9512
+max_gap: 5.3899
+Server loss: 4.4122
+-------------------------------------------------- 56.46389126777649
+
+-------------Round number: 24-------------
+
+Evaluate models
+Averaged Train Loss: 0.3214
+Averaged Test Accurancy: 0.6316
+Averaged Test AUC: 0.9142
+Std Test Accurancy: 0.0882
+Std Test AUC: 0.0252
+Prototype Margin: 17.2953 (Norm: 1.0946) | Bhattacharyya Overlap: 0.1196
+class-wise minimum distance: [4.6626, 5.648, 3.1339, 3.6412, 3.1339, 3.6412, 4.6342, 4.9909, 4.6626, 5.648]
+min_gap: 3.1339
+max_gap: 5.648
+Server loss: 4.6915
+-------------------------------------------------- 56.3406867980957
+
+-------------Round number: 25-------------
+
+Evaluate models
+Averaged Train Loss: 0.2868
+Averaged Test Accurancy: 0.6441
+Averaged Test AUC: 0.9177
+Std Test Accurancy: 0.0853
+Std Test AUC: 0.0267
+Prototype Margin: 17.8205 (Norm: 1.0996) | Bhattacharyya Overlap: 0.1215
+class-wise minimum distance: [4.8975, 5.8915, 3.3129, 3.8572, 3.3129, 3.8572, 4.8543, 5.2311, 4.8975, 5.8915]
+min_gap: 3.3129
+max_gap: 5.8915
+Server loss: 4.0797
+-------------------------------------------------- 56.40799283981323
+
+-------------Round number: 26-------------
+
+Evaluate models
+Averaged Train Loss: 0.2570
+Averaged Test Accurancy: 0.6330
+Averaged Test AUC: 0.9140
+Std Test Accurancy: 0.0900
+Std Test AUC: 0.0295
+Prototype Margin: 18.3182 (Norm: 1.0916) | Bhattacharyya Overlap: 0.1225
+class-wise minimum distance: [5.1337, 6.1333, 3.5012, 4.0711, 3.5012, 4.0711, 5.0806, 5.4782, 5.1337, 6.1333]
+min_gap: 3.5012
+max_gap: 6.1333
+Server loss: 4.1897
+-------------------------------------------------- 56.950429916381836
+
+-------------Round number: 27-------------
+
+Evaluate models
+Averaged Train Loss: 0.2276
+Averaged Test Accurancy: 0.6498
+Averaged Test AUC: 0.9216
+Std Test Accurancy: 0.0749
+Std Test AUC: 0.0223
+Prototype Margin: 18.5771 (Norm: 1.0945) | Bhattacharyya Overlap: 0.1222
+class-wise minimum distance: [5.3521, 6.3511, 3.6773, 4.2692, 3.6773, 4.2692, 5.2844, 5.6856, 5.3521, 6.3511]
+min_gap: 3.6773
+max_gap: 6.3511
+Server loss: 5.2467
+-------------------------------------------------- 57.92938017845154
+
+-------------Round number: 28-------------
+
+Evaluate models
+Averaged Train Loss: 0.2037
+Averaged Test Accurancy: 0.6209
+Averaged Test AUC: 0.9159
+Std Test Accurancy: 0.0745
+Std Test AUC: 0.0227
+Prototype Margin: 19.3532 (Norm: 1.0966) | Bhattacharyya Overlap: 0.1209
+class-wise minimum distance: [5.5734, 6.5726, 3.8546, 4.4537, 3.8546, 4.4537, 5.4774, 5.8883, 5.5734, 6.5726]
+min_gap: 3.8546
+max_gap: 6.5726
+Server loss: 5.3216
+-------------------------------------------------- 59.40002989768982
+
+-------------Round number: 29-------------
+
+Evaluate models
+Averaged Train Loss: 0.1804
+Averaged Test Accurancy: 0.6536
+Averaged Test AUC: 0.9235
+Std Test Accurancy: 0.0758
+Std Test AUC: 0.0236
+Prototype Margin: 19.5278 (Norm: 1.1079) | Bhattacharyya Overlap: 0.1184
+class-wise minimum distance: [5.7439, 6.7496, 3.997, 4.6099, 3.997, 4.6099, 5.6419, 6.0409, 5.7439, 6.7496]
+min_gap: 3.997
+max_gap: 6.7496
+Server loss: 3.2001
+-------------------------------------------------- 57.319403886795044
+
+-------------Round number: 30-------------
+
+Evaluate models
+Averaged Train Loss: 0.1622
+Averaged Test Accurancy: 0.6245
+Averaged Test AUC: 0.9125
+Std Test Accurancy: 0.0957
+Std Test AUC: 0.0312
+Prototype Margin: 19.6254 (Norm: 1.0929) | Bhattacharyya Overlap: 0.1159
+class-wise minimum distance: [5.9018, 6.9032, 4.1396, 4.7543, 4.1396, 4.7543, 5.7875, 6.2067, 5.9018, 6.9032]
+min_gap: 4.1396
+max_gap: 6.9032
+Server loss: 4.2788
+-------------------------------------------------- 57.172301054000854
+
+-------------Round number: 31-------------
+
+Evaluate models
+Averaged Train Loss: 0.1441
+Averaged Test Accurancy: 0.6649
+Averaged Test AUC: 0.9291
+Std Test Accurancy: 0.0759
+Std Test AUC: 0.0224
+Prototype Margin: 19.7727 (Norm: 1.1030) | Bhattacharyya Overlap: 0.1132
+class-wise minimum distance: [6.0333, 7.0467, 4.2634, 4.8774, 4.2634, 4.8774, 5.9193, 6.3245, 6.0333, 7.0467]
+min_gap: 4.2634
+max_gap: 7.0467
+Server loss: 4.8708
+-------------------------------------------------- 57.0588538646698
+
+-------------Round number: 32-------------
+
+Evaluate models
+Averaged Train Loss: 0.1293
+Averaged Test Accurancy: 0.6657
+Averaged Test AUC: 0.9288
+Std Test Accurancy: 0.0729
+Std Test AUC: 0.0206
+Prototype Margin: 19.9546 (Norm: 1.1110) | Bhattacharyya Overlap: 0.1100
+class-wise minimum distance: [6.1409, 7.1704, 4.3743, 4.9834, 4.3743, 4.9834, 6.0292, 6.4247, 6.1409, 7.1704]
+min_gap: 4.3743
+max_gap: 7.1704
+Server loss: 5.2721
+-------------------------------------------------- 57.20214915275574
+
+-------------Round number: 33-------------
+
+Evaluate models
+Averaged Train Loss: 0.1168
+Averaged Test Accurancy: 0.6535
+Averaged Test AUC: 0.9252
+Std Test Accurancy: 0.0861
+Std Test AUC: 0.0255
+Prototype Margin: 19.8942 (Norm: 1.1028) | Bhattacharyya Overlap: 0.1068
+class-wise minimum distance: [6.2419, 7.2786, 4.4704, 5.0745, 4.4704, 5.0745, 6.1279, 6.5307, 6.2419, 7.2786]
+min_gap: 4.4704
+max_gap: 7.2786
+Server loss: 4.1329
+-------------------------------------------------- 56.881574869155884
+
+-------------Round number: 34-------------
+
+Evaluate models
+Averaged Train Loss: 0.1060
+Averaged Test Accurancy: 0.6682
+Averaged Test AUC: 0.9282
+Std Test Accurancy: 0.0695
+Std Test AUC: 0.0201
+Prototype Margin: 20.0007 (Norm: 1.1047) | Bhattacharyya Overlap: 0.1038
+class-wise minimum distance: [6.3279, 7.3694, 4.5606, 5.1592, 4.5606, 5.1592, 6.224, 6.6124, 6.3279, 7.3694]
+min_gap: 4.5606
+max_gap: 7.3694
+Server loss: 3.4008
+-------------------------------------------------- 57.080658197402954
+
+-------------Round number: 35-------------
+
+Evaluate models
+Averaged Train Loss: 0.0973
+Averaged Test Accurancy: 0.6618
+Averaged Test AUC: 0.9263
+Std Test Accurancy: 0.0751
+Std Test AUC: 0.0208
+Prototype Margin: 19.8857 (Norm: 1.1062) | Bhattacharyya Overlap: 0.1003
+class-wise minimum distance: [6.3882, 7.4331, 4.6347, 5.222, 4.6347, 5.222, 6.2874, 6.6597, 6.3882, 7.4331]
+min_gap: 4.6347
+max_gap: 7.4331
+Server loss: 5.8294
+-------------------------------------------------- 56.76801013946533
+
+-------------Round number: 36-------------
+
+Evaluate models
+Averaged Train Loss: 0.0904
+Averaged Test Accurancy: 0.6719
+Averaged Test AUC: 0.9311
+Std Test Accurancy: 0.0783
+Std Test AUC: 0.0221
+Prototype Margin: 20.0987 (Norm: 1.1141) | Bhattacharyya Overlap: 0.0969
+class-wise minimum distance: [6.4432, 7.5053, 4.7094, 5.2779, 4.7094, 5.2779, 6.351, 6.7138, 6.4432, 7.5053]
+min_gap: 4.7094
+max_gap: 7.5053
+Server loss: 4.3793
+-------------------------------------------------- 58.96082830429077
+
+-------------Round number: 37-------------
+
+Evaluate models
+Averaged Train Loss: 0.0845
+Averaged Test Accurancy: 0.6678
+Averaged Test AUC: 0.9291
+Std Test Accurancy: 0.0803
+Std Test AUC: 0.0244
+Prototype Margin: 20.0177 (Norm: 1.1136) | Bhattacharyya Overlap: 0.0937
+class-wise minimum distance: [6.4902, 7.5618, 4.7701, 5.3206, 4.7701, 5.3206, 6.3983, 6.7733, 6.4902, 7.5618]
+min_gap: 4.7701
+max_gap: 7.5618
+Server loss: 3.8602
+-------------------------------------------------- 57.61429309844971
+
+-------------Round number: 38-------------
+
+Evaluate models
+Averaged Train Loss: 0.0793
+Averaged Test Accurancy: 0.6682
+Averaged Test AUC: 0.9302
+Std Test Accurancy: 0.0810
+Std Test AUC: 0.0224
+Prototype Margin: 19.7927 (Norm: 1.1080) | Bhattacharyya Overlap: 0.0910
+class-wise minimum distance: [6.5163, 7.6009, 4.8203, 5.3617, 4.8203, 5.3617, 6.4409, 6.793, 6.5163, 7.6009]
+min_gap: 4.8203
+max_gap: 7.6009
+Server loss: 3.8434
+-------------------------------------------------- 56.49788522720337
+
+-------------Round number: 39-------------
+
+Evaluate models
+Averaged Train Loss: 0.0747
+Averaged Test Accurancy: 0.6755
+Averaged Test AUC: 0.9309
+Std Test Accurancy: 0.0748
+Std Test AUC: 0.0225
+Prototype Margin: 19.7747 (Norm: 1.1118) | Bhattacharyya Overlap: 0.0876
+class-wise minimum distance: [6.5356, 7.6385, 4.8649, 5.3949, 4.8649, 5.3949, 6.4793, 6.8299, 6.5356, 7.6385]
+min_gap: 4.8649
+max_gap: 7.6385
+Server loss: 4.1007
+-------------------------------------------------- 57.30315804481506
+
+-------------Round number: 40-------------
+
+Evaluate models
+Averaged Train Loss: 0.0710
+Averaged Test Accurancy: 0.6707
+Averaged Test AUC: 0.9291
+Std Test Accurancy: 0.0817
+Std Test AUC: 0.0248
+Prototype Margin: 19.6529 (Norm: 1.1092) | Bhattacharyya Overlap: 0.0850
+class-wise minimum distance: [6.567, 7.6535, 4.903, 5.4177, 4.903, 5.4177, 6.506, 6.8542, 6.567, 7.6535]
+min_gap: 4.903
+max_gap: 7.6535
+Server loss: 3.5832
+-------------------------------------------------- 58.30711102485657
+
+-------------Round number: 41-------------
+
+Evaluate models
+Averaged Train Loss: 0.0674
+Averaged Test Accurancy: 0.6722
+Averaged Test AUC: 0.9306
+Std Test Accurancy: 0.0796
+Std Test AUC: 0.0231
+Prototype Margin: 19.5054 (Norm: 1.1117) | Bhattacharyya Overlap: 0.0825
+class-wise minimum distance: [6.5736, 7.6711, 4.9326, 5.434, 4.9326, 5.434, 6.5258, 6.8663, 6.5736, 7.6711]
+min_gap: 4.9326
+max_gap: 7.6711
+Server loss: 4.1989
+-------------------------------------------------- 57.010377168655396
+
+-------------Round number: 42-------------
+
+Evaluate models
+Averaged Train Loss: 0.0640
+Averaged Test Accurancy: 0.6565
+Averaged Test AUC: 0.9251
+Std Test Accurancy: 0.0913
+Std Test AUC: 0.0260
+Prototype Margin: 19.0806 (Norm: 1.1021) | Bhattacharyya Overlap: 0.0801
+class-wise minimum distance: [6.5829, 7.6632, 4.9545, 5.4513, 4.9545, 5.4513, 6.5352, 6.8587, 6.5829, 7.6632]
+min_gap: 4.9545
+max_gap: 7.6632
+Server loss: 2.9918
+-------------------------------------------------- 56.9757559299469
+
+-------------Round number: 43-------------
+
+Evaluate models
+Averaged Train Loss: 0.0618
+Averaged Test Accurancy: 0.6609
+Averaged Test AUC: 0.9240
+Std Test Accurancy: 0.0823
+Std Test AUC: 0.0252
+Prototype Margin: 19.2561 (Norm: 1.1101) | Bhattacharyya Overlap: 0.0775
+class-wise minimum distance: [6.6063, 7.6598, 4.981, 5.4604, 4.981, 5.4604, 6.555, 6.8724, 6.6063, 7.6598]
+min_gap: 4.981
+max_gap: 7.6598
+Server loss: 5.5194
+-------------------------------------------------- 57.16895890235901
+
+-------------Round number: 44-------------
+
+Evaluate models
+Averaged Train Loss: 0.0592
+Averaged Test Accurancy: 0.6745
+Averaged Test AUC: 0.9305
+Std Test Accurancy: 0.0756
+Std Test AUC: 0.0221
+Prototype Margin: 19.3679 (Norm: 1.1108) | Bhattacharyya Overlap: 0.0754
+class-wise minimum distance: [6.6218, 7.7007, 5.0057, 5.4925, 5.0057, 5.4925, 6.5896, 6.901, 6.6218, 7.7007]
+min_gap: 5.0057
+max_gap: 7.7007
+Server loss: 5.1304
+-------------------------------------------------- 56.84860110282898
+
+-------------Round number: 45-------------
+
+Evaluate models
+Averaged Train Loss: 0.0570
+Averaged Test Accurancy: 0.6699
+Averaged Test AUC: 0.9277
+Std Test Accurancy: 0.0775
+Std Test AUC: 0.0235
+Prototype Margin: 19.0441 (Norm: 1.0954) | Bhattacharyya Overlap: 0.0730
+class-wise minimum distance: [6.6348, 7.7141, 5.0263, 5.5091, 5.0263, 5.5091, 6.6084, 6.9319, 6.6348, 7.7141]
+min_gap: 5.0263
+max_gap: 7.7141
+Server loss: 4.4257
+-------------------------------------------------- 57.049501180648804
+
+-------------Round number: 46-------------
+
+Evaluate models
+Averaged Train Loss: 0.0551
+Averaged Test Accurancy: 0.6637
+Averaged Test AUC: 0.9270
+Std Test Accurancy: 0.0847
+Std Test AUC: 0.0241
+Prototype Margin: 18.9909 (Norm: 1.1014) | Bhattacharyya Overlap: 0.0710
+class-wise minimum distance: [6.6391, 7.7094, 5.044, 5.513, 5.044, 5.513, 6.6058, 6.9193, 6.6391, 7.7094]
+min_gap: 5.044
+max_gap: 7.7094
+Server loss: 4.1150
+-------------------------------------------------- 158.2589099407196
+
+-------------Round number: 47-------------
+
+Evaluate models
+Averaged Train Loss: 0.0527
+Averaged Test Accurancy: 0.6759
+Averaged Test AUC: 0.9293
+Std Test Accurancy: 0.0790
+Std Test AUC: 0.0231
+Prototype Margin: 18.6546 (Norm: 1.1025) | Bhattacharyya Overlap: 0.0690
+class-wise minimum distance: [6.6152, 7.6897, 5.0463, 5.5075, 5.0463, 5.5075, 6.6004, 6.8832, 6.6152, 7.6897]
+min_gap: 5.0463
+max_gap: 7.6897
+Server loss: 4.5613
+-------------------------------------------------- 212.71643376350403
+
+-------------Round number: 48-------------
+
+Evaluate models
+Averaged Train Loss: 0.0508
+Averaged Test Accurancy: 0.6818
+Averaged Test AUC: 0.9320
+Std Test Accurancy: 0.0789
+Std Test AUC: 0.0218
+Prototype Margin: 18.7473 (Norm: 1.1140) | Bhattacharyya Overlap: 0.0673
+class-wise minimum distance: [6.6149, 7.6833, 5.0578, 5.5121, 5.0578, 5.5121, 6.6054, 6.8678, 6.6149, 7.6833]
+min_gap: 5.0578
+max_gap: 7.6833
+Server loss: 4.5647
+-------------------------------------------------- 221.22776818275452
+
+-------------Round number: 49-------------
+
+Evaluate models
+Averaged Train Loss: 0.0494
+Averaged Test Accurancy: 0.6750
+Averaged Test AUC: 0.9292
+Std Test Accurancy: 0.0730
+Std Test AUC: 0.0211
+Prototype Margin: 18.5363 (Norm: 1.1023) | Bhattacharyya Overlap: 0.0655
+class-wise minimum distance: [6.613, 7.6955, 5.065, 5.5229, 5.065, 5.5229, 6.6171, 6.8525, 6.613, 7.6955]
+min_gap: 5.065
+max_gap: 7.6955
+Server loss: 4.7397
+-------------------------------------------------- 203.1163489818573
+
+-------------Round number: 50-------------
+
+Evaluate models
+Averaged Train Loss: 0.0485
+Averaged Test Accurancy: 0.6617
+Averaged Test AUC: 0.9259
+Std Test Accurancy: 0.0829
+Std Test AUC: 0.0255
+Prototype Margin: 18.5017 (Norm: 1.0959) | Bhattacharyya Overlap: 0.0636
+class-wise minimum distance: [6.6158, 7.7023, 5.0767, 5.5286, 5.0767, 5.5286, 6.6254, 6.896, 6.6158, 7.7023]
+min_gap: 5.0767
+max_gap: 7.7023
+Server loss: 3.9388
+-------------------------------------------------- 211.8264479637146
+
+-------------Round number: 51-------------
+
+Evaluate models
+Averaged Train Loss: 0.0467
+Averaged Test Accurancy: 0.6683
+Averaged Test AUC: 0.9265
+Std Test Accurancy: 0.0802
+Std Test AUC: 0.0231
+Prototype Margin: 18.2148 (Norm: 1.1025) | Bhattacharyya Overlap: 0.0624
+class-wise minimum distance: [6.6125, 7.6595, 5.0758, 5.5224, 5.0758, 5.5224, 6.6164, 6.8396, 6.6125, 7.6595]
+min_gap: 5.0758
+max_gap: 7.6595
+Server loss: 4.2650
+-------------------------------------------------- 219.50187277793884
+
+-------------Round number: 52-------------
+
+Evaluate models
+Averaged Train Loss: 0.0451
+Averaged Test Accurancy: 0.6826
+Averaged Test AUC: 0.9339
+Std Test Accurancy: 0.0753
+Std Test AUC: 0.0214
+Prototype Margin: 18.3967 (Norm: 1.1198) | Bhattacharyya Overlap: 0.0606
+class-wise minimum distance: [6.605, 7.6773, 5.0808, 5.53, 5.0808, 5.53, 6.6146, 6.847, 6.605, 7.6773]
+min_gap: 5.0808
+max_gap: 7.6773
+Server loss: 3.8868
+-------------------------------------------------- 193.67271518707275
+
+-------------Round number: 53-------------
+
+Evaluate models
+Averaged Train Loss: 0.0442
+Averaged Test Accurancy: 0.6768
+Averaged Test AUC: 0.9307
+Std Test Accurancy: 0.0783
+Std Test AUC: 0.0223
+Prototype Margin: 18.2227 (Norm: 1.1079) | Bhattacharyya Overlap: 0.0591
+class-wise minimum distance: [6.6078, 7.6836, 5.0912, 5.537, 5.0912, 5.537, 6.6193, 6.8482, 6.6078, 7.6836]
+min_gap: 5.0912
+max_gap: 7.6836
+Server loss: 5.7627
+-------------------------------------------------- 214.97925090789795
+
+-------------Round number: 54-------------
+
+Evaluate models
+Averaged Train Loss: 0.0426
+Averaged Test Accurancy: 0.6869
+Averaged Test AUC: 0.9366
+Std Test Accurancy: 0.0734
+Std Test AUC: 0.0199
+Prototype Margin: 18.2302 (Norm: 1.1237) | Bhattacharyya Overlap: 0.0576
+class-wise minimum distance: [6.602, 7.6571, 5.0929, 5.531, 5.0929, 5.531, 6.6193, 6.8474, 6.602, 7.6571]
+min_gap: 5.0929
+max_gap: 7.6571
+Server loss: 3.1957
+-------------------------------------------------- 217.05718517303467
+
+-------------Round number: 55-------------
+
+Evaluate models
+Averaged Train Loss: 0.0418
+Averaged Test Accurancy: 0.6792
+Averaged Test AUC: 0.9322
+Std Test Accurancy: 0.0745
+Std Test AUC: 0.0208
+Prototype Margin: 17.9893 (Norm: 1.1088) | Bhattacharyya Overlap: 0.0565
+class-wise minimum distance: [6.5963, 7.6526, 5.0966, 5.5396, 5.0966, 5.5396, 6.6257, 6.8427, 6.5963, 7.6526]
+min_gap: 5.0966
+max_gap: 7.6526
+Server loss: 4.6819
+-------------------------------------------------- 207.04740977287292
+
+-------------Round number: 56-------------
+
+Evaluate models
+Averaged Train Loss: 0.0409
+Averaged Test Accurancy: 0.6877
+Averaged Test AUC: 0.9359
+Std Test Accurancy: 0.0734
+Std Test AUC: 0.0207
+Prototype Margin: 18.1246 (Norm: 1.1231) | Bhattacharyya Overlap: 0.0551
+class-wise minimum distance: [6.5893, 7.648, 5.0988, 5.5335, 5.0988, 5.5335, 6.62, 6.8434, 6.5893, 7.648]
+min_gap: 5.0988
+max_gap: 7.648
+Server loss: 3.2725
+-------------------------------------------------- 213.88949298858643
+
+-------------Round number: 57-------------
+
+Evaluate models
+Averaged Train Loss: 0.0402
+Averaged Test Accurancy: 0.6799
+Averaged Test AUC: 0.9322
+Std Test Accurancy: 0.0826
+Std Test AUC: 0.0242
+Prototype Margin: 17.9475 (Norm: 1.1194) | Bhattacharyya Overlap: 0.0541
+class-wise minimum distance: [6.5838, 7.6399, 5.1, 5.5313, 5.1, 5.5313, 6.6158, 6.8356, 6.5838, 7.6399]
+min_gap: 5.1
+max_gap: 7.6399
+Server loss: 3.4444
+-------------------------------------------------- 220.24531507492065
+
+-------------Round number: 58-------------
+
+Evaluate models
+Averaged Train Loss: 0.0390
+Averaged Test Accurancy: 0.6873
+Averaged Test AUC: 0.9355
+Std Test Accurancy: 0.0761
+Std Test AUC: 0.0210
+Prototype Margin: 17.7050 (Norm: 1.1163) | Bhattacharyya Overlap: 0.0529
+class-wise minimum distance: [6.5729, 7.6253, 5.1008, 5.5308, 5.1008, 5.5308, 6.6129, 6.8173, 6.5729, 7.6253]
+min_gap: 5.1008
+max_gap: 7.6253
+Server loss: 5.0381
+-------------------------------------------------- 199.6424572467804
+
+-------------Round number: 59-------------
+
+Evaluate models
+Averaged Train Loss: 0.0382
+Averaged Test Accurancy: 0.6820
+Averaged Test AUC: 0.9342
+Std Test Accurancy: 0.0783
+Std Test AUC: 0.0226
+Prototype Margin: 17.6832 (Norm: 1.1265) | Bhattacharyya Overlap: 0.0516
+class-wise minimum distance: [6.5702, 7.5933, 5.0985, 5.5197, 5.0985, 5.5197, 6.5968, 6.8085, 6.5702, 7.5933]
+min_gap: 5.0985
+max_gap: 7.5933
+Server loss: 5.2101
+-------------------------------------------------- 193.24237298965454
+
+-------------Round number: 60-------------
+
+Evaluate models
+Averaged Train Loss: 0.0377
+Averaged Test Accurancy: 0.6890
+Averaged Test AUC: 0.9366
+Std Test Accurancy: 0.0767
+Std Test AUC: 0.0215
+Prototype Margin: 17.8288 (Norm: 1.1285) | Bhattacharyya Overlap: 0.0508
+class-wise minimum distance: [6.5709, 7.6061, 5.1062, 5.5248, 5.1062, 5.5248, 6.6009, 6.8024, 6.5709, 7.6061]
+min_gap: 5.1062
+max_gap: 7.6061
+Server loss: 5.4659
+-------------------------------------------------- 190.97782516479492
+
+-------------Round number: 61-------------
+
+Evaluate models
+Averaged Train Loss: 0.0370
+Averaged Test Accurancy: 0.6820
+Averaged Test AUC: 0.9322
+Std Test Accurancy: 0.0774
+Std Test AUC: 0.0213
+Prototype Margin: 17.3991 (Norm: 1.1129) | Bhattacharyya Overlap: 0.0496
+class-wise minimum distance: [6.5741, 7.5761, 5.1078, 5.5185, 5.1078, 5.5185, 6.5924, 6.779, 6.5741, 7.5761]
+min_gap: 5.1078
+max_gap: 7.5761
+Server loss: 5.5598
+-------------------------------------------------- 193.0241560935974
+
+-------------Round number: 62-------------
+
+Evaluate models
+Averaged Train Loss: 0.0363
+Averaged Test Accurancy: 0.6846
+Averaged Test AUC: 0.9345
+Std Test Accurancy: 0.0767
+Std Test AUC: 0.0222
+Prototype Margin: 17.4225 (Norm: 1.1232) | Bhattacharyya Overlap: 0.0486
+class-wise minimum distance: [6.5577, 7.5633, 5.1038, 5.5097, 5.1038, 5.5097, 6.5846, 6.7714, 6.5577, 7.5633]
+min_gap: 5.1038
+max_gap: 7.5633
+Server loss: 3.9713
+-------------------------------------------------- 200.4932689666748
+
+-------------Round number: 63-------------
+
+Evaluate models
+Averaged Train Loss: 0.0357
+Averaged Test Accurancy: 0.6758
+Averaged Test AUC: 0.9309
+Std Test Accurancy: 0.0766
+Std Test AUC: 0.0216
+Prototype Margin: 17.1764 (Norm: 1.1065) | Bhattacharyya Overlap: 0.0478
+class-wise minimum distance: [6.5545, 7.5731, 5.1104, 5.5144, 5.1104, 5.5144, 6.5861, 6.7485, 6.5545, 7.5731]
+min_gap: 5.1104
+max_gap: 7.5731
+Server loss: 4.3105
+-------------------------------------------------- 147.52151083946228
+
+-------------Round number: 64-------------
+
+Evaluate models
+Averaged Train Loss: 0.0352
+Averaged Test Accurancy: 0.6867
+Averaged Test AUC: 0.9342
+Std Test Accurancy: 0.0745
+Std Test AUC: 0.0212
+Prototype Margin: 17.3016 (Norm: 1.1193) | Bhattacharyya Overlap: 0.0466
+class-wise minimum distance: [6.5561, 7.5675, 5.1132, 5.513, 5.1132, 5.513, 6.5832, 6.7369, 6.5561, 7.5675]
+min_gap: 5.1132
+max_gap: 7.5675
+Server loss: 3.5456
+-------------------------------------------------- 129.83618903160095
+
+-------------Round number: 65-------------
+
+Evaluate models
+Averaged Train Loss: 0.0347
+Averaged Test Accurancy: 0.6806
+Averaged Test AUC: 0.9321
+Std Test Accurancy: 0.0781
+Std Test AUC: 0.0236
+Prototype Margin: 17.2959 (Norm: 1.1195) | Bhattacharyya Overlap: 0.0457
+class-wise minimum distance: [6.5559, 7.5608, 5.1178, 5.5105, 5.1178, 5.5105, 6.5819, 6.7579, 6.5559, 7.5608]
+min_gap: 5.1178
+max_gap: 7.5608
+Server loss: 4.2652
+-------------------------------------------------- 153.56444597244263
+
+-------------Round number: 66-------------
+
+Evaluate models
+Averaged Train Loss: 0.0340
+Averaged Test Accurancy: 0.6884
+Averaged Test AUC: 0.9353
+Std Test Accurancy: 0.0727
+Std Test AUC: 0.0203
+Prototype Margin: 17.2074 (Norm: 1.1239) | Bhattacharyya Overlap: 0.0451
+class-wise minimum distance: [6.5489, 7.5439, 5.1146, 5.5118, 5.1146, 5.5118, 6.5831, 6.7303, 6.5489, 7.5439]
+min_gap: 5.1146
+max_gap: 7.5439
+Server loss: 2.2033
+-------------------------------------------------- 154.9318687915802
+
+-------------Round number: 67-------------
+
+Evaluate models
+Averaged Train Loss: 0.0335
+Averaged Test Accurancy: 0.6803
+Averaged Test AUC: 0.9321
+Std Test Accurancy: 0.0766
+Std Test AUC: 0.0234
+Prototype Margin: 17.0185 (Norm: 1.1126) | Bhattacharyya Overlap: 0.0440
+class-wise minimum distance: [6.5391, 7.544, 5.1148, 5.511, 5.1148, 5.511, 6.583, 6.7411, 6.5391, 7.544]
+min_gap: 5.1148
+max_gap: 7.544
+Server loss: 4.0483
+-------------------------------------------------- 153.64334392547607
+
+-------------Round number: 68-------------
+
+Evaluate models
+Averaged Train Loss: 0.0332
+Averaged Test Accurancy: 0.6823
+Averaged Test AUC: 0.9333
+Std Test Accurancy: 0.0800
+Std Test AUC: 0.0235
+Prototype Margin: 17.1294 (Norm: 1.1212) | Bhattacharyya Overlap: 0.0434
+class-wise minimum distance: [6.5422, 7.5487, 5.1174, 5.5096, 5.1174, 5.5096, 6.5746, 6.7537, 6.5422, 7.5487]
+min_gap: 5.1174
+max_gap: 7.5487
+Server loss: 4.2964
+-------------------------------------------------- 153.47720098495483
+
+-------------Round number: 69-------------
+
+Evaluate models
+Averaged Train Loss: 0.0324
+Averaged Test Accurancy: 0.6882
+Averaged Test AUC: 0.9346
+Std Test Accurancy: 0.0733
+Std Test AUC: 0.0211
+Prototype Margin: 16.8814 (Norm: 1.1181) | Bhattacharyya Overlap: 0.0426
+class-wise minimum distance: [6.5391, 7.5244, 5.1148, 5.5036, 5.1148, 5.5036, 6.5701, 6.7116, 6.5391, 7.5244]
+min_gap: 5.1148
+max_gap: 7.5244
+Server loss: 2.8746
+-------------------------------------------------- 153.94763112068176
+
+-------------Round number: 70-------------
+
+Evaluate models
+Averaged Train Loss: 0.0321
+Averaged Test Accurancy: 0.6847
+Averaged Test AUC: 0.9345
+Std Test Accurancy: 0.0820
+Std Test AUC: 0.0231
+Prototype Margin: 16.9987 (Norm: 1.1279) | Bhattacharyya Overlap: 0.0418
+class-wise minimum distance: [6.5356, 7.5201, 5.114, 5.4985, 5.114, 5.4985, 6.5559, 6.7126, 6.5356, 7.5201]
+min_gap: 5.114
+max_gap: 7.5201
+Server loss: 3.9311
+-------------------------------------------------- 153.0123221874237
+
+-------------Round number: 71-------------
+
+Evaluate models
+Averaged Train Loss: 0.0320
+Averaged Test Accurancy: 0.6832
+Averaged Test AUC: 0.9314
+Std Test Accurancy: 0.0757
+Std Test AUC: 0.0225
+Prototype Margin: 16.8550 (Norm: 1.1100) | Bhattacharyya Overlap: 0.0412
+class-wise minimum distance: [6.5324, 7.5352, 5.1245, 5.5045, 5.1245, 5.5045, 6.5715, 6.7314, 6.5324, 7.5352]
+min_gap: 5.1245
+max_gap: 7.5352
+Server loss: 5.2066
+-------------------------------------------------- 153.7537989616394
+
+-------------Round number: 72-------------
+
+Evaluate models
+Averaged Train Loss: 0.0315
+Averaged Test Accurancy: 0.6858
+Averaged Test AUC: 0.9339
+Std Test Accurancy: 0.0754
+Std Test AUC: 0.0199
+Prototype Margin: 16.9069 (Norm: 1.1152) | Bhattacharyya Overlap: 0.0403
+class-wise minimum distance: [6.5494, 7.5315, 5.1264, 5.5099, 5.1264, 5.5099, 6.5804, 6.7329, 6.5494, 7.5315]
+min_gap: 5.1264
+max_gap: 7.5315
+Server loss: 4.7423
+-------------------------------------------------- 154.02071499824524
+
+-------------Round number: 73-------------
+
+Evaluate models
+Averaged Train Loss: 0.0312
+Averaged Test Accurancy: 0.6744
+Averaged Test AUC: 0.9264
+Std Test Accurancy: 0.0851
+Std Test AUC: 0.0268
+Prototype Margin: 16.7039 (Norm: 1.1165) | Bhattacharyya Overlap: 0.0396
+class-wise minimum distance: [6.5414, 7.4937, 5.1247, 5.4941, 5.1247, 5.4941, 6.5575, 6.6887, 6.5414, 7.4937]
+min_gap: 5.1247
+max_gap: 7.4937
+Server loss: 4.9434
+-------------------------------------------------- 152.01580905914307
+
+-------------Round number: 74-------------
+
+Evaluate models
+Averaged Train Loss: 0.0305
+Averaged Test Accurancy: 0.6804
+Averaged Test AUC: 0.9311
+Std Test Accurancy: 0.0803
+Std Test AUC: 0.0243
+Prototype Margin: 16.7063 (Norm: 1.1292) | Bhattacharyya Overlap: 0.0390
+class-wise minimum distance: [6.5291, 7.4805, 5.1187, 5.4867, 5.1187, 5.4867, 6.5424, 6.6625, 6.5291, 7.4805]
+min_gap: 5.1187
+max_gap: 7.4805
+Server loss: 4.1309
+-------------------------------------------------- 153.70731401443481
+
+-------------Round number: 75-------------
+
+Evaluate models
+Averaged Train Loss: 0.0297
+Averaged Test Accurancy: 0.6948
+Averaged Test AUC: 0.9381
+Std Test Accurancy: 0.0724
+Std Test AUC: 0.0202
+Prototype Margin: 16.6312 (Norm: 1.1309) | Bhattacharyya Overlap: 0.0383
+class-wise minimum distance: [6.5153, 7.4797, 5.1165, 5.4881, 5.1165, 5.4881, 6.549, 6.6701, 6.5153, 7.4797]
+min_gap: 5.1165
+max_gap: 7.4797
+Server loss: 5.3281
+-------------------------------------------------- 157.2250030040741
+
+-------------Round number: 76-------------
+
+Evaluate models
+Averaged Train Loss: 0.0299
+Averaged Test Accurancy: 0.6767
+Averaged Test AUC: 0.9289
+Std Test Accurancy: 0.0849
+Std Test AUC: 0.0261
+Prototype Margin: 16.5098 (Norm: 1.1209) | Bhattacharyya Overlap: 0.0377
+class-wise minimum distance: [6.5086, 7.473, 5.1199, 5.4852, 5.1199, 5.4852, 6.5371, 6.683, 6.5086, 7.473]
+min_gap: 5.1199
+max_gap: 7.473
+Server loss: 4.6049
+-------------------------------------------------- 154.0238001346588
+
+-------------Round number: 77-------------
+
+Evaluate models
+Averaged Train Loss: 0.0291
+Averaged Test Accurancy: 0.6908
+Averaged Test AUC: 0.9363
+Std Test Accurancy: 0.0741
+Std Test AUC: 0.0202
+Prototype Margin: 16.4466 (Norm: 1.1187) | Bhattacharyya Overlap: 0.0372
+class-wise minimum distance: [6.5149, 7.4738, 5.1228, 5.4888, 5.1228, 5.4888, 6.5473, 6.6643, 6.5149, 7.4738]
+min_gap: 5.1228
+max_gap: 7.4738
+Server loss: 3.7533
+-------------------------------------------------- 153.43414211273193
+
+-------------Round number: 78-------------
+
+Evaluate models
+Averaged Train Loss: 0.0290
+Averaged Test Accurancy: 0.6885
+Averaged Test AUC: 0.9360
+Std Test Accurancy: 0.0768
+Std Test AUC: 0.0222
+Prototype Margin: 16.6586 (Norm: 1.1322) | Bhattacharyya Overlap: 0.0365
+class-wise minimum distance: [6.5173, 7.4719, 5.1253, 5.4867, 5.1253, 5.4867, 6.5414, 6.6744, 6.5173, 7.4719]
+min_gap: 5.1253
+max_gap: 7.4719
+Server loss: 4.0933
+-------------------------------------------------- 154.45406317710876
+
+-------------Round number: 79-------------
+
+Evaluate models
+Averaged Train Loss: 0.0287
+Averaged Test Accurancy: 0.6880
+Averaged Test AUC: 0.9351
+Std Test Accurancy: 0.0776
+Std Test AUC: 0.0230
+Prototype Margin: 16.5814 (Norm: 1.1311) | Bhattacharyya Overlap: 0.0360
+class-wise minimum distance: [6.5166, 7.4663, 5.1264, 5.4818, 5.1264, 5.4818, 6.5317, 6.668, 6.5166, 7.4663]
+min_gap: 5.1264
+max_gap: 7.4663
+Server loss: 3.8568
+-------------------------------------------------- 153.26544404029846
+
+-------------Round number: 80-------------
+
+Evaluate models
+Averaged Train Loss: 0.0283
+Averaged Test Accurancy: 0.6919
+Averaged Test AUC: 0.9360
+Std Test Accurancy: 0.0761
+Std Test AUC: 0.0220
+Prototype Margin: 16.5176 (Norm: 1.1350) | Bhattacharyya Overlap: 0.0355
+class-wise minimum distance: [6.509, 7.4492, 5.1263, 5.4782, 5.1263, 5.4782, 6.5294, 6.6537, 6.509, 7.4492]
+min_gap: 5.1263
+max_gap: 7.4492
+Server loss: 2.7911
+-------------------------------------------------- 153.43825483322144
+
+-------------Round number: 81-------------
+
+Evaluate models
+Averaged Train Loss: 0.0283
+Averaged Test Accurancy: 0.6850
+Averaged Test AUC: 0.9328
+Std Test Accurancy: 0.0739
+Std Test AUC: 0.0215
+Prototype Margin: 16.5382 (Norm: 1.1261) | Bhattacharyya Overlap: 0.0348
+class-wise minimum distance: [6.5118, 7.4627, 5.1304, 5.4893, 5.1304, 5.4893, 6.5358, 6.6521, 6.5118, 7.4627]
+min_gap: 5.1304
+max_gap: 7.4627
+Server loss: 4.4228
+-------------------------------------------------- 153.3548469543457
+
+-------------Round number: 82-------------
+
+Evaluate models
+Averaged Train Loss: 0.0277
+Averaged Test Accurancy: 0.6941
+Averaged Test AUC: 0.9367
+Std Test Accurancy: 0.0701
+Std Test AUC: 0.0196
+Prototype Margin: 16.3599 (Norm: 1.1299) | Bhattacharyya Overlap: 0.0341
+class-wise minimum distance: [6.5114, 7.4461, 5.1286, 5.4831, 5.1286, 5.4831, 6.529, 6.6371, 6.5114, 7.4461]
+min_gap: 5.1286
+max_gap: 7.4461
+Server loss: 5.0720
+-------------------------------------------------- 154.27262091636658
+
+-------------Round number: 83-------------
+
+Evaluate models
+Averaged Train Loss: 0.0273
+Averaged Test Accurancy: 0.6940
+Averaged Test AUC: 0.9379
+Std Test Accurancy: 0.0720
+Std Test AUC: 0.0197
+Prototype Margin: 16.3096 (Norm: 1.1297) | Bhattacharyya Overlap: 0.0337
+class-wise minimum distance: [6.5054, 7.4478, 5.1256, 5.4771, 5.1256, 5.4771, 6.5226, 6.6295, 6.5054, 7.4478]
+min_gap: 5.1256
+max_gap: 7.4478
+Server loss: 4.4882
+-------------------------------------------------- 153.34951305389404
+
+-------------Round number: 84-------------
+
+Evaluate models
+Averaged Train Loss: 0.0272
+Averaged Test Accurancy: 0.6880
+Averaged Test AUC: 0.9356
+Std Test Accurancy: 0.0774
+Std Test AUC: 0.0219
+Prototype Margin: 16.2567 (Norm: 1.1226) | Bhattacharyya Overlap: 0.0332
+class-wise minimum distance: [6.507, 7.447, 5.1299, 5.4795, 5.1299, 5.4795, 6.5265, 6.6418, 6.507, 7.447]
+min_gap: 5.1299
+max_gap: 7.447
+Server loss: 5.2438
+-------------------------------------------------- 154.21505308151245
+
+-------------Round number: 85-------------
+
+Evaluate models
+Averaged Train Loss: 0.0269
+Averaged Test Accurancy: 0.6872
+Averaged Test AUC: 0.9336
+Std Test Accurancy: 0.0740
+Std Test AUC: 0.0211
+Prototype Margin: 15.9919 (Norm: 1.1089) | Bhattacharyya Overlap: 0.0328
+class-wise minimum distance: [6.5091, 7.4439, 5.1343, 5.478, 5.1343, 5.478, 6.5245, 6.6407, 6.5091, 7.4439]
+min_gap: 5.1343
+max_gap: 7.4439
+Server loss: 4.2507
+-------------------------------------------------- 153.97955799102783
+
+-------------Round number: 86-------------
+
+Evaluate models
+Averaged Train Loss: 0.0267
+Averaged Test Accurancy: 0.6948
+Averaged Test AUC: 0.9378
+Std Test Accurancy: 0.0741
+Std Test AUC: 0.0202
+Prototype Margin: 16.3560 (Norm: 1.1388) | Bhattacharyya Overlap: 0.0323
+class-wise minimum distance: [6.5096, 7.4355, 5.1304, 5.4748, 5.1304, 5.4748, 6.5209, 6.6264, 6.5096, 7.4355]
+min_gap: 5.1304
+max_gap: 7.4355
+Server loss: 4.0393
+-------------------------------------------------- 153.27435183525085
+
+-------------Round number: 87-------------
+
+Evaluate models
+Averaged Train Loss: 0.0262
+Averaged Test Accurancy: 0.6873
+Averaged Test AUC: 0.9350
+Std Test Accurancy: 0.0769
+Std Test AUC: 0.0225
+Prototype Margin: 16.0838 (Norm: 1.1269) | Bhattacharyya Overlap: 0.0318
+class-wise minimum distance: [6.5011, 7.4297, 5.1265, 5.4708, 5.1265, 5.4708, 6.5126, 6.6312, 6.5011, 7.4297]
+min_gap: 5.1265
+max_gap: 7.4297
+Server loss: 4.4557
+-------------------------------------------------- 145.77225279808044
+
+-------------Round number: 88-------------
+
+Evaluate models
+Averaged Train Loss: 0.0261
+Averaged Test Accurancy: 0.6848
+Averaged Test AUC: 0.9339
+Std Test Accurancy: 0.0780
+Std Test AUC: 0.0231
+Prototype Margin: 16.0530 (Norm: 1.1217) | Bhattacharyya Overlap: 0.0315
+class-wise minimum distance: [6.4976, 7.43, 5.1297, 5.4744, 5.1297, 5.4744, 6.5206, 6.6354, 6.4976, 7.43]
+min_gap: 5.1297
+max_gap: 7.43
+Server loss: 4.3937
+-------------------------------------------------- 164.77164697647095
+
+-------------Round number: 89-------------
+
+Evaluate models
+Averaged Train Loss: 0.0260
+Averaged Test Accurancy: 0.6842
+Averaged Test AUC: 0.9329
+Std Test Accurancy: 0.0793
+Std Test AUC: 0.0234
+Prototype Margin: 16.0309 (Norm: 1.1210) | Bhattacharyya Overlap: 0.0310
+class-wise minimum distance: [6.5001, 7.4336, 5.1312, 5.4724, 5.1312, 5.4724, 6.5163, 6.6117, 6.5001, 7.4336]
+min_gap: 5.1312
+max_gap: 7.4336
+Server loss: 4.9659
+-------------------------------------------------- 152.88315224647522
+
+-------------Round number: 90-------------
+
+Evaluate models
+Averaged Train Loss: 0.0257
+Averaged Test Accurancy: 0.6840
+Averaged Test AUC: 0.9307
+Std Test Accurancy: 0.0753
+Std Test AUC: 0.0234
+Prototype Margin: 15.6938 (Norm: 1.1084) | Bhattacharyya Overlap: 0.0305
+class-wise minimum distance: [6.4939, 7.4061, 5.1304, 5.4639, 5.1304, 5.4639, 6.5165, 6.5744, 6.4939, 7.4061]
+min_gap: 5.1304
+max_gap: 7.4061
+Server loss: 3.7738
+-------------------------------------------------- 144.60952496528625
+
+-------------Round number: 91-------------
+
+Evaluate models
+Averaged Train Loss: 0.0251
+Averaged Test Accurancy: 0.6898
+Averaged Test AUC: 0.9345
+Std Test Accurancy: 0.0756
+Std Test AUC: 0.0207
+Prototype Margin: 15.6764 (Norm: 1.1216) | Bhattacharyya Overlap: 0.0301
+class-wise minimum distance: [6.4866, 7.3931, 5.1234, 5.4561, 5.1234, 5.4561, 6.5033, 6.5655, 6.4866, 7.3931]
+min_gap: 5.1234
+max_gap: 7.3931
+Server loss: 4.9472
+-------------------------------------------------- 127.23123502731323
+
+-------------Round number: 92-------------
+
+Evaluate models
+Averaged Train Loss: 0.0250
+Averaged Test Accurancy: 0.6963
+Averaged Test AUC: 0.9380
+Std Test Accurancy: 0.0753
+Std Test AUC: 0.0211
+Prototype Margin: 15.9718 (Norm: 1.1345) | Bhattacharyya Overlap: 0.0297
+class-wise minimum distance: [6.4837, 7.4038, 5.1253, 5.4592, 5.1253, 5.4592, 6.507, 6.5841, 6.4837, 7.4038]
+min_gap: 5.1253
+max_gap: 7.4038
+Server loss: 3.9589
+-------------------------------------------------- 121.93310594558716
+
+-------------Round number: 93-------------
+
+Evaluate models
+Averaged Train Loss: 0.0251
+Averaged Test Accurancy: 0.6822
+Averaged Test AUC: 0.9306
+Std Test Accurancy: 0.0818
+Std Test AUC: 0.0254
+Prototype Margin: 15.8906 (Norm: 1.1246) | Bhattacharyya Overlap: 0.0293
+class-wise minimum distance: [6.4785, 7.4081, 5.1304, 5.4602, 5.1304, 5.4602, 6.5015, 6.6054, 6.4785, 7.4081]
+min_gap: 5.1304
+max_gap: 7.4081
+Server loss: 4.2909
+-------------------------------------------------- 153.51998019218445
+
+-------------Round number: 94-------------
+
+Evaluate models
+Averaged Train Loss: 0.0249
+Averaged Test Accurancy: 0.6941
+Averaged Test AUC: 0.9384
+Std Test Accurancy: 0.0723
+Std Test AUC: 0.0202
+Prototype Margin: 16.2217 (Norm: 1.1428) | Bhattacharyya Overlap: 0.0290
+class-wise minimum distance: [6.4896, 7.4069, 5.1383, 5.4705, 5.1383, 5.4705, 6.5118, 6.5908, 6.4896, 7.4069]
+min_gap: 5.1383
+max_gap: 7.4069
+Server loss: 4.7255
+-------------------------------------------------- 144.92173314094543
+
+-------------Round number: 95-------------
+
+Evaluate models
+Averaged Train Loss: 0.0246
+Averaged Test Accurancy: 0.6927
+Averaged Test AUC: 0.9376
+Std Test Accurancy: 0.0754
+Std Test AUC: 0.0217
+Prototype Margin: 16.0332 (Norm: 1.1387) | Bhattacharyya Overlap: 0.0284
+class-wise minimum distance: [6.49, 7.4043, 5.1364, 5.4599, 5.1364, 5.4599, 6.5017, 6.5942, 6.49, 7.4043]
+min_gap: 5.1364
+max_gap: 7.4043
+Server loss: 2.8880
+-------------------------------------------------- 154.30288696289062
+
+-------------Round number: 96-------------
+
+Evaluate models
+Averaged Train Loss: 0.0242
+Averaged Test Accurancy: 0.6952
+Averaged Test AUC: 0.9389
+Std Test Accurancy: 0.0729
+Std Test AUC: 0.0191
+Prototype Margin: 15.8335 (Norm: 1.1304) | Bhattacharyya Overlap: 0.0282
+class-wise minimum distance: [6.4901, 7.4002, 5.1367, 5.4629, 5.1367, 5.4629, 6.5035, 6.5724, 6.4901, 7.4002]
+min_gap: 5.1367
+max_gap: 7.4002
+Server loss: 4.5454
+-------------------------------------------------- 155.1419141292572
+
+-------------Round number: 97-------------
+
+Evaluate models
+Averaged Train Loss: 0.0242
+Averaged Test Accurancy: 0.6886
+Averaged Test AUC: 0.9353
+Std Test Accurancy: 0.0754
+Std Test AUC: 0.0212
+Prototype Margin: 15.8982 (Norm: 1.1321) | Bhattacharyya Overlap: 0.0277
+class-wise minimum distance: [6.4847, 7.3977, 5.1395, 5.4626, 5.1395, 5.4626, 6.5021, 6.5804, 6.4847, 7.3977]
+min_gap: 5.1395
+max_gap: 7.3977
+Server loss: 3.9145
+-------------------------------------------------- 153.7025351524353
+
+-------------Round number: 98-------------
+
+Evaluate models
+Averaged Train Loss: 0.0239
+Averaged Test Accurancy: 0.6951
+Averaged Test AUC: 0.9377
+Std Test Accurancy: 0.0718
+Std Test AUC: 0.0200
+Prototype Margin: 15.9392 (Norm: 1.1379) | Bhattacharyya Overlap: 0.0273
+class-wise minimum distance: [6.4878, 7.3972, 5.1402, 5.4612, 5.1402, 5.4612, 6.4987, 6.5671, 6.4878, 7.3972]
+min_gap: 5.1402
+max_gap: 7.3972
+Server loss: 4.6834
+-------------------------------------------------- 153.36172199249268
+
+-------------Round number: 99-------------
+
+Evaluate models
+Averaged Train Loss: 0.0237
+Averaged Test Accurancy: 0.6946
+Averaged Test AUC: 0.9371
+Std Test Accurancy: 0.0751
+Std Test AUC: 0.0205
+Prototype Margin: 15.7821 (Norm: 1.1307) | Bhattacharyya Overlap: 0.0269
+class-wise minimum distance: [6.4823, 7.3889, 5.1382, 5.4629, 5.1382, 5.4629, 6.5043, 6.5771, 6.4823, 7.3889]
+min_gap: 5.1382
+max_gap: 7.3889
+Server loss: 5.1840
+-------------------------------------------------- 154.04569911956787
+
+-------------Round number: 100-------------
+
+Evaluate models
+Averaged Train Loss: 0.0236
+Averaged Test Accurancy: 0.6898
+Averaged Test AUC: 0.9342
+Std Test Accurancy: 0.0759
+Std Test AUC: 0.0229
+Prototype Margin: 15.7519 (Norm: 1.1255) | Bhattacharyya Overlap: 0.0266
+class-wise minimum distance: [6.4922, 7.3987, 5.1383, 5.4622, 5.1383, 5.4622, 6.5044, 6.5931, 6.4922, 7.3987]
+min_gap: 5.1383
+max_gap: 7.3987
+Server loss: 2.7650
+-------------------------------------------------- 153.92971897125244
+
+Best accuracy.
+0.6962953091684435
+117.76310110807418
+File path: ../results/Cifar10_FedTGP_test_0.h5
+wandb: uploading artifact run-hfx27zds-summaryclients_accuracy_table-fyPoGA; updating run metadata
+wandb: uploading artifact run-hfx27zds-summaryclients_accuracy_table-fyPoGA
+wandb: uploading config.yaml; uploading media/table/summary/clients_accuracy_table_100_acf0b3e0a8180a1e220d.table.json; uploading output.log; uploading wandb-summary.json
+wandb: uploading media/table/summary/clients_accuracy_table_100_acf0b3e0a8180a1e220d.table.json; uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 100-100, summary
+wandb: 
+wandb: Run history:
+wandb:              charts/best_acc ▁
+wandb:    charts/bhattacharyya_dist ▃▃▄▃▃▂▂▁▁▁▁▂▂▂▃▃▃▃▄▄▅▅▅▅▅▆▆▆▆▇▇▇▇▇▇█████
+wandb: charts/bhattacharyya_overlap ▆▆▆▆▅▆▆▇▇▇███▇▇▆▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁
+wandb:       charts/mean_round_time ▁
+wandb:      charts/prototype_margin ▁▄▄▄▄▆▆▆▇▇▇████████▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▆
+wandb: charts/prototype_margin_norm ▁▂▃▄▅▆▇▆▇▇▇▇▇▇▇██▇██▇▇██████████████████
+wandb:              charts/test_acc ▁▆▆▆▇▇▇▇▇▇▇▇▇███████████████████████████
+wandb:          charts/test_acc_std ▅█▂▄▂▃▃▁▁▂▃▁▁▁▂▂▂▁▂▁▂▂▂▂▂▂▁▂▁▂▂▁▁▂▁▂▁▁▁▁
+wandb:              charts/test_auc ▁▄▄▄▅▅▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇█▇███▇█▇██████████
+wandb:          charts/test_auc_std █▄▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                          +81 ...
+wandb: 
+wandb: Run summary:
+wandb:              charts/best_acc 0.6963
+wandb:    charts/bhattacharyya_dist 4.17759
+wandb: charts/bhattacharyya_overlap 0.02662
+wandb:       charts/mean_round_time 117.7631
+wandb:      charts/prototype_margin 15.75192
+wandb: charts/prototype_margin_norm 1.12552
+wandb:              charts/test_acc 0.68983
+wandb:          charts/test_acc_std 0.07595
+wandb:              charts/test_auc 0.93425
+wandb:          charts/test_auc_std 0.02289
+wandb:                          +81 ...
+wandb: 
+wandb: 🚀 View run FedTGP_Cifar10_cnn_nc20_alpha0.5 at: https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD/runs/hfx27zds
+wandb: ⭐️ View project at: https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD
+wandb: Synced 5 W&B file(s), 1 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20261031_221547-hfx27zds/logs
+
+Average time cost: 11892.94s.
+Length:  101
+std for best accurancy: 0.0
+mean for best accurancy: 0.6962953091684435
+All done!
+
+Storage on cpu
+-------------------------------------------------------------------------------
+Total Tensors: 273920 	Used Memory: 1.04M
+-------------------------------------------------------------------------------
+
+Storage on mps:0
+-------------------------------------------------------------------------------
+Total Tensors: 56060664 	Used Memory: 144.85M
+The allocated memory on mps:0: 181.74M
+-------------------------------------------------------------------------------

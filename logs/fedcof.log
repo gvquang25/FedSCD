@@ -1,0 +1,1219 @@
+
+============= Running time: 0th (Seed: 407924) =============
+Creating server and clients ...
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /Users/phucvu/.netrc.
+wandb: Currently logged in as: vudinhphuc26 (gvquang25-hanoi-university-of-science-and-technology) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 2nmh2xce
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in /Users/phucvu/Library/CloudStorage/GoogleDrive-vudinhphuc269@gmail.com/My Drive/2. Study/6. WicomLab/Federated Learning/FedSCD/system/wandb/run-20261101_041648-2nmh2xce
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run FedCOF_Cifar10_cnn_nc20_alpha0.5
+wandb: ⭐️ View project at https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD
+wandb: 🚀 View run at https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD/runs/2nmh2xce
+
+Join ratio / total clients: 1.0 / 20
+Finished creating FedCOF server and clients.
+
+==============================================================================
+                    FEDERATED LEARNING EXPERIMENT SUMMARY                     
+==============================================================================
+ [1]  CONFIGURATION
+  * Algorithm         : FedCOF
+  * Dataset          : Cifar10 (10 classes)
+  * Backbone      : cnn
+  * Device    : mps
+  * Current Run       : Run 1/1 (Time index: 0)
+  * Random Seed       : 407924
+  * Shuffle Train     : Disabled
+------------------------------------------------------------------------------
+ [2] NON-IID SETTINGS
+  * Distribution: Non-IID (Dirichlet partition)
+  * Dirichlet Alpha  : 0.5
+  * Balance     : False
+  * Number Client (-nc)           : 20
+  * join_ratio    : 1.0 (~20 clients/round)
+  * Random Join Ratio              : False
+------------------------------------------------------------------------------
+ [3] HYPERPARAMETERS
+  * Global Rounds (-gr)           : 100
+  * Local Epochs (-ls)            : 1
+  * Local Batch Size (-lbs)        : 32
+  * Head Learning Rate (-lr)       : 0.01 (Fixed)
+  * Encoder Learning Rate          : Inherited lr=0.01 (Separate Optimizer)
+  * Prototype Loss Weight (-lp)    : 1.0 (InfoNCE + MSE)
+  * InfoNCE Temperature (-nct)    : 0.1
+  * Proto Warmup Rounds            : 1 round(s)
+  * Regularization Weight (-lam)   : 0.1
+  * Evaluation Frequency (-eg)     : Every 1 round(s)
+  * WandB Logging (-log)           : Enabled
+==============================================================================
+
+
+-------------Round number: 0-------------
+
+Evaluate models
+Averaged Train Loss: 2.3035
+Averaged Test Accurancy: 0.1273
+Averaged Test AUC: 0.4994
+Std Test Accurancy: 0.1327
+Std Test AUC: 0.1526
+Prototype Margin: 0.1201 (Norm: 0.1085) | Bhattacharyya Overlap: 0.6278
+-------------------------------------------------- 65.75239706039429
+
+-------------Round number: 1-------------
+
+Evaluate models
+Averaged Train Loss: 1.5462
+Averaged Test Accurancy: 0.4382
+Averaged Test AUC: 0.8518
+Std Test Accurancy: 0.1274
+Std Test AUC: 0.0494
+Prototype Margin: 2.4022 (Norm: 0.4227) | Bhattacharyya Overlap: 0.0933
+-------------------------------------------------- 56.113162994384766
+
+-------------Round number: 2-------------
+
+Evaluate models
+Averaged Train Loss: 1.3788
+Averaged Test Accurancy: 0.5008
+Averaged Test AUC: 0.8847
+Std Test Accurancy: 0.1112
+Std Test AUC: 0.0379
+Prototype Margin: 2.5944 (Norm: 0.2791) | Bhattacharyya Overlap: 0.1990
+-------------------------------------------------- 64.80221390724182
+
+-------------Round number: 3-------------
+
+Evaluate models
+Averaged Train Loss: 1.3494
+Averaged Test Accurancy: 0.5119
+Averaged Test AUC: 0.8891
+Std Test Accurancy: 0.1130
+Std Test AUC: 0.0375
+Prototype Margin: 2.5438 (Norm: 0.2318) | Bhattacharyya Overlap: 0.2391
+-------------------------------------------------- 56.21435809135437
+
+-------------Round number: 4-------------
+
+Evaluate models
+Averaged Train Loss: 1.3085
+Averaged Test Accurancy: 0.5289
+Averaged Test AUC: 0.8963
+Std Test Accurancy: 0.1096
+Std Test AUC: 0.0357
+Prototype Margin: 2.6099 (Norm: 0.2475) | Bhattacharyya Overlap: 0.2098
+-------------------------------------------------- 63.56281805038452
+
+-------------Round number: 5-------------
+
+Evaluate models
+Averaged Train Loss: 1.2956
+Averaged Test Accurancy: 0.5314
+Averaged Test AUC: 0.8982
+Std Test Accurancy: 0.1115
+Std Test AUC: 0.0351
+Prototype Margin: 2.4794 (Norm: 0.2202) | Bhattacharyya Overlap: 0.2179
+-------------------------------------------------- 55.35241889953613
+
+-------------Round number: 6-------------
+
+Evaluate models
+Averaged Train Loss: 1.2582
+Averaged Test Accurancy: 0.5461
+Averaged Test AUC: 0.9043
+Std Test Accurancy: 0.1058
+Std Test AUC: 0.0330
+Prototype Margin: 2.5538 (Norm: 0.2266) | Bhattacharyya Overlap: 0.1998
+-------------------------------------------------- 63.625213861465454
+
+-------------Round number: 7-------------
+
+Evaluate models
+Averaged Train Loss: 1.2426
+Averaged Test Accurancy: 0.5505
+Averaged Test AUC: 0.9066
+Std Test Accurancy: 0.1071
+Std Test AUC: 0.0324
+Prototype Margin: 2.4788 (Norm: 0.2102) | Bhattacharyya Overlap: 0.2020
+-------------------------------------------------- 55.24512505531311
+
+-------------Round number: 8-------------
+
+Evaluate models
+Averaged Train Loss: 1.2039
+Averaged Test Accurancy: 0.5648
+Averaged Test AUC: 0.9126
+Std Test Accurancy: 0.1035
+Std Test AUC: 0.0302
+Prototype Margin: 2.5395 (Norm: 0.2114) | Bhattacharyya Overlap: 0.1891
+-------------------------------------------------- 62.87373089790344
+
+-------------Round number: 9-------------
+
+Evaluate models
+Averaged Train Loss: 1.1871
+Averaged Test Accurancy: 0.5704
+Averaged Test AUC: 0.9151
+Std Test Accurancy: 0.1012
+Std Test AUC: 0.0292
+Prototype Margin: 2.5130 (Norm: 0.2008) | Bhattacharyya Overlap: 0.1902
+-------------------------------------------------- 53.89340281486511
+
+-------------Round number: 10-------------
+
+Evaluate models
+Averaged Train Loss: 1.1527
+Averaged Test Accurancy: 0.5840
+Averaged Test AUC: 0.9201
+Std Test Accurancy: 0.0997
+Std Test AUC: 0.0278
+Prototype Margin: 2.6039 (Norm: 0.2051) | Bhattacharyya Overlap: 0.1792
+-------------------------------------------------- 49.1837739944458
+
+-------------Round number: 11-------------
+
+Evaluate models
+Averaged Train Loss: 1.1408
+Averaged Test Accurancy: 0.5852
+Averaged Test AUC: 0.9219
+Std Test Accurancy: 0.0978
+Std Test AUC: 0.0270
+Prototype Margin: 2.5795 (Norm: 0.1984) | Bhattacharyya Overlap: 0.1801
+-------------------------------------------------- 50.38833999633789
+
+-------------Round number: 12-------------
+
+Evaluate models
+Averaged Train Loss: 1.1127
+Averaged Test Accurancy: 0.5940
+Averaged Test AUC: 0.9254
+Std Test Accurancy: 0.0965
+Std Test AUC: 0.0262
+Prototype Margin: 2.6758 (Norm: 0.2027) | Bhattacharyya Overlap: 0.1702
+-------------------------------------------------- 51.06654405593872
+
+-------------Round number: 13-------------
+
+Evaluate models
+Averaged Train Loss: 1.1043
+Averaged Test Accurancy: 0.5979
+Averaged Test AUC: 0.9267
+Std Test Accurancy: 0.0961
+Std Test AUC: 0.0257
+Prototype Margin: 2.6654 (Norm: 0.1997) | Bhattacharyya Overlap: 0.1736
+-------------------------------------------------- 54.16618895530701
+
+-------------Round number: 14-------------
+
+Evaluate models
+Averaged Train Loss: 1.0823
+Averaged Test Accurancy: 0.6043
+Averaged Test AUC: 0.9293
+Std Test Accurancy: 0.0955
+Std Test AUC: 0.0252
+Prototype Margin: 2.7316 (Norm: 0.2010) | Bhattacharyya Overlap: 0.1670
+-------------------------------------------------- 65.26248908042908
+
+-------------Round number: 15-------------
+
+Evaluate models
+Averaged Train Loss: 1.0724
+Averaged Test Accurancy: 0.6099
+Averaged Test AUC: 0.9305
+Std Test Accurancy: 0.0935
+Std Test AUC: 0.0248
+Prototype Margin: 2.7707 (Norm: 0.2013) | Bhattacharyya Overlap: 0.1657
+-------------------------------------------------- 54.188141107559204
+
+-------------Round number: 16-------------
+
+Evaluate models
+Averaged Train Loss: 1.0583
+Averaged Test Accurancy: 0.6139
+Averaged Test AUC: 0.9321
+Std Test Accurancy: 0.0943
+Std Test AUC: 0.0245
+Prototype Margin: 2.8244 (Norm: 0.2037) | Bhattacharyya Overlap: 0.1620
+-------------------------------------------------- 65.10259008407593
+
+-------------Round number: 17-------------
+
+Evaluate models
+Averaged Train Loss: 1.0490
+Averaged Test Accurancy: 0.6179
+Averaged Test AUC: 0.9333
+Std Test Accurancy: 0.0934
+Std Test AUC: 0.0240
+Prototype Margin: 2.8908 (Norm: 0.2052) | Bhattacharyya Overlap: 0.1591
+-------------------------------------------------- 54.3649959564209
+
+-------------Round number: 18-------------
+
+Evaluate models
+Averaged Train Loss: 1.0339
+Averaged Test Accurancy: 0.6209
+Averaged Test AUC: 0.9350
+Std Test Accurancy: 0.0907
+Std Test AUC: 0.0237
+Prototype Margin: 2.9469 (Norm: 0.2072) | Bhattacharyya Overlap: 0.1572
+-------------------------------------------------- 65.09249377250671
+
+-------------Round number: 19-------------
+
+Evaluate models
+Averaged Train Loss: 1.0303
+Averaged Test Accurancy: 0.6241
+Averaged Test AUC: 0.9354
+Std Test Accurancy: 0.0933
+Std Test AUC: 0.0235
+Prototype Margin: 2.9719 (Norm: 0.2067) | Bhattacharyya Overlap: 0.1547
+-------------------------------------------------- 53.43744111061096
+
+-------------Round number: 20-------------
+
+Evaluate models
+Averaged Train Loss: 1.0173
+Averaged Test Accurancy: 0.6270
+Averaged Test AUC: 0.9370
+Std Test Accurancy: 0.0910
+Std Test AUC: 0.0232
+Prototype Margin: 3.0337 (Norm: 0.2086) | Bhattacharyya Overlap: 0.1536
+-------------------------------------------------- 66.20436596870422
+
+-------------Round number: 21-------------
+
+Evaluate models
+Averaged Train Loss: 1.0111
+Averaged Test Accurancy: 0.6303
+Averaged Test AUC: 0.9376
+Std Test Accurancy: 0.0924
+Std Test AUC: 0.0231
+Prototype Margin: 3.0812 (Norm: 0.2114) | Bhattacharyya Overlap: 0.1512
+-------------------------------------------------- 55.54468131065369
+
+-------------Round number: 22-------------
+
+Evaluate models
+Averaged Train Loss: 1.0013
+Averaged Test Accurancy: 0.6320
+Averaged Test AUC: 0.9387
+Std Test Accurancy: 0.0904
+Std Test AUC: 0.0227
+Prototype Margin: 3.1274 (Norm: 0.2127) | Bhattacharyya Overlap: 0.1498
+-------------------------------------------------- 39.906262159347534
+
+-------------Round number: 23-------------
+
+Evaluate models
+Averaged Train Loss: 0.9982
+Averaged Test Accurancy: 0.6349
+Averaged Test AUC: 0.9390
+Std Test Accurancy: 0.0914
+Std Test AUC: 0.0227
+Prototype Margin: 3.1573 (Norm: 0.2139) | Bhattacharyya Overlap: 0.1483
+-------------------------------------------------- 49.75913691520691
+
+-------------Round number: 24-------------
+
+Evaluate models
+Averaged Train Loss: 0.9884
+Averaged Test Accurancy: 0.6357
+Averaged Test AUC: 0.9400
+Std Test Accurancy: 0.0911
+Std Test AUC: 0.0225
+Prototype Margin: 3.2361 (Norm: 0.2181) | Bhattacharyya Overlap: 0.1451
+-------------------------------------------------- 50.14985799789429
+
+-------------Round number: 25-------------
+
+Evaluate models
+Averaged Train Loss: 0.9854
+Averaged Test Accurancy: 0.6385
+Averaged Test AUC: 0.9403
+Std Test Accurancy: 0.0918
+Std Test AUC: 0.0224
+Prototype Margin: 3.2371 (Norm: 0.2170) | Bhattacharyya Overlap: 0.1466
+-------------------------------------------------- 50.971118211746216
+
+-------------Round number: 26-------------
+
+Evaluate models
+Averaged Train Loss: 0.9772
+Averaged Test Accurancy: 0.6389
+Averaged Test AUC: 0.9412
+Std Test Accurancy: 0.0911
+Std Test AUC: 0.0222
+Prototype Margin: 3.3122 (Norm: 0.2208) | Bhattacharyya Overlap: 0.1413
+-------------------------------------------------- 50.65942597389221
+
+-------------Round number: 27-------------
+
+Evaluate models
+Averaged Train Loss: 0.9758
+Averaged Test Accurancy: 0.6405
+Averaged Test AUC: 0.9413
+Std Test Accurancy: 0.0914
+Std Test AUC: 0.0222
+Prototype Margin: 3.3177 (Norm: 0.2194) | Bhattacharyya Overlap: 0.1425
+-------------------------------------------------- 51.43436098098755
+
+-------------Round number: 28-------------
+
+Evaluate models
+Averaged Train Loss: 0.9669
+Averaged Test Accurancy: 0.6425
+Averaged Test AUC: 0.9422
+Std Test Accurancy: 0.0904
+Std Test AUC: 0.0219
+Prototype Margin: 3.3766 (Norm: 0.2231) | Bhattacharyya Overlap: 0.1397
+-------------------------------------------------- 51.00894498825073
+
+-------------Round number: 29-------------
+
+Evaluate models
+Averaged Train Loss: 0.9655
+Averaged Test Accurancy: 0.6443
+Averaged Test AUC: 0.9423
+Std Test Accurancy: 0.0919
+Std Test AUC: 0.0220
+Prototype Margin: 3.3851 (Norm: 0.2226) | Bhattacharyya Overlap: 0.1403
+-------------------------------------------------- 50.777015924453735
+
+-------------Round number: 30-------------
+
+Evaluate models
+Averaged Train Loss: 0.9566
+Averaged Test Accurancy: 0.6467
+Averaged Test AUC: 0.9433
+Std Test Accurancy: 0.0907
+Std Test AUC: 0.0217
+Prototype Margin: 3.4360 (Norm: 0.2255) | Bhattacharyya Overlap: 0.1372
+-------------------------------------------------- 51.13232707977295
+
+-------------Round number: 31-------------
+
+Evaluate models
+Averaged Train Loss: 0.9555
+Averaged Test Accurancy: 0.6473
+Averaged Test AUC: 0.9433
+Std Test Accurancy: 0.0914
+Std Test AUC: 0.0217
+Prototype Margin: 3.4643 (Norm: 0.2266) | Bhattacharyya Overlap: 0.1372
+-------------------------------------------------- 50.92661905288696
+
+-------------Round number: 32-------------
+
+Evaluate models
+Averaged Train Loss: 0.9485
+Averaged Test Accurancy: 0.6495
+Averaged Test AUC: 0.9441
+Std Test Accurancy: 0.0903
+Std Test AUC: 0.0213
+Prototype Margin: 3.4732 (Norm: 0.2268) | Bhattacharyya Overlap: 0.1350
+-------------------------------------------------- 50.783730030059814
+
+-------------Round number: 33-------------
+
+Evaluate models
+Averaged Train Loss: 0.9465
+Averaged Test Accurancy: 0.6484
+Averaged Test AUC: 0.9441
+Std Test Accurancy: 0.0906
+Std Test AUC: 0.0215
+Prototype Margin: 3.5486 (Norm: 0.2311) | Bhattacharyya Overlap: 0.1342
+-------------------------------------------------- 50.91848707199097
+
+-------------Round number: 34-------------
+
+Evaluate models
+Averaged Train Loss: 0.9420
+Averaged Test Accurancy: 0.6527
+Averaged Test AUC: 0.9448
+Std Test Accurancy: 0.0894
+Std Test AUC: 0.0211
+Prototype Margin: 3.5133 (Norm: 0.2275) | Bhattacharyya Overlap: 0.1332
+-------------------------------------------------- 51.88258194923401
+
+-------------Round number: 35-------------
+
+Evaluate models
+Averaged Train Loss: 0.9359
+Averaged Test Accurancy: 0.6510
+Averaged Test AUC: 0.9451
+Std Test Accurancy: 0.0899
+Std Test AUC: 0.0212
+Prototype Margin: 3.6075 (Norm: 0.2343) | Bhattacharyya Overlap: 0.1317
+-------------------------------------------------- 50.967180013656616
+
+-------------Round number: 36-------------
+
+Evaluate models
+Averaged Train Loss: 0.9343
+Averaged Test Accurancy: 0.6544
+Averaged Test AUC: 0.9456
+Std Test Accurancy: 0.0897
+Std Test AUC: 0.0209
+Prototype Margin: 3.5640 (Norm: 0.2292) | Bhattacharyya Overlap: 0.1309
+-------------------------------------------------- 50.56444525718689
+
+-------------Round number: 37-------------
+
+Evaluate models
+Averaged Train Loss: 0.9279
+Averaged Test Accurancy: 0.6532
+Averaged Test AUC: 0.9459
+Std Test Accurancy: 0.0889
+Std Test AUC: 0.0209
+Prototype Margin: 3.6551 (Norm: 0.2346) | Bhattacharyya Overlap: 0.1303
+-------------------------------------------------- 51.15728712081909
+
+-------------Round number: 38-------------
+
+Evaluate models
+Averaged Train Loss: 0.9275
+Averaged Test Accurancy: 0.6557
+Averaged Test AUC: 0.9461
+Std Test Accurancy: 0.0900
+Std Test AUC: 0.0209
+Prototype Margin: 3.6356 (Norm: 0.2320) | Bhattacharyya Overlap: 0.1297
+-------------------------------------------------- 51.745280027389526
+
+-------------Round number: 39-------------
+
+Evaluate models
+Averaged Train Loss: 0.9211
+Averaged Test Accurancy: 0.6559
+Averaged Test AUC: 0.9466
+Std Test Accurancy: 0.0886
+Std Test AUC: 0.0207
+Prototype Margin: 3.7019 (Norm: 0.2362) | Bhattacharyya Overlap: 0.1296
+-------------------------------------------------- 51.198225021362305
+
+-------------Round number: 40-------------
+
+Evaluate models
+Averaged Train Loss: 0.9193
+Averaged Test Accurancy: 0.6576
+Averaged Test AUC: 0.9468
+Std Test Accurancy: 0.0906
+Std Test AUC: 0.0207
+Prototype Margin: 3.6892 (Norm: 0.2350) | Bhattacharyya Overlap: 0.1276
+-------------------------------------------------- 51.69105815887451
+
+-------------Round number: 41-------------
+
+Evaluate models
+Averaged Train Loss: 0.9133
+Averaged Test Accurancy: 0.6591
+Averaged Test AUC: 0.9473
+Std Test Accurancy: 0.0891
+Std Test AUC: 0.0205
+Prototype Margin: 3.7320 (Norm: 0.2385) | Bhattacharyya Overlap: 0.1276
+-------------------------------------------------- 43.249449014663696
+
+-------------Round number: 42-------------
+
+Evaluate models
+Averaged Train Loss: 0.9111
+Averaged Test Accurancy: 0.6604
+Averaged Test AUC: 0.9476
+Std Test Accurancy: 0.0902
+Std Test AUC: 0.0204
+Prototype Margin: 3.7111 (Norm: 0.2359) | Bhattacharyya Overlap: 0.1274
+-------------------------------------------------- 43.72823190689087
+
+-------------Round number: 43-------------
+
+Evaluate models
+Averaged Train Loss: 0.9084
+Averaged Test Accurancy: 0.6600
+Averaged Test AUC: 0.9477
+Std Test Accurancy: 0.0873
+Std Test AUC: 0.0204
+Prototype Margin: 3.7842 (Norm: 0.2406) | Bhattacharyya Overlap: 0.1272
+-------------------------------------------------- 42.34386205673218
+
+-------------Round number: 44-------------
+
+Evaluate models
+Averaged Train Loss: 0.9045
+Averaged Test Accurancy: 0.6625
+Averaged Test AUC: 0.9481
+Std Test Accurancy: 0.0889
+Std Test AUC: 0.0203
+Prototype Margin: 3.7591 (Norm: 0.2379) | Bhattacharyya Overlap: 0.1267
+-------------------------------------------------- 43.43273115158081
+
+-------------Round number: 45-------------
+
+Evaluate models
+Averaged Train Loss: 0.9006
+Averaged Test Accurancy: 0.6637
+Averaged Test AUC: 0.9485
+Std Test Accurancy: 0.0862
+Std Test AUC: 0.0201
+Prototype Margin: 3.8611 (Norm: 0.2441) | Bhattacharyya Overlap: 0.1257
+-------------------------------------------------- 50.612354040145874
+
+-------------Round number: 46-------------
+
+Evaluate models
+Averaged Train Loss: 0.8974
+Averaged Test Accurancy: 0.6629
+Averaged Test AUC: 0.9487
+Std Test Accurancy: 0.0894
+Std Test AUC: 0.0201
+Prototype Margin: 3.8236 (Norm: 0.2406) | Bhattacharyya Overlap: 0.1257
+-------------------------------------------------- 51.682883977890015
+
+-------------Round number: 47-------------
+
+Evaluate models
+Averaged Train Loss: 0.8958
+Averaged Test Accurancy: 0.6657
+Averaged Test AUC: 0.9488
+Std Test Accurancy: 0.0859
+Std Test AUC: 0.0201
+Prototype Margin: 3.8916 (Norm: 0.2448) | Bhattacharyya Overlap: 0.1253
+-------------------------------------------------- 50.58103084564209
+
+-------------Round number: 48-------------
+
+Evaluate models
+Averaged Train Loss: 0.8906
+Averaged Test Accurancy: 0.6658
+Averaged Test AUC: 0.9493
+Std Test Accurancy: 0.0881
+Std Test AUC: 0.0199
+Prototype Margin: 3.8656 (Norm: 0.2426) | Bhattacharyya Overlap: 0.1253
+-------------------------------------------------- 50.98051404953003
+
+-------------Round number: 49-------------
+
+Evaluate models
+Averaged Train Loss: 0.8900
+Averaged Test Accurancy: 0.6669
+Averaged Test AUC: 0.9493
+Std Test Accurancy: 0.0866
+Std Test AUC: 0.0199
+Prototype Margin: 3.9255 (Norm: 0.2454) | Bhattacharyya Overlap: 0.1247
+-------------------------------------------------- 51.13735508918762
+
+-------------Round number: 50-------------
+
+Evaluate models
+Averaged Train Loss: 0.8844
+Averaged Test Accurancy: 0.6671
+Averaged Test AUC: 0.9498
+Std Test Accurancy: 0.0872
+Std Test AUC: 0.0198
+Prototype Margin: 3.9170 (Norm: 0.2445) | Bhattacharyya Overlap: 0.1238
+-------------------------------------------------- 51.516716957092285
+
+-------------Round number: 51-------------
+
+Evaluate models
+Averaged Train Loss: 0.8842
+Averaged Test Accurancy: 0.6683
+Averaged Test AUC: 0.9498
+Std Test Accurancy: 0.0863
+Std Test AUC: 0.0197
+Prototype Margin: 3.9535 (Norm: 0.2461) | Bhattacharyya Overlap: 0.1255
+-------------------------------------------------- 51.45227289199829
+
+-------------Round number: 52-------------
+
+Evaluate models
+Averaged Train Loss: 0.8784
+Averaged Test Accurancy: 0.6687
+Averaged Test AUC: 0.9503
+Std Test Accurancy: 0.0875
+Std Test AUC: 0.0197
+Prototype Margin: 3.9526 (Norm: 0.2459) | Bhattacharyya Overlap: 0.1240
+-------------------------------------------------- 51.46570706367493
+
+-------------Round number: 53-------------
+
+Evaluate models
+Averaged Train Loss: 0.8780
+Averaged Test Accurancy: 0.6694
+Averaged Test AUC: 0.9504
+Std Test Accurancy: 0.0855
+Std Test AUC: 0.0195
+Prototype Margin: 3.9785 (Norm: 0.2462) | Bhattacharyya Overlap: 0.1247
+-------------------------------------------------- 50.91938924789429
+
+-------------Round number: 54-------------
+
+Evaluate models
+Averaged Train Loss: 0.8721
+Averaged Test Accurancy: 0.6717
+Averaged Test AUC: 0.9509
+Std Test Accurancy: 0.0857
+Std Test AUC: 0.0195
+Prototype Margin: 3.9882 (Norm: 0.2469) | Bhattacharyya Overlap: 0.1233
+-------------------------------------------------- 50.99162483215332
+
+-------------Round number: 55-------------
+
+Evaluate models
+Averaged Train Loss: 0.8722
+Averaged Test Accurancy: 0.6715
+Averaged Test AUC: 0.9509
+Std Test Accurancy: 0.0838
+Std Test AUC: 0.0193
+Prototype Margin: 4.0310 (Norm: 0.2494) | Bhattacharyya Overlap: 0.1241
+-------------------------------------------------- 51.133471965789795
+
+-------------Round number: 56-------------
+
+Evaluate models
+Averaged Train Loss: 0.8656
+Averaged Test Accurancy: 0.6744
+Averaged Test AUC: 0.9514
+Std Test Accurancy: 0.0864
+Std Test AUC: 0.0193
+Prototype Margin: 4.0184 (Norm: 0.2488) | Bhattacharyya Overlap: 0.1226
+-------------------------------------------------- 50.961246967315674
+
+-------------Round number: 57-------------
+
+Evaluate models
+Averaged Train Loss: 0.8655
+Averaged Test Accurancy: 0.6734
+Averaged Test AUC: 0.9515
+Std Test Accurancy: 0.0849
+Std Test AUC: 0.0190
+Prototype Margin: 4.0529 (Norm: 0.2505) | Bhattacharyya Overlap: 0.1231
+-------------------------------------------------- 51.61561179161072
+
+-------------Round number: 58-------------
+
+Evaluate models
+Averaged Train Loss: 0.8602
+Averaged Test Accurancy: 0.6768
+Averaged Test AUC: 0.9518
+Std Test Accurancy: 0.0848
+Std Test AUC: 0.0192
+Prototype Margin: 4.0600 (Norm: 0.2509) | Bhattacharyya Overlap: 0.1219
+-------------------------------------------------- 50.68278908729553
+
+-------------Round number: 59-------------
+
+Evaluate models
+Averaged Train Loss: 0.8599
+Averaged Test Accurancy: 0.6756
+Averaged Test AUC: 0.9521
+Std Test Accurancy: 0.0840
+Std Test AUC: 0.0188
+Prototype Margin: 4.0832 (Norm: 0.2506) | Bhattacharyya Overlap: 0.1224
+-------------------------------------------------- 42.398195028305054
+
+-------------Round number: 60-------------
+
+Evaluate models
+Averaged Train Loss: 0.8558
+Averaged Test Accurancy: 0.6764
+Averaged Test AUC: 0.9522
+Std Test Accurancy: 0.0849
+Std Test AUC: 0.0190
+Prototype Margin: 4.0918 (Norm: 0.2516) | Bhattacharyya Overlap: 0.1214
+-------------------------------------------------- 49.01197385787964
+
+-------------Round number: 61-------------
+
+Evaluate models
+Averaged Train Loss: 0.8540
+Averaged Test Accurancy: 0.6772
+Averaged Test AUC: 0.9525
+Std Test Accurancy: 0.0837
+Std Test AUC: 0.0187
+Prototype Margin: 4.1226 (Norm: 0.2533) | Bhattacharyya Overlap: 0.1220
+-------------------------------------------------- 50.94365096092224
+
+-------------Round number: 62-------------
+
+Evaluate models
+Averaged Train Loss: 0.8499
+Averaged Test Accurancy: 0.6788
+Averaged Test AUC: 0.9528
+Std Test Accurancy: 0.0829
+Std Test AUC: 0.0188
+Prototype Margin: 4.1183 (Norm: 0.2530) | Bhattacharyya Overlap: 0.1211
+-------------------------------------------------- 51.1436870098114
+
+-------------Round number: 63-------------
+
+Evaluate models
+Averaged Train Loss: 0.8481
+Averaged Test Accurancy: 0.6788
+Averaged Test AUC: 0.9529
+Std Test Accurancy: 0.0827
+Std Test AUC: 0.0186
+Prototype Margin: 4.1468 (Norm: 0.2550) | Bhattacharyya Overlap: 0.1221
+-------------------------------------------------- 50.794438123703
+
+-------------Round number: 64-------------
+
+Evaluate models
+Averaged Train Loss: 0.8436
+Averaged Test Accurancy: 0.6810
+Averaged Test AUC: 0.9533
+Std Test Accurancy: 0.0825
+Std Test AUC: 0.0186
+Prototype Margin: 4.1409 (Norm: 0.2547) | Bhattacharyya Overlap: 0.1208
+-------------------------------------------------- 51.15092587471008
+
+-------------Round number: 65-------------
+
+Evaluate models
+Averaged Train Loss: 0.8429
+Averaged Test Accurancy: 0.6805
+Averaged Test AUC: 0.9534
+Std Test Accurancy: 0.0804
+Std Test AUC: 0.0184
+Prototype Margin: 4.1863 (Norm: 0.2567) | Bhattacharyya Overlap: 0.1217
+-------------------------------------------------- 52.00262093544006
+
+-------------Round number: 66-------------
+
+Evaluate models
+Averaged Train Loss: 0.8397
+Averaged Test Accurancy: 0.6822
+Averaged Test AUC: 0.9537
+Std Test Accurancy: 0.0810
+Std Test AUC: 0.0185
+Prototype Margin: 4.1526 (Norm: 0.2541) | Bhattacharyya Overlap: 0.1213
+-------------------------------------------------- 50.804771900177
+
+-------------Round number: 67-------------
+
+Evaluate models
+Averaged Train Loss: 0.8368
+Averaged Test Accurancy: 0.6824
+Averaged Test AUC: 0.9538
+Std Test Accurancy: 0.0801
+Std Test AUC: 0.0183
+Prototype Margin: 4.2405 (Norm: 0.2590) | Bhattacharyya Overlap: 0.1219
+-------------------------------------------------- 52.01645636558533
+
+-------------Round number: 68-------------
+
+Evaluate models
+Averaged Train Loss: 0.8342
+Averaged Test Accurancy: 0.6850
+Averaged Test AUC: 0.9541
+Std Test Accurancy: 0.0813
+Std Test AUC: 0.0184
+Prototype Margin: 4.1969 (Norm: 0.2561) | Bhattacharyya Overlap: 0.1203
+-------------------------------------------------- 51.51260185241699
+
+-------------Round number: 69-------------
+
+Evaluate models
+Averaged Train Loss: 0.8325
+Averaged Test Accurancy: 0.6822
+Averaged Test AUC: 0.9542
+Std Test Accurancy: 0.0791
+Std Test AUC: 0.0183
+Prototype Margin: 4.2682 (Norm: 0.2589) | Bhattacharyya Overlap: 0.1222
+-------------------------------------------------- 51.13901901245117
+
+-------------Round number: 70-------------
+
+Evaluate models
+Averaged Train Loss: 0.8281
+Averaged Test Accurancy: 0.6858
+Averaged Test AUC: 0.9546
+Std Test Accurancy: 0.0809
+Std Test AUC: 0.0181
+Prototype Margin: 4.2477 (Norm: 0.2579) | Bhattacharyya Overlap: 0.1192
+-------------------------------------------------- 51.87804079055786
+
+-------------Round number: 71-------------
+
+Evaluate models
+Averaged Train Loss: 0.8267
+Averaged Test Accurancy: 0.6848
+Averaged Test AUC: 0.9547
+Std Test Accurancy: 0.0782
+Std Test AUC: 0.0181
+Prototype Margin: 4.2737 (Norm: 0.2579) | Bhattacharyya Overlap: 0.1224
+-------------------------------------------------- 51.3756148815155
+
+-------------Round number: 72-------------
+
+Evaluate models
+Averaged Train Loss: 0.8225
+Averaged Test Accurancy: 0.6874
+Averaged Test AUC: 0.9551
+Std Test Accurancy: 0.0814
+Std Test AUC: 0.0179
+Prototype Margin: 4.3130 (Norm: 0.2610) | Bhattacharyya Overlap: 0.1178
+-------------------------------------------------- 52.621598958969116
+
+-------------Round number: 73-------------
+
+Evaluate models
+Averaged Train Loss: 0.8212
+Averaged Test Accurancy: 0.6868
+Averaged Test AUC: 0.9550
+Std Test Accurancy: 0.0785
+Std Test AUC: 0.0180
+Prototype Margin: 4.3244 (Norm: 0.2613) | Bhattacharyya Overlap: 0.1221
+-------------------------------------------------- 50.70585083961487
+
+-------------Round number: 74-------------
+
+Evaluate models
+Averaged Train Loss: 0.8168
+Averaged Test Accurancy: 0.6900
+Averaged Test AUC: 0.9556
+Std Test Accurancy: 0.0789
+Std Test AUC: 0.0177
+Prototype Margin: 4.3588 (Norm: 0.2637) | Bhattacharyya Overlap: 0.1170
+-------------------------------------------------- 50.74569511413574
+
+-------------Round number: 75-------------
+
+Evaluate models
+Averaged Train Loss: 0.8159
+Averaged Test Accurancy: 0.6883
+Averaged Test AUC: 0.9555
+Std Test Accurancy: 0.0781
+Std Test AUC: 0.0179
+Prototype Margin: 4.3522 (Norm: 0.2627) | Bhattacharyya Overlap: 0.1213
+-------------------------------------------------- 51.050013065338135
+
+-------------Round number: 76-------------
+
+Evaluate models
+Averaged Train Loss: 0.8129
+Averaged Test Accurancy: 0.6910
+Averaged Test AUC: 0.9558
+Std Test Accurancy: 0.0768
+Std Test AUC: 0.0177
+Prototype Margin: 4.4037 (Norm: 0.2646) | Bhattacharyya Overlap: 0.1167
+-------------------------------------------------- 50.68815779685974
+
+-------------Round number: 77-------------
+
+Evaluate models
+Averaged Train Loss: 0.8102
+Averaged Test Accurancy: 0.6902
+Averaged Test AUC: 0.9560
+Std Test Accurancy: 0.0781
+Std Test AUC: 0.0177
+Prototype Margin: 4.4039 (Norm: 0.2655) | Bhattacharyya Overlap: 0.1203
+-------------------------------------------------- 50.937626123428345
+
+-------------Round number: 78-------------
+
+Evaluate models
+Averaged Train Loss: 0.8083
+Averaged Test Accurancy: 0.6919
+Averaged Test AUC: 0.9562
+Std Test Accurancy: 0.0769
+Std Test AUC: 0.0175
+Prototype Margin: 4.4273 (Norm: 0.2657) | Bhattacharyya Overlap: 0.1172
+-------------------------------------------------- 51.3010950088501
+
+-------------Round number: 79-------------
+
+Evaluate models
+Averaged Train Loss: 0.8063
+Averaged Test Accurancy: 0.6904
+Averaged Test AUC: 0.9562
+Std Test Accurancy: 0.0770
+Std Test AUC: 0.0175
+Prototype Margin: 4.4578 (Norm: 0.2674) | Bhattacharyya Overlap: 0.1186
+-------------------------------------------------- 51.212181091308594
+
+-------------Round number: 80-------------
+
+Evaluate models
+Averaged Train Loss: 0.8032
+Averaged Test Accurancy: 0.6926
+Averaged Test AUC: 0.9566
+Std Test Accurancy: 0.0784
+Std Test AUC: 0.0175
+Prototype Margin: 4.4644 (Norm: 0.2660) | Bhattacharyya Overlap: 0.1181
+-------------------------------------------------- 50.97643995285034
+
+-------------Round number: 81-------------
+
+Evaluate models
+Averaged Train Loss: 0.7994
+Averaged Test Accurancy: 0.6918
+Averaged Test AUC: 0.9568
+Std Test Accurancy: 0.0771
+Std Test AUC: 0.0173
+Prototype Margin: 4.5144 (Norm: 0.2707) | Bhattacharyya Overlap: 0.1177
+-------------------------------------------------- 50.92351508140564
+
+-------------Round number: 82-------------
+
+Evaluate models
+Averaged Train Loss: 0.7980
+Averaged Test Accurancy: 0.6944
+Averaged Test AUC: 0.9569
+Std Test Accurancy: 0.0767
+Std Test AUC: 0.0173
+Prototype Margin: 4.5094 (Norm: 0.2690) | Bhattacharyya Overlap: 0.1176
+-------------------------------------------------- 42.605015993118286
+
+-------------Round number: 83-------------
+
+Evaluate models
+Averaged Train Loss: 0.7949
+Averaged Test Accurancy: 0.6930
+Averaged Test AUC: 0.9572
+Std Test Accurancy: 0.0767
+Std Test AUC: 0.0172
+Prototype Margin: 4.5443 (Norm: 0.2714) | Bhattacharyya Overlap: 0.1180
+-------------------------------------------------- 49.457926988601685
+
+-------------Round number: 84-------------
+
+Evaluate models
+Averaged Train Loss: 0.7916
+Averaged Test Accurancy: 0.6968
+Averaged Test AUC: 0.9574
+Std Test Accurancy: 0.0774
+Std Test AUC: 0.0171
+Prototype Margin: 4.5730 (Norm: 0.2731) | Bhattacharyya Overlap: 0.1162
+-------------------------------------------------- 51.51856994628906
+
+-------------Round number: 85-------------
+
+Evaluate models
+Averaged Train Loss: 0.7899
+Averaged Test Accurancy: 0.6940
+Averaged Test AUC: 0.9576
+Std Test Accurancy: 0.0756
+Std Test AUC: 0.0171
+Prototype Margin: 4.5648 (Norm: 0.2726) | Bhattacharyya Overlap: 0.1177
+-------------------------------------------------- 50.6312370300293
+
+-------------Round number: 86-------------
+
+Evaluate models
+Averaged Train Loss: 0.7864
+Averaged Test Accurancy: 0.6980
+Averaged Test AUC: 0.9578
+Std Test Accurancy: 0.0767
+Std Test AUC: 0.0170
+Prototype Margin: 4.6177 (Norm: 0.2746) | Bhattacharyya Overlap: 0.1158
+-------------------------------------------------- 50.48414993286133
+
+-------------Round number: 87-------------
+
+Evaluate models
+Averaged Train Loss: 0.7848
+Averaged Test Accurancy: 0.6970
+Averaged Test AUC: 0.9580
+Std Test Accurancy: 0.0734
+Std Test AUC: 0.0169
+Prototype Margin: 4.5962 (Norm: 0.2740) | Bhattacharyya Overlap: 0.1179
+-------------------------------------------------- 50.91442322731018
+
+-------------Round number: 88-------------
+
+Evaluate models
+Averaged Train Loss: 0.7809
+Averaged Test Accurancy: 0.6984
+Averaged Test AUC: 0.9583
+Std Test Accurancy: 0.0765
+Std Test AUC: 0.0168
+Prototype Margin: 4.6406 (Norm: 0.2761) | Bhattacharyya Overlap: 0.1153
+-------------------------------------------------- 51.023845911026
+
+-------------Round number: 89-------------
+
+Evaluate models
+Averaged Train Loss: 0.7802
+Averaged Test Accurancy: 0.6998
+Averaged Test AUC: 0.9582
+Std Test Accurancy: 0.0742
+Std Test AUC: 0.0169
+Prototype Margin: 4.6464 (Norm: 0.2763) | Bhattacharyya Overlap: 0.1181
+-------------------------------------------------- 51.72607684135437
+
+-------------Round number: 90-------------
+
+Evaluate models
+Averaged Train Loss: 0.7760
+Averaged Test Accurancy: 0.6985
+Averaged Test AUC: 0.9586
+Std Test Accurancy: 0.0752
+Std Test AUC: 0.0166
+Prototype Margin: 4.6917 (Norm: 0.2785) | Bhattacharyya Overlap: 0.1140
+-------------------------------------------------- 50.966166973114014
+
+-------------Round number: 91-------------
+
+Evaluate models
+Averaged Train Loss: 0.7758
+Averaged Test Accurancy: 0.7001
+Averaged Test AUC: 0.9586
+Std Test Accurancy: 0.0737
+Std Test AUC: 0.0167
+Prototype Margin: 4.6805 (Norm: 0.2772) | Bhattacharyya Overlap: 0.1178
+-------------------------------------------------- 51.10582995414734
+
+-------------Round number: 92-------------
+
+Evaluate models
+Averaged Train Loss: 0.7725
+Averaged Test Accurancy: 0.6997
+Averaged Test AUC: 0.9589
+Std Test Accurancy: 0.0736
+Std Test AUC: 0.0165
+Prototype Margin: 4.7202 (Norm: 0.2791) | Bhattacharyya Overlap: 0.1147
+-------------------------------------------------- 50.87960386276245
+
+-------------Round number: 93-------------
+
+Evaluate models
+Averaged Train Loss: 0.7708
+Averaged Test Accurancy: 0.7008
+Averaged Test AUC: 0.9589
+Std Test Accurancy: 0.0750
+Std Test AUC: 0.0166
+Prototype Margin: 4.7462 (Norm: 0.2804) | Bhattacharyya Overlap: 0.1170
+-------------------------------------------------- 50.76200294494629
+
+-------------Round number: 94-------------
+
+Evaluate models
+Averaged Train Loss: 0.7665
+Averaged Test Accurancy: 0.7008
+Averaged Test AUC: 0.9593
+Std Test Accurancy: 0.0721
+Std Test AUC: 0.0163
+Prototype Margin: 4.7439 (Norm: 0.2816) | Bhattacharyya Overlap: 0.1150
+-------------------------------------------------- 51.80193877220154
+
+-------------Round number: 95-------------
+
+Evaluate models
+Averaged Train Loss: 0.7661
+Averaged Test Accurancy: 0.7021
+Averaged Test AUC: 0.9591
+Std Test Accurancy: 0.0730
+Std Test AUC: 0.0164
+Prototype Margin: 4.7844 (Norm: 0.2830) | Bhattacharyya Overlap: 0.1167
+-------------------------------------------------- 50.98689103126526
+
+-------------Round number: 96-------------
+
+Evaluate models
+Averaged Train Loss: 0.7613
+Averaged Test Accurancy: 0.7039
+Averaged Test AUC: 0.9597
+Std Test Accurancy: 0.0723
+Std Test AUC: 0.0162
+Prototype Margin: 4.8005 (Norm: 0.2831) | Bhattacharyya Overlap: 0.1141
+-------------------------------------------------- 51.8045539855957
+
+-------------Round number: 97-------------
+
+Evaluate models
+Averaged Train Loss: 0.7614
+Averaged Test Accurancy: 0.7035
+Averaged Test AUC: 0.9595
+Std Test Accurancy: 0.0720
+Std Test AUC: 0.0162
+Prototype Margin: 4.8203 (Norm: 0.2841) | Bhattacharyya Overlap: 0.1172
+-------------------------------------------------- 51.09687280654907
+
+-------------Round number: 98-------------
+
+Evaluate models
+Averaged Train Loss: 0.7565
+Averaged Test Accurancy: 0.7041
+Averaged Test AUC: 0.9601
+Std Test Accurancy: 0.0729
+Std Test AUC: 0.0161
+Prototype Margin: 4.8523 (Norm: 0.2862) | Bhattacharyya Overlap: 0.1133
+-------------------------------------------------- 51.609586000442505
+
+-------------Round number: 99-------------
+
+Evaluate models
+Averaged Train Loss: 0.7575
+Averaged Test Accurancy: 0.7036
+Averaged Test AUC: 0.9598
+Std Test Accurancy: 0.0720
+Std Test AUC: 0.0160
+Prototype Margin: 4.8505 (Norm: 0.2848) | Bhattacharyya Overlap: 0.1168
+-------------------------------------------------- 50.52295923233032
+
+-------------Round number: 100-------------
+
+Evaluate models
+Averaged Train Loss: 0.7523
+Averaged Test Accurancy: 0.7061
+Averaged Test AUC: 0.9603
+Std Test Accurancy: 0.0711
+Std Test AUC: 0.0162
+Prototype Margin: 4.9011 (Norm: 0.2888) | Bhattacharyya Overlap: 0.1135
+
+Best accuracy.
+0.7060900852878464
+51.90946361512849
+File path: ../results/Cifar10_FedCOF_test_0.h5
+wandb: uploading artifact run-2nmh2xce-summaryclients_accuracy_table-tCXI5g; updating run metadata; uploading artifact run-2nmh2xce-summaryclients_accuracy_table-tCXI5g
+wandb: uploading artifact run-2nmh2xce-summaryclients_accuracy_table-tCXI5g; uploading artifact run-2nmh2xce-summaryclients_accuracy_table-tCXI5g
+wandb: uploading artifact run-2nmh2xce-summaryclients_accuracy_table-tCXI5g
+wandb: WARNING Artifact "run-2nmh2xce-summaryclients_accuracy_table-tCXI5g" already exists with the same content. No new version will be created.
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml; uploading media/table/summary/clients_accuracy_table_100_7e4ede389054b8165c1c.table.json; uploading history steps 99-101, summary, console lines 1137-1152
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:              charts/best_acc ▁▁
+wandb:    charts/bhattacharyya_dist ▂▁▂▂▂▄▄▄▄▅▅▅▆▆▇▇▇███████████████████████
+wandb: charts/bhattacharyya_overlap ██▇▇▆▅▄▄▄▄▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▂▁▁▁▁▁▁▁▁▁▁
+wandb:       charts/mean_round_time ▁▁
+wandb:      charts/prototype_margin ▁▁▁▁▂▂▂▃▃▃▄▄▄▅▄▅▅▅▅▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇███
+wandb: charts/prototype_margin_norm █▂▂▂▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▄▄
+wandb:              charts/test_acc ▁▃▄▄▅▆▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇██████████
+wandb:          charts/test_acc_std █▇▆▅▄▄▄▄▄▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁
+wandb:              charts/test_auc ▁▇▇▇▇███████████████████████████████████
+wandb:          charts/test_auc_std █▅▅▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                          +81 ...
+wandb: 
+wandb: Run summary:
+wandb:              charts/best_acc 0.70609
+wandb:    charts/bhattacharyya_dist 3.39461
+wandb: charts/bhattacharyya_overlap 0.11346
+wandb:       charts/mean_round_time 51.90946
+wandb:      charts/prototype_margin 4.9011
+wandb: charts/prototype_margin_norm 0.28879
+wandb:              charts/test_acc 0.70609
+wandb:          charts/test_acc_std 0.07112
+wandb:              charts/test_auc 0.9603
+wandb:          charts/test_auc_std 0.01616
+wandb:                          +81 ...
+wandb: 
+wandb: 🚀 View run FedCOF_Cifar10_cnn_nc20_alpha0.5 at: https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD/runs/2nmh2xce
+wandb: ⭐️ View project at: https://wandb.ai/gvquang25-hanoi-university-of-science-and-technology/FedSCD
+wandb: Synced 5 W&B file(s), 2 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20261101_041648-2nmh2xce/logs
+
+Average time cost: 5230.64s.
+Length:  101
+std for best accurancy: 0.0
+mean for best accurancy: 0.7060900852878464
+All done!
+
+Storage on mps:0
+-------------------------------------------------------------------------------
+Total Tensors: 54469356 	Used Memory: 140.81M
+The allocated memory on mps:0: 159.12M
+-------------------------------------------------------------------------------
+
+Storage on cpu
+-------------------------------------------------------------------------------
+Total Tensors: 179200 	Used Memory: 700.00K
+-------------------------------------------------------------------------------
