@@ -58,33 +58,55 @@ python scripts/prepare_all_datasets.py --dataset all --alphas 0.1 0.5 1.0 --num_
 
 ## 4. Cách 1: Chạy Tự Động 1-Click (Khuyên Dùng)
 
-### Lựa chọn A: Dùng script PowerShell tự động bỏ qua các bài đã chạy
+Cả hai công cụ tự động dưới đây đều **luôn luôn kích hoạt ghi log trực tuyến lên WandB** cho từng lần chạy (`-log --wandb_project FedSCD --wandb_entity gvquang25-hanoi-university-of-science-and-technology`).
+
+### Lựa chọn A: Dùng script PowerShell (`run_missing_experiments.ps1`)
 Tại thư mục `system/`:
 
-```powershell
-cd system
-.\run_missing_experiments.ps1 -Device cuda -DeviceId 0 -BatchSize 32 -GlobalRounds 100 -LocalLearningRate 0.01
-```
+* **Chạy 75 thí nghiệm còn thiếu (mặc định - tự động bỏ qua 9 bài đã chạy):**
+  ```powershell
+  cd system
+  .\run_missing_experiments.ps1 -Device cuda -DeviceId 0 -BatchSize 32 -GlobalRounds 100 -LocalLearningRate 0.01
+  ```
 
-Script này sẽ:
-1. Tự động kiểm tra danh sách 9 thí nghiệm đã chạy trong Bảng 4 và in `[BỎ QUA]`.
-2. Tuần tự thực thi 75 thí nghiệm còn lại trên GPU RTX 4050.
-3. Tự động lưu log vào `logs/<Dataset>_<Algo>_alpha<Alpha>.log` và đồng bộ live lên WandB.
+* **Chạy ĐỦ CẢ 84 RUN từ đầu đến cuối (thêm cờ `-ForceAll`):**
+  ```powershell
+  cd system
+  .\run_missing_experiments.ps1 -ForceAll -Device cuda -DeviceId 0 -BatchSize 32 -GlobalRounds 100 -LocalLearningRate 0.01
+  ```
 
-### Lựa chọn B: Dùng Python Benchmark Matrix Runner
+Script sẽ:
+1. Tuần tự thực thi các thí nghiệm trên GPU RTX 4050 (`-dev cuda -did 0`).
+2. Tự động lưu log vào `logs/<Dataset>_<Algo>_alpha<Alpha>.log`.
+3. Đồng bộ live 100% kết quả metrics và biểu đồ t-SNE lên WandB.
+
+---
+
+### Lựa chọn B: Dùng Python Benchmark Matrix Runner (`run_benchmark_matrix.py`)
 Tại thư mục `system/`:
 
-```powershell
-cd system
-python run_benchmark_matrix.py --device cuda --device_id 0 --batch_size 32 --lr 0.01 --global_rounds 100
-```
-*(Nếu muốn chạy lại toàn bộ kể cả các bài đã chạy, thêm cờ `--force_all`)*.
+* **Chạy 75 thí nghiệm còn thiếu (mặc định):**
+  ```powershell
+  cd system
+  python run_benchmark_matrix.py --device cuda --device_id 0 --batch_size 32 --lr 0.01 --global_rounds 100
+  ```
+
+* **Chạy ĐỦ CẢ 84 RUN từ đầu đến cuối (thêm cờ `--force_all`):**
+  ```powershell
+  cd system
+  python run_benchmark_matrix.py --force_all --device cuda --device_id 0 --batch_size 32 --lr 0.01 --global_rounds 100
+  ```
 
 ---
 
 ## 5. Cách 2: Danh Sách Từng Lệnh Chạy Chi Tiết (Manual Copy-Paste)
 
 Mỗi lệnh dưới đây đều được chuẩn hóa với đầy đủ tham số tối ưu riêng của từng thuật toán.
+> **Lưu ý:** Trước khi chạy các lệnh đơn lẻ dưới đây, hãy mở terminal và chuyển vào thư mục `system/`:
+> ```powershell
+> cd system
+> ```
+> *(Tính năng vẽ t-SNE đã được tự động tích hợp, sẽ xuất ra vector `.pdf` và `.npz` sau mỗi 20 vòng và vòng cuối cùng mà không cần thêm tham số phụ)*.
 
 > **Chú thích:** Các lệnh được đánh dấu `# [ĐÃ CHẠY]` đã có kết quả. Nếu cần chạy lại, bạn chỉ cần bỏ dấu `#`.
 

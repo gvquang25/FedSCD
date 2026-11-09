@@ -14,6 +14,9 @@ param(
     [int]$NumClients = 20,
     [double]$JoinRatio = 1.0,
     [int]$Times = 1,
+    [int]$TsneGap = 20,
+    [switch]$NoTsne,
+    [switch]$ForceAll,
     [string]$WandbProject = "FedSCD",
     [string]$WandbEntity = "gvquang25-hanoi-university-of-science-and-technology"
 )
@@ -61,9 +64,15 @@ Write-Host " WandB: $WandbEntity / $WandbProject" -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
 $TotalPlanned = 84
-$SkippedCount = $CompletedRuns.Count
-$PendingCount = $TotalPlanned - $SkippedCount
+$SkippedCount = if ($ForceAll) { 0 } else { $CompletedRuns.Count }
+$PendingCount = if ($ForceAll) { 84 } else { $TotalPlanned - $SkippedCount }
 $CurrentStep = 1
+
+if ($ForceAll) {
+    Write-Host " [CHE DO] CHAY DU TOAN BO 84 THI NGHIEM (Khong bo qua run nao, tat ca deu log WandB)" -ForegroundColor Yellow
+} else {
+    Write-Host " [CHE DO] TU DONG BO QUA 9 THI NGHIEM DA CHAY (Chay 75 thi nghiem con thieu)" -ForegroundColor Yellow
+}
 
 foreach ($ds in $Datasets) {
     $dsName = $ds.Name
@@ -74,7 +83,7 @@ foreach ($ds in $Datasets) {
         foreach ($algo in $Algos) {
             $key = "${dsName}_${algo}_${alpha}"
             
-            if ($CompletedRuns.ContainsKey($key)) {
+            if (-Not $ForceAll -and $CompletedRuns.ContainsKey($key)) {
                 $acc = $CompletedRuns[$key]
                 Write-Host "[BO QUA] $algo tren $dsName (alpha=$alpha) -> DA CHAY VOI ACC: $acc%" -ForegroundColor Yellow
                 continue
@@ -144,6 +153,12 @@ foreach ($ds in $Datasets) {
                 "--wandb_entity", $WandbEntity,
                 "--wandb_group", $WandbGroup
             ) + $ExtraArgs
+
+            if ($NoTsne) {
+                $cmdArgs += "--no_tsne"
+            } elseif ($TsneGap -gt 0) {
+                $cmdArgs += @("--tsne_gap", $TsneGap)
+            }
 
             Write-Host "Lenh: $PythonExe $($cmdArgs -join ' ')" -ForegroundColor DarkGray
             

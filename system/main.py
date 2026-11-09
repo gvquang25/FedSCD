@@ -92,7 +92,7 @@ def run(args):
             else:
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
-        elif model_str == "cnn":  # non-convex
+        elif model_str.lower() in ["cnn", "fedavgcnn"]:  # non-convex
             if "mnist" in args.dataset:
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
             elif "Cifar10" in args.dataset:
@@ -104,7 +104,7 @@ def run(args):
             else:
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
 
-        elif model_str == "cnn20":  # non-convex
+        elif model_str.lower() in ["cnn20", "fedavgcnn20"]:  # non-convex
             if "mnist" in args.dataset:
                 args.model = FedAvgCNN20(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
             elif "Cifar10" in args.dataset:
@@ -290,7 +290,7 @@ if __name__ == "__main__":
     # Data partitioning
     parser.add_argument("--noniid", action='store_true')
     parser.add_argument('--balance', action='store_true')
-    parser.add_argument('--alpha_dirich', default=0.1, type=float)
+    parser.add_argument("-alpha", "--alpha", "--alpha_dirich", dest="alpha_dirich", default=0.1, type=float)
 
     # Practical simulation settings
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
@@ -321,6 +321,8 @@ if __name__ == "__main__":
                         help="Separate learning rate for the encoder/backbone")
     parser.add_argument('--tsne_gap', type=int, default=None, 
                         help="Interval for t-SNE visualization")
+    parser.add_argument('--no_tsne', action='store_true', default=False,
+                        help="Disable t-SNE visualization")
     parser.add_argument('--proto_momentum', type=float, default=0.1,
                         help="Momentum EMA coefficient for prototype update")
     parser.add_argument('--lamda_ins', type=float, default=0.05,

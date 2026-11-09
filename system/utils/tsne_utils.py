@@ -404,7 +404,11 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                         if sil is not None:
                             log_dict[f"tsne/{algo_name.lower()}_client_{client.id}_silhouette"] = sil
                             log_dict[f"tsne/client_{client.id}_silhouette"] = sil
-                        wandb.log(log_dict, commit=False)
+                        step_val = int(round_idx) if round_idx is not None else None
+                        if step_val is not None:
+                            wandb.log(log_dict, step=step_val)
+                        else:
+                            wandb.log(log_dict)
                         # Lưu file PDF và NPZ lên WandB Run Files
                         if os.path.exists(save_path):
                             wandb.save(save_path, base_path=save_dir)
