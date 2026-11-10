@@ -72,7 +72,7 @@ def run(args):
     model_str = args.model
     args.model_str = model_str
 
-    base_seed = args.seed if args.seed is not None else (int(time.time() * 1000) % 1000000)
+    base_seed = args.seed if args.seed is not None else 2006
 
     for i in range(args.prev, args.times):
         current_seed = base_seed + i
@@ -432,8 +432,8 @@ if __name__ == "__main__":
                         help="Offset param_b for class-wise knowledge aggregation in FedGMKD")
 
     # Seed & Data Loader
-    parser.add_argument('-sd', "--seed", type=int, default=None,
-                        help="Random seed for model initialization and training")
+    parser.add_argument('-sd', "--seed", type=int, default=2006,
+                        help="Random seed for model initialization and training (default: 2006)")
     parser.add_argument('--shuffle', action='store_true',
                         help="Shuffle training data in client local DataLoader")
 

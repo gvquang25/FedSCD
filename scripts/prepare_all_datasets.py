@@ -36,7 +36,7 @@ from torchvision.datasets import ImageFolder, DatasetFolder
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Fixed seeds for reproducibility
-SEED = 1
+SEED = 2006
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)

@@ -30,7 +30,8 @@ class clientGMKD(Client):
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
-        torch.manual_seed(0)
+        seed = getattr(args, 'current_seed', getattr(args, 'seed', 2006))
+        torch.manual_seed(seed if seed is not None else 2006)
 
         # FedGMKD Hyperparameters
         raw_lam = getattr(args, 'gmkd_lam', getattr(args, 'lam_kd', 0.06))

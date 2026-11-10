@@ -101,6 +101,7 @@ def parse_args():
     parser.add_argument("--device", "-dev", type=str, default="cuda", choices=["cuda", "cpu", "mps"], help="Compute device")
     parser.add_argument("--device_id", "-did", type=int, default=0, help="CUDA device ID")
     parser.add_argument("--times", "-t", type=int, default=1, help="Independent runs/seeds (default: 1)")
+    parser.add_argument("--seed", "-sd", type=int, default=2006, help="Random seed for model initialization and training (default: 2006)")
     parser.add_argument("--tsne_gap", type=int, default=20, help="Interval for t-SNE visualization (default: 20)")
     parser.add_argument("--no_tsne", action="store_true", default=False, help="Disable t-SNE visualization")
     parser.add_argument("--wandb_project", type=str, default="FedSCD", help="WandB project name")
@@ -181,6 +182,7 @@ def main():
             "-dev", args.device,
             "-did", str(args.device_id),
             "-t", str(args.times),
+            "-sd", str(args.seed),
             "-log",
             "--wandb_project", args.wandb_project,
             "--wandb_entity", args.wandb_entity,
