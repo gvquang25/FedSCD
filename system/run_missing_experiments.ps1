@@ -18,6 +18,7 @@ param(
     [int]$TsneGap = 20,
     [switch]$NoTsne,
     [switch]$ForceAll,
+    [string]$Algorithm = "",
     [string]$WandbProject = "FedSCD",
     [string]$WandbEntity = "gvquang25-hanoi-university-of-science-and-technology"
 )
@@ -42,7 +43,8 @@ $Datasets = @(
 )
 
 $Alphas = @(0.1, 0.5, 1.0)
-$Algos = @("FedTGP", "FedPLVM", "FedGMKD", "FedSA", "FedORGP", "FedCOF", "FedSCD")
+$AllAlgos = @("FedTGP", "FedPLVM", "FedGMKD", "FedSA", "FedORGP", "FedCOF", "FedSCD")
+$Algos = if ($Algorithm -ne "") { @($Algorithm) } else { $AllAlgos }
 
 # Danh sach cac thi nghiem da co ket qua trong Bang 4 (icml2026.tex)
 $CompletedRuns = @{
@@ -116,7 +118,7 @@ foreach ($ds in $Datasets) {
                 }
                 "FedSCD" {
                     $ExtraArgs = @(
-                        "-lamda", "0.1",
+                        "-lam", "0.1",
                         "-nct", "0.1",
                         "--phi_range", "0.1",
                         "--proto_momentum", "0.1",

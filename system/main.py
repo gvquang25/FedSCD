@@ -305,7 +305,7 @@ if __name__ == "__main__":
                         help="The threthold for droping slow clients")
 
     # Regularization weight
-    parser.add_argument('-lam', "--lamda", type=float, default=0.1,
+    parser.add_argument('-lam', '-lamda', '--lam', '--lamda', dest='lamda', type=float, default=0.1,
                         help="Regularization weight / prototype regularization weight")
 
     # FedSCD Hyperparameters

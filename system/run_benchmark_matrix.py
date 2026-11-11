@@ -71,7 +71,7 @@ def get_algo_extra_args(algo):
         return ["-lam", "0.1", "--cof_gamma", "1.0"]
     elif algo_lower in ["fedscd", "scd"]:
         return [
-            "-lamda", "0.1",
+            "-lam", "0.1",
             "-nct", "0.1",
             "--phi_range", "0.1",
             "--proto_momentum", "0.1",
