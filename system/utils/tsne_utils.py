@@ -101,6 +101,14 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 raw_protos_dict = client.anchors
             elif hasattr(client, 'cluster_protos') and client.cluster_protos:
                 raw_protos_dict = client.cluster_protos
+            elif hasattr(client, 'global_avg_protos') and client.global_avg_protos:
+                raw_protos_dict = client.global_avg_protos
+            elif hasattr(client, 'global_cluster_protos') and client.global_cluster_protos:
+                raw_protos_dict = client.global_cluster_protos
+            elif hasattr(client, 'global_features') and client.global_features is not None:
+                raw_protos_dict = client.global_features
+            elif hasattr(client, 'local_features') and client.local_features:
+                raw_protos_dict = client.local_features
             elif hasattr(client, 'local_stats') and isinstance(client.local_stats, dict) and 'class_means' in client.local_stats:
                 raw_protos_dict = client.local_stats['class_means']
 

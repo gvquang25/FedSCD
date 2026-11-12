@@ -25,3 +25,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Nested duplicate directories
+Figure_Plot/Figure_Plot/
