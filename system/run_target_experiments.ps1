@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # HỆ THỐNG CHẠY THỰC NGHIỆM TARGET CHO BẢNG 4 (ICML/IEEE 2026)
 # Chuyên biệt cho GPU NVIDIA RTX 4050 (-dev cuda -did 0) và Seed 2006
 #
@@ -32,8 +32,9 @@ param(
     [int]$TsneGap = 20,
     [switch]$NoTsne,
     [switch]$SkipDoneCifar10SCD,   # Bỏ qua 3 run CIFAR-10 của FedSCD đã có sẵn trong bảng
+    [switch]$SkipTinyAlpha01,      # Bỏ qua alpha=0.1 cho 6 baseline trên Tiny-ImageNet (còn đúng 24 runs)
     [switch]$OnlyFedSCD,           # Chỉ chạy 12 run của FedSCD
-    [switch]$OnlyTiny,             # Chỉ chạy 21 run trên Tiny-ImageNet
+    [switch]$OnlyTiny,             # Chỉ chạy các run trên Tiny-ImageNet
     [string]$WandbProject = "FedSCD",
     [string]$WandbEntity = "gvquang25-hanoi-university-of-science-and-technology"
 )
@@ -87,10 +88,10 @@ if (-Not $OnlyTiny) {
 # ------------------------------------------------------------------------------
 if (-Not $OnlyFedSCD) {
     $TinyBaselines = @("FedTGP", "FedPLVM", "FedGMKD", "FedSA", "FedORGP", "FedCOF")
-    $Alphas = @(0.1, 0.5, 1.0)
+    $TinyAlphas = if ($SkipTinyAlpha01) { @(0.5, 1.0) } else { @(0.1, 0.5, 1.0) }
 
     foreach ($algo in $TinyBaselines) {
-        foreach ($a in $Alphas) {
+        foreach ($a in $TinyAlphas) {
             $TargetTasks += @{
                 Dataset = "TinyImagenet"
                 Classes = 200

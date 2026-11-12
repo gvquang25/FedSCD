@@ -56,6 +56,8 @@ def parse_args():
     parser.add_argument("--no_tsne", action="store_true", default=False, help="Disable t-SNE")
     parser.add_argument("--skip_done_cifar10", action="store_true", default=False,
                         help="Skip 3 CIFAR-10 FedSCD runs already present in Table")
+    parser.add_argument("--skip_tiny_alpha01", action="store_true", default=False,
+                        help="Skip alpha=0.1 for baselines on Tiny-ImageNet (remaining 24 runs)")
     parser.add_argument("--only_fedscd", action="store_true", default=False, help="Run only the 12 FedSCD runs")
     parser.add_argument("--only_tiny", action="store_true", default=False, help="Run only the 21 Tiny-ImageNet runs")
     parser.add_argument("--wandb_project", type=str, default="FedSCD", help="WandB project")
@@ -82,8 +84,9 @@ def build_tasks(args):
 
     # 2. Toàn bộ baseline trên Tiny-ImageNet
     if not args.only_fedscd:
+        tiny_alphas = [0.5, 1.0] if args.skip_tiny_alpha01 else [0.1, 0.5, 1.0]
         for algo in ["FedTGP", "FedPLVM", "FedGMKD", "FedSA", "FedORGP", "FedCOF"]:
-            for a in alphas:
+            for a in tiny_alphas:
                 tasks.append({
                     "dataset": "TinyImagenet",
                     "alpha": a,
