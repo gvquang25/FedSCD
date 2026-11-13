@@ -32,7 +32,7 @@ from matplotlib.colors import BoundaryNorm
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 # 1. Danh sách thuật toán mục tiêu
-BASELINES = ["FedTGP", "FedCOF", "FedSA", "FedORGP", "FedPLVM", "FedGMKD"]
+BASELINES = ["FedTGP", "FedCOF", "FedSA", "FedORGP", "FedGMKD"]
 OUR_METHOD = "FedSCD"
 ALL_ALGOS = BASELINES + [OUR_METHOD]
 
@@ -42,7 +42,6 @@ EXACT_RUN_IDS = {
     "FedCOF": "51xhysn0",
     "FedSA": "ymjqmadz",
     "FedORGP": "l41jzv91",
-    "FedPLVM": "o0vj3q9d",
     "FedGMKD": "1i8wptld",
     "FedSCD": "ngyaoosa",
 }
@@ -163,9 +162,10 @@ def plot_ieee_tsne_custom_grid(
     seed=2006
 ):
     """
-    Vẽ biểu đồ t-SNE 2 hàng x 4 cột chuẩn IEEE:
-      - Hàng 1 (4 hình): (a) FedTGP | (b) FedCOF | (c) FedSA | (d) FedORGP
-      - Hàng 2: (e) FedPLVM | (f) FedGMKD | (g) FedSCD (Ours) | Ô thứ 4: Khung Class Label thu gọn (chấm màu kèm số 0-9), tiêu đề 'Class Label' ngang
+    Vẽ biểu đồ t-SNE 2 hàng x 3 cột chuẩn IEEE:
+      - Hàng 1 (3 hình): (a) FedTGP | (b) FedCOF | (c) FedSA
+      - Hàng 2 (3 hình): (d) FedORGP | (e) FedGMKD | (f) FedSCD (Ours)
+      - Legend chung căn giữa phía trên: Class Label (10 chấm màu 0-9)
       - Bỏ hoàn toàn ticks và nhãn trục 't-SNE 1', 't-SNE 2' để đồ thị thông thoáng, không rối mắt
       - Ngôi sao tô theo màu class tương ứng, viền mảnh sắc nét (linewidths=0.45)
       - Format đồng nhất 100% giữa mọi ô: nền trắng, viền mảnh 0.25
@@ -176,20 +176,19 @@ def plot_ieee_tsne_custom_grid(
     indiv_dir = os.path.join(os.path.dirname(output_pdf), "individual")
     os.makedirs(indiv_dir, exist_ok=True)
 
-    # Chiều rộng chuẩn IEEE \textwidth = 7.16 inches (~18.2 cm), chiều cao cân đối = 3.25 inches
-    fig, axes = plt.subplots(2, 4, figsize=(7.16, 3.25))
+    # Chiều rộng chuẩn IEEE \textwidth = 7.16 inches (~18.2 cm), chiều cao cân đối = 4.4 inches
+    fig, axes = plt.subplots(2, 3, figsize=(7.16, 4.4))
 
     cmap = plt.get_cmap("tab10")
 
-    # Danh sách 7 thuật toán phân bố vào 7 ô đầu tiên
+    # Danh sách 6 thuật toán phân bố đối xứng vào lưới 2 hàng x 3 cột
     panels = [
         ("(a) FedTGP", "FedTGP", 0, 0),
         ("(b) FedCOF", "FedCOF", 0, 1),
         ("(c) FedSA", "FedSA", 0, 2),
-        ("(d) FedORGP", "FedORGP", 0, 3),
-        ("(e) FedPLVM", "FedPLVM", 1, 0),
-        ("(f) FedGMKD", "FedGMKD", 1, 1),
-        ("(g) FedSCD (Ours)", "FedSCD", 1, 2),
+        ("(d) FedORGP", "FedORGP", 1, 0),
+        ("(e) FedGMKD", "FedGMKD", 1, 1),
+        ("(f) FedSCD (Ours)", "FedSCD", 1, 2),
     ]
 
     for (label_title, algo, row_i, col_j) in panels:
@@ -205,7 +204,7 @@ def plot_ieee_tsne_custom_grid(
             proto_classes = data.get("proto_classes", np.array([]))
             sil = data.get("sil", None)
 
-            # Fallback tính tâm cụm thực nghiệm nếu proto_emb rỗng (như FedPLVM, FedGMKD)
+            # Fallback tính tâm cụm thực nghiệm nếu proto_emb rỗng (như FedGMKD)
             if len(proto_emb) == 0 and len(sample_emb) > 0:
                 unique_c = np.unique(sample_labels)
                 proto_emb = np.array([sample_emb[sample_labels == c].mean(axis=0) for c in unique_c])
@@ -235,7 +234,7 @@ def plot_ieee_tsne_custom_grid(
 
             # 3. Tiêu đề subplot và điểm Silhouette Score (đồng nhất format)
             sil_str = f" (Sil: {float(sil):+.3f})" if sil is not None and not np.isnan(sil) else ""
-            ax.set_title(f"{label_title}{sil_str}", fontsize=8.2, fontweight="bold", pad=3.5)
+            ax.set_title(f"{label_title}{sil_str}", fontsize=8.5, fontweight="bold", pad=3.5)
 
             # 4. Viền khung chuẩn đồng nhất cho mọi ô (nền trắng, viền mảnh 0.25)
             ax.set_facecolor("white")
@@ -244,7 +243,7 @@ def plot_ieee_tsne_custom_grid(
                 spine.set_linewidth(0.25)
         else:
             ax.text(0.5, 0.5, f"{algo}\n(No Data)", ha="center", va="center", color="gray", fontsize=7.5)
-            ax.set_title(label_title, fontsize=8.2, pad=3.5)
+            ax.set_title(label_title, fontsize=8.5, pad=3.5)
             ax.set_facecolor("white")
             for spine in ax.spines.values():
                 spine.set_color("black")
@@ -280,22 +279,27 @@ def plot_ieee_tsne_custom_grid(
             except Exception:
                 pass
 
-    # 5. Ô thứ 4 ở Hàng 2 (axes[1, 3]): Cột dọc Class Label không viền (frameon=False)
-    ax_slot = axes[1, 3]
-    ax_slot.axis("off")  # Không vẽ khung viền (frameon=False)
-    ax_slot.set_xlim(0, 1)
-    ax_slot.set_ylim(0, 1)
+    # 5. Shared horizontal legend ở đỉnh đồ thị (10 chấm màu 0-9) với viền mảnh 0.45 pt đồng nhất với viền ngôi sao
+    c_dots = [
+        plt.Line2D([0], [0], marker="o", color="none", markerfacecolor=cmap(i),
+                   markeredgecolor="black", markeredgewidth=0.45,
+                   markersize=5.5, label=str(i))
+        for i in range(10)
+    ]
+    fig.legend(
+        handles=c_dots,
+        title="Class Label",
+        title_fontsize=8.5,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.91),
+        ncol=10,
+        frameon=False,
+        fontsize=8.0,
+        columnspacing=1.1,
+        handletextpad=0.2
+    )
 
-    # Tiêu đề "Class Label" in đậm nằm ngang đồng hàng với tiêu đề các ô xung quanh
-    ax_slot.set_title("Class Label", fontsize=8.2, fontweight="bold", pad=3.5)
-
-    # Cột dọc 10 chấm màu từ 0 đến 9 (từ trên xuống dưới), căn giữa ô
-    ys = np.linspace(0.92, 0.08, 10)
-    for i in range(10):
-        ax_slot.scatter(0.44, ys[i], c=[cmap(i)], s=26, edgecolors="none")
-        ax_slot.text(0.53, ys[i], str(i), fontsize=7.2, va="center", ha="left")
-
-    plt.subplots_adjust(left=0.035, right=0.985, top=0.93, bottom=0.06, wspace=0.18, hspace=0.25)
+    plt.tight_layout(rect=[0, 0, 1, 0.89], pad=0.3, w_pad=0.5, h_pad=0.5)
 
     # Xuất PDF vector chuẩn IEEE và PNG 300 DPI
     plt.savefig(output_pdf, format="pdf", bbox_inches="tight", dpi=300)

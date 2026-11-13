@@ -84,7 +84,7 @@ plt.rcParams.update({
     "ps.fonttype": 42
 })
 
-# Cấu hình hiển thị 7 thuật toán: tất cả nét liền '-', FedSCD độ dày 1.5, baselines độ dày 1.0
+# Cấu hình hiển thị 6 thuật toán: tất cả nét liền '-', FedSCD độ dày 1.5, baselines độ dày 1.0
 algos = [
     {
         "key": "FedSCD",
@@ -127,14 +127,6 @@ algos = [
         "zorder": 5
     },
     {
-        "key": "FedPLVM",
-        "label": "FedPLVM",
-        "color": "#56B4E9",
-        "style": "-",
-        "width": 1.0,
-        "zorder": 5
-    },
-    {
         "key": "FedGMKD",
         "label": "FedGMKD",
         "color": "#7F7F7F",
@@ -159,10 +151,10 @@ def plot_motivation():
     df_acc = pd.read_csv(acc_file)
 
     # Khởi tạo Figure 2 hàng 2 cột, kéo giãn chiều cao lên 6.0 inches để các đường cong thoáng rõ
-    fig, axes = plt.subplots(2, 2, figsize=(7.16, 7.0))
+    fig, axes = plt.subplots(2, 2, figsize=(7.16, 6.0))
 
     panels = [
-        (axes[0, 0], df_margin, "(a) Prototype Margin", 1.0, (0, 120), [0, 30, 60, 90, 120]),
+        (axes[0, 0], df_margin, "(a) Prototype Margin", 1.0, (0, 7.0), [0, 2, 4, 6]),
         (axes[0, 1], df_overlap, "(b) Bhattacharyya Overlap", 1.0, (0.0, 0.8), [0.0, 0.2, 0.4, 0.6, 0.8]),
         (axes[1, 0], df_acc, "(c) Test Accuracy (%)", 100.0, (0, 80), [0, 20, 40, 60, 80])
     ]
