@@ -323,6 +323,14 @@ if __name__ == "__main__":
                         help="Interval for t-SNE visualization")
     parser.add_argument('--no_tsne', action='store_true', default=False,
                         help="Disable t-SNE visualization")
+    parser.add_argument('--tsne_max_samples', type=int, default=1000,
+                        help="Max number of samples for t-SNE visualization")
+    parser.add_argument('--tsne_balanced', action='store_true', default=False,
+                        help="Use balanced unseen test samples across all clients for t-SNE")
+    parser.add_argument('--tsne_fair', action='store_true', default=False,
+                        help="Use identical feature normalization/projection across all algorithms for t-SNE")
+    parser.add_argument('--save_tsne_ckpt', action='store_true', default=False,
+                        help="Save client 0 checkpoint at final round for fast t-SNE replotting")
     parser.add_argument('--proto_momentum', type=float, default=0.1,
                         help="Momentum EMA coefficient for prototype update")
     parser.add_argument('--lamda_ins', type=float, default=0.05,

@@ -8,7 +8,52 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 import wandb
+
+
+def _load_balanced_global_testloader(client, max_samples=2000):
+    """Gom tap test chua tung thay tu tat ca clients va lay mau can bang theo lop (co dinh seed=0)."""
+    from utils.data_utils import read_client_data
+
+    num_clients = int(getattr(client, 'num_clients', getattr(client.args, 'num_clients', 20)))
+    by_class = {}
+    for cid in range(num_clients):
+        items = read_client_data(
+            client.dataset,
+            cid,
+            client.args.noniid,
+            client.args.balance,
+            client.args.alpha_dirich,
+            is_train=False,
+            num_clients=num_clients,
+        )
+        for sample in items:
+            y = sample[1]
+            cls_id = int(y.item()) if torch.is_tensor(y) else int(y)
+            by_class.setdefault(cls_id, []).append(sample)
+
+    classes = sorted(by_class.keys())
+    if not classes:
+        return client.load_test_data()
+
+    rng = np.random.RandomState(0)
+    n_classes = len(classes)
+    base_per_cls = max(1, int(max_samples) // n_classes)
+    remainder = max(0, int(max_samples) - base_per_cls * n_classes)
+
+    selected = []
+    for idx_c, cls_id in enumerate(classes):
+        pool = by_class[cls_id]
+        target = base_per_cls + (1 if idx_c < remainder else 0)
+        if len(pool) > target:
+            chosen_idx = rng.choice(len(pool), target, replace=False)
+            selected.extend(pool[i] for i in sorted(chosen_idx))
+        else:
+            selected.extend(pool)
+
+    batch_size = int(getattr(client.args, 'test_batch_size', 512) or 512)
+    return DataLoader(selected, batch_size=batch_size, drop_last=False, shuffle=False)
 
 
 def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_results"):
@@ -40,7 +85,11 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
         from sklearn.metrics import silhouette_score
 
         with torch.no_grad():
-            testloader = client.load_test_data()
+            use_balanced = bool(getattr(client.args, 'tsne_balanced', False))
+            if use_balanced:
+                testloader = _load_balanced_global_testloader(client, max_samples=max_samples)
+            else:
+                testloader = client.load_test_data()
             all_reps = []
             all_labels = []
 
@@ -68,7 +117,7 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             sample_labels = torch.cat(all_labels, dim=0)
 
             N = sample_feats.size(0)
-            if N > max_samples:
+            if not use_balanced and N > max_samples:
                 idx = np.random.RandomState(0).choice(N, max_samples, replace=False)
                 sample_feats = sample_feats[idx]
                 sample_labels = sample_labels[idx]
@@ -84,7 +133,8 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             phi_list = []
             proto_classes = []
 
-            is_scd_client = hasattr(client, 'global_phis') or hasattr(client, 'bayes_shrink_max')
+            is_fair = bool(getattr(client.args, 'tsne_fair', False))
+            is_scd_client = (not is_fair) and (hasattr(client, 'global_phis') or hasattr(client, 'bayes_shrink_max'))
             is_pcl_client = is_scd_client
             local_stats = getattr(client, 'local_stats', {}) or {}
             global_stds = getattr(client, 'global_stds', {}) or {}
@@ -205,11 +255,18 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                     protos_proj = F.normalize(protos_tensor - proto_center, dim=1)
             elif has_protos:
                 protos_tensor = torch.cat(proto_feats, dim=0)
-                feats_proj = sample_feats
-                protos_proj = protos_tensor
+                if is_fair:
+                    feats_proj = F.normalize(sample_feats - sample_feats.mean(dim=0, keepdim=True), dim=1)
+                    protos_proj = F.normalize(protos_tensor - sample_feats.mean(dim=0, keepdim=True), dim=1)
+                else:
+                    feats_proj = sample_feats
+                    protos_proj = protos_tensor
             else:
                 protos_proj = None
-                feats_proj = sample_feats
+                if is_fair:
+                    feats_proj = F.normalize(sample_feats - sample_feats.mean(dim=0, keepdim=True), dim=1)
+                else:
+                    feats_proj = sample_feats
 
             feats_proj_np = feats_proj.numpy()
 
@@ -398,6 +455,42 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 )
             except Exception as e_npz:
                 print(f"[{algo_name} Client {client.id}] Cảnh báo lưu file t-SNE .npz: {e_npz}")
+
+            # Lưu checkpoint Client 0 ở round cuối nếu bật --save_tsne_ckpt
+            global_rounds = int(getattr(client.args, 'global_rounds', 100) or 100)
+            if getattr(client.args, 'save_tsne_ckpt', False) and int(round_idx) >= global_rounds - 1:
+                try:
+                    ckpt_dir = "./checkpoints_tsne"
+                    os.makedirs(ckpt_dir, exist_ok=True)
+                    alpha_val = getattr(client.args, 'alpha_dirich', 0.5)
+                    seed_val = getattr(client.args, 'seed', getattr(client.args, 'current_seed', 2006))
+                    ckpt_name = f"{algo_name}_{client.dataset}_alpha{alpha_val}_seed{seed_val}_round{round_idx}_client{client.id}.pt"
+                    ckpt_path = os.path.join(ckpt_dir, ckpt_name)
+
+                    protos_cpu = {}
+                    if isinstance(raw_protos_dict, dict):
+                        for k, v in raw_protos_dict.items():
+                            if v is not None and torch.is_tensor(v):
+                                protos_cpu[int(k)] = v.detach().cpu().clone()
+                    elif torch.is_tensor(raw_protos_dict):
+                        protos_cpu = raw_protos_dict.detach().cpu().clone()
+
+                    torch.save(
+                        {
+                            "algorithm": algo_name,
+                            "dataset": str(client.dataset),
+                            "alpha": float(alpha_val),
+                            "seed": int(seed_val),
+                            "round_idx": int(round_idx),
+                            "client_id": int(client.id),
+                            "model_state_dict": {k: v.detach().cpu().clone() for k, v in client.model.state_dict().items()},
+                            "protos": protos_cpu,
+                        },
+                        ckpt_path,
+                    )
+                    print(f"[{algo_name} Client {client.id}] Đã lưu checkpoint t-SNE: {ckpt_path}")
+                except Exception as e_ckpt:
+                    print(f"[{algo_name} Client {client.id}] Cảnh báo lưu checkpoint .pt: {e_ckpt}")
 
             # Ghi log WandB an toàn:
             # - wandb.Image(fig) hiển thị trực tiếp trên web UI

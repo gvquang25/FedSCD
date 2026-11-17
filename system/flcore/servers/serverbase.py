@@ -385,12 +385,14 @@ class Server(object):
             tsne_gap = getattr(self.args, 'tsne_gap', None)
             if tsne_gap is None or tsne_gap <= 0:
                 tsne_gap = 20 if (self.global_rounds >= 20) else self.eval_gap
-            
+
             is_final_round = (self.current_round >= self.global_rounds - 1)
-            if self.current_round % tsne_gap == 0 or is_final_round:
+            run_interval = (self.current_round % tsne_gap == 0) if (tsne_gap < self.global_rounds) else (self.current_round > 0 and self.current_round % tsne_gap == 0)
+            if run_interval or is_final_round:
                 if hasattr(self.clients[0], 'visualize_tsne'):
                     try:
-                        self.clients[0].visualize_tsne(round_idx=self.current_round)
+                        tsne_max = int(getattr(self.args, 'tsne_max_samples', 1000) or 1000)
+                        self.clients[0].visualize_tsne(round_idx=self.current_round, max_samples=tsne_max)
                     except Exception as e_tsne:
                         print(f"[{self.algorithm}] Cảnh báo t-SNE: {e_tsne}")
         

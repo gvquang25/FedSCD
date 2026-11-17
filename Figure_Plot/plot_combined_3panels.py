@@ -84,55 +84,65 @@ plt.rcParams.update({
     "ps.fonttype": 42
 })
 
-# Cấu hình hiển thị 6 thuật toán: tất cả nét liền '-', FedSCD độ dày 1.5, baselines độ dày 1.0
+# Cấu hình hiển thị 6 thuật toán với bảng màu rực rỡ, hài hòa chuẩn bài báo:
+# - FedSCD: màu đỏ thẫm rực rỡ (#D90429), nét đậm 2.0, nổi bật nhất
+# - 5 baselines: các tone màu rực rỡ nhưng hài hòa, độ tương phản cao, nét 1.3
 algos = [
     {
         "key": "FedSCD",
         "label": "FedSCD (Ours)",
-        "color": "#0072B2",
+        "color": "#D90429",
         "style": "-",
-        "width": 1.5,
-        "zorder": 10
+        "width": 2.0,
+        "zorder": 10,
+        "marker": None
+        # "markersize": 2,
+        # "markevery": 5
     },
     {
         "key": "FedTGP",
         "label": "FedTGP",
-        "color": "#D55E00",
+        "color": "#F97316",
         "style": "-",
-        "width": 1.0,
-        "zorder": 5
+        "width": 1.3,
+        "zorder": 5,
+        "marker": None
     },
     {
         "key": "FedCOF",
         "label": "FedCOF",
-        "color": "#009E73",
+        "color": "#059669",
         "style": "-",
-        "width": 1.0,
-        "zorder": 5
+        "width": 1.3,
+        "zorder": 5,
+        "marker": None
     },
     {
         "key": "FedSA",
         "label": "FedSA",
-        "color": "#CC79A7",
+        "color": "#7C3AED",
         "style": "-",
-        "width": 1.0,
-        "zorder": 5
+        "width": 1.3,
+        "zorder": 5,
+        "marker": None
     },
     {
         "key": "FedORGP",
         "label": "FedORGP",
-        "color": "#E69F00",
+        "color": "#EAB308",
         "style": "-",
-        "width": 1.0,
-        "zorder": 5
+        "width": 1.3,
+        "zorder": 5,
+        "marker": None
     },
     {
         "key": "FedGMKD",
         "label": "FedGMKD",
-        "color": "#7F7F7F",
+        "color": "#2563EB",
         "style": "-",
-        "width": 1.0,
-        "zorder": 5
+        "width": 1.3,
+        "zorder": 5,
+        "marker": None
     }
 ]
 
@@ -167,14 +177,24 @@ def plot_motivation():
 
         for algo in algos:
             if algo["key"] in df.columns:
+                plot_kwargs = {
+                    "label": algo["label"],
+                    "color": algo["color"],
+                    "linestyle": algo["style"],
+                    "linewidth": algo["width"],
+                    "zorder": algo["zorder"]
+                }
+                if algo.get("marker"):
+                    plot_kwargs["marker"] = algo["marker"]
+                    plot_kwargs["markersize"] = algo["markersize"]
+                    plot_kwargs["markevery"] = algo["markevery"]
+                    plot_kwargs["markerfacecolor"] = algo["color"]
+                    plot_kwargs["markeredgecolor"] = algo["color"]
+
                 ax.plot(
                     df["Step"],
                     df[algo["key"]] * actual_scale,
-                    label=algo["label"],
-                    color=algo["color"],
-                    linestyle=algo["style"],
-                    linewidth=algo["width"],
-                    zorder=algo["zorder"]
+                    **plot_kwargs
                 )
 
         ax.set_xlabel("Communication Rounds", labelpad=4)

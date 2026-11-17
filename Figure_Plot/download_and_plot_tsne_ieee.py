@@ -72,7 +72,8 @@ def download_tsne_from_wandb(
     seed=2006,
     client_id=0,
     output_dir="./Figure_Plot/data_tsne",
-    algos=None
+    algos=None,
+    wandb_group=None
 ):
     """Tải file .npz t-SNE qua WandB API."""
     import wandb
@@ -84,7 +85,7 @@ def download_tsne_from_wandb(
 
     print(f"\n=======================================================")
     print(f" [WandB API] Kết nối tới: {entity}/{project}")
-    print(f" Bộ lọc: Dataset={dataset}, Alpha={alpha}, Seed={seed}, Client={client_id}")
+    print(f" Bộ lọc: Dataset={dataset}, Alpha={alpha}, Seed={seed}, Client={client_id}, Group={wandb_group or 'Default'}")
     print(f" Danh sách thuật toán: {', '.join(algos)}")
     print(f"=======================================================\n")
 
@@ -94,24 +95,27 @@ def download_tsne_from_wandb(
         dest_name = f"{algo}_{dataset}_alpha{alpha}_seed{seed}.npz"
         dest_path = os.path.join(output_dir, dest_name)
 
-        # 1. Ưu tiên lấy trực tiếp qua EXACT_RUN_IDS nếu có
+        # 1. Nếu không chỉ định wandb_group, ưu tiên lấy trực tiếp qua EXACT_RUN_IDS
         selected_run = None
-        if algo in EXACT_RUN_IDS:
+        if not wandb_group and algo in EXACT_RUN_IDS:
             try:
                 selected_run = api.run(f"{entity}/{project}/{EXACT_RUN_IDS[algo]}")
             except Exception:
                 selected_run = None
 
-        # 2. Nếu chưa có, query trên WandB
+        # 2. Query trên WandB (ưu tiên mới nhất khi lọc theo group)
         if selected_run is None:
             try:
-                runs = api.runs(f"{entity}/{project}", filters={
+                filters = {
                     "$or": [
                         {"config.algorithm": algo},
                         {"config.algorithm": algo.lower()},
                         {"displayName": {"$regex": f"^{algo}"}}
                     ]
-                })
+                }
+                if wandb_group:
+                    filters["group"] = wandb_group
+                runs = api.runs(f"{entity}/{project}", filters=filters, order="-created_at")
                 for r in runs:
                     cfg = r.config or {}
                     if dataset.lower() not in str(cfg.get("dataset", "")).lower():
@@ -176,8 +180,8 @@ def plot_ieee_tsne_custom_grid(
     indiv_dir = os.path.join(os.path.dirname(output_pdf), "individual")
     os.makedirs(indiv_dir, exist_ok=True)
 
-    # Chiều rộng chuẩn IEEE \textwidth = 7.16 inches (~18.2 cm), chiều cao cân đối = 4.4 inches
-    fig, axes = plt.subplots(2, 3, figsize=(7.16, 4.4))
+    # Chiều rộng chuẩn IEEE \textwidth = 7.16 inches (~18.2 cm), chiều cao gọn gàng = 3.85 inches
+    fig, axes = plt.subplots(2, 3, figsize=(7.16, 3.85))
 
     cmap = plt.get_cmap("tab10")
 
@@ -232,9 +236,23 @@ def plot_ieee_tsne_custom_grid(
                     zorder=6
                 )
 
-            # 3. Tiêu đề subplot và điểm Silhouette Score (đồng nhất format)
-            sil_str = f" (Sil: {float(sil):+.3f})" if sil is not None and not np.isnan(sil) else ""
-            ax.set_title(f"{label_title}{sil_str}", fontsize=8.5, fontweight="bold", pad=3.5)
+            # Mở rộng vừa đủ khoảng trống phía trên trục y để chữ gọn gần cụm điểm mà không bị chờm
+            y_min, y_max = ax.get_ylim()
+            y_span = y_max - y_min
+            ax.set_ylim(y_min - 0.02 * y_span, y_max + 0.08 * y_span)
+
+            # 3. Nhãn thuật toán nhét vào góc trên bên trái bên trong khung hình (bỏ phần Sil)
+            ax.text(
+                0.03, 0.96,
+                label_title,
+                transform=ax.transAxes,
+                fontsize=8.5,
+                fontweight="bold",
+                va="top",
+                ha="left",
+                zorder=10,
+                bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
+            )
 
             # 4. Viền khung chuẩn đồng nhất cho mọi ô (nền trắng, viền mảnh 0.25)
             ax.set_facecolor("white")
@@ -243,7 +261,17 @@ def plot_ieee_tsne_custom_grid(
                 spine.set_linewidth(0.25)
         else:
             ax.text(0.5, 0.5, f"{algo}\n(No Data)", ha="center", va="center", color="gray", fontsize=7.5)
-            ax.set_title(label_title, fontsize=8.5, pad=3.5)
+            ax.text(
+                0.03, 0.96,
+                label_title,
+                transform=ax.transAxes,
+                fontsize=8.5,
+                fontweight="bold",
+                va="top",
+                ha="left",
+                zorder=10,
+                bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
+            )
             ax.set_facecolor("white")
             for spine in ax.spines.values():
                 spine.set_color("black")
@@ -269,7 +297,17 @@ def plot_ieee_tsne_custom_grid(
                         c=p_classes, cmap=cmap,
                         s=70, marker="*", edgecolors="black", linewidths=0.45, zorder=6
                     )
-                indiv_ax.set_title(f"{label_title}{sil_str}", fontsize=9.0, fontweight="bold")
+                indiv_ax.text(
+                    0.03, 0.96,
+                    label_title,
+                    transform=indiv_ax.transAxes,
+                    fontsize=9.0,
+                    fontweight="bold",
+                    va="top",
+                    ha="left",
+                    zorder=10,
+                    bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
+                )
                 indiv_ax.set_xticks([])
                 indiv_ax.set_yticks([])
                 for spine in indiv_ax.spines.values():
@@ -279,27 +317,7 @@ def plot_ieee_tsne_custom_grid(
             except Exception:
                 pass
 
-    # 5. Shared horizontal legend ở đỉnh đồ thị (10 chấm màu 0-9) với viền mảnh 0.45 pt đồng nhất với viền ngôi sao
-    c_dots = [
-        plt.Line2D([0], [0], marker="o", color="none", markerfacecolor=cmap(i),
-                   markeredgecolor="black", markeredgewidth=0.45,
-                   markersize=5.5, label=str(i))
-        for i in range(10)
-    ]
-    fig.legend(
-        handles=c_dots,
-        title="Class Label",
-        title_fontsize=8.5,
-        loc="lower center",
-        bbox_to_anchor=(0.5, 0.91),
-        ncol=10,
-        frameon=False,
-        fontsize=8.0,
-        columnspacing=1.1,
-        handletextpad=0.2
-    )
-
-    plt.tight_layout(rect=[0, 0, 1, 0.89], pad=0.3, w_pad=0.5, h_pad=0.5)
+    plt.tight_layout(pad=0.25, w_pad=0.35, h_pad=0.35)
 
     # Xuất PDF vector chuẩn IEEE và PNG 300 DPI
     plt.savefig(output_pdf, format="pdf", bbox_inches="tight", dpi=300)
@@ -336,6 +354,7 @@ def main():
     parser.add_argument("--seed", type=int, default=2006)
     parser.add_argument("--client_id", type=int, default=0)
     parser.add_argument("--skip_download", action="store_true", help="Chỉ vẽ từ thư mục data_tsne có sẵn")
+    parser.add_argument("--wandb_group", type=str, default=None, help="Lọc theo WandB group cụ thể (ví dụ Cifar10_nc20_alpha0.5_tsne2k)")
     parser.add_argument("--data_dir", type=str, default="./Figure_Plot/data_tsne")
     parser.add_argument("--output_pdf", type=str, default="./Figure_Plot/figures/ieee_tsne_cifar10_dir05.pdf")
 
@@ -352,7 +371,8 @@ def main():
                 seed=args.seed,
                 client_id=args.client_id,
                 output_dir=args.data_dir,
-                algos=ALL_ALGOS
+                algos=ALL_ALGOS,
+                wandb_group=args.wandb_group
             )
         except Exception as e:
             print(f"[Cảnh báo]: {e}, chuyển sang quét thư mục local...")
