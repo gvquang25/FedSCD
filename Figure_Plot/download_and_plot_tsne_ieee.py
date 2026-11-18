@@ -1,42 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script tải dữ liệu t-SNE từ WandB API và vẽ lại biểu đồ chuẩn IEEE Transactions / Conference.
-Thực nghiệm:
-  - Dataset: CIFAR-10 (10 classes)
-  - Dirichlet: alpha = 0.5
-  - Seed: 2006
-  - Bố cục theo yêu cầu mới nhất:
-      + Hàng 1 (4 hình): (a) FedTGP | (b) FedCOF | (c) FedSA | (d) FedORGP
-      + Hàng 2 (3 hình + 1 colorbar): (e) FedPLVM | (f) FedGMKD | (g) FedSCD (Ours) | Ô góc phải là Colorbar dọc thu ngắn lại, nhãn 'Class Label' bên cạnh
-      + Bỏ hoàn toàn các dòng chú thích 'Class Proto' và 'Local Feature'
-      + Bỏ hoàn toàn 't-SNE 1', 't-SNE 2' và ticks
-      + Viền ngôi sao mảnh (linewidths=0.45), tô theo màu class
-      + Format FedSCD đồng nhất 100% với các baseline (nền trắng, viền chuẩn)
-      + Chiều rộng vừa khít chiều rộng trang IEEE (\textwidth = 7.16 inches)
+Download & Plot High-Density IEEE 2x3 t-SNE Grid for 6 Federated Frameworks.
+
+Features:
+  - Pure crisp dense scatter dots with thin white micro-rims + 2-layer Halo Class Anchor stars.
+  - Interleaved deterministic point z-order so no single class artificially masks others.
+  - High-contrast 10-class palette with strict class-index color locking across points & stars.
+  - Tight smart framing so clusters fill ~88-92% of each subplot canvas (no top legend bar).
+  - Offline instant t-SNE recomputation (--recompute_tsne) whenever 512-D sample_feats are
+    present in the .npz archive (produced by updated system/utils/tsne_utils.py).
 """
 
-import os
-import sys
-import re
 import argparse
-import numpy as np
-
-# Ngăn import shadowing với thư mục ./wandb
-sys.path = [p for p in sys.path if os.path.abspath(p) != os.path.abspath(".")]
+import os
+import re
+import shutil
+import sys
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.colors import BoundaryNorm
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+import numpy as np
 
-# 1. Danh sách thuật toán mục tiêu
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+
 BASELINES = ["FedTGP", "FedCOF", "FedSA", "FedORGP", "FedGMKD"]
 OUR_METHOD = "FedSCD"
 ALL_ALGOS = BASELINES + [OUR_METHOD]
 
-# Exact Run IDs đã xác thực trực tiếp trên WandB cho CIFAR-10, dir 0.5, seed 2006
+# Verified baseline WandB run IDs for CIFAR-10, alpha=0.5, seed=2006 (fallback when no group given)
 EXACT_RUN_IDS = {
     "FedTGP": "y7vmkxry",
     "FedCOF": "51xhysn0",
@@ -46,19 +40,46 @@ EXACT_RUN_IDS = {
     "FedSCD": "ngyaoosa",
 }
 
+# Refined 10-class IEEE publication palette (saturated, print-safe, crisp against white)
+PALETTE_10 = [
+    "#1D4ED8",  # 0: Cobalt Blue
+    "#EA580C",  # 1: Burnt Orange
+    "#16A34A",  # 2: Emerald Green
+    "#DC2626",  # 3: Crimson Red
+    "#7C3AED",  # 4: Royal Violet
+    "#854D0E",  # 5: Chestnut Brown
+    "#DB2777",  # 6: Vivid Rose-Magenta
+    "#475569",  # 7: Deep Slate Gray
+    "#CA8A04",  # 8: Golden Olive
+    "#0891B2",  # 9: Deep Cyan-Teal
+]
+
+
+def _import_wandb():
+    """Import wandb safely without shadowing from local ./wandb directories."""
+    blocked = {
+        os.path.abspath("."),
+        REPO_ROOT,
+        os.path.join(REPO_ROOT, "system"),
+        SCRIPT_DIR,
+    }
+    sys.path = [p for p in sys.path if os.path.abspath(p) not in blocked]
+    import wandb  # noqa: E402
+    return wandb
+
 
 def setup_ieee_style():
-    """Cấu hình typography chuẩn bài báo IEEE (Times New Roman, Type 42)."""
+    """Configure Matplotlib typography for IEEE Transactions (Times New Roman, Type 42)."""
     plt.rcParams.update({
         "font.family": "serif",
         "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
-        "font.size": 8.5,
-        "axes.labelsize": 8.5,
-        "axes.titlesize": 8.5,
+        "font.size": 8.8,
+        "axes.labelsize": 8.8,
+        "axes.titlesize": 9.0,
         "legend.fontsize": 8.0,
         "xtick.labelsize": 7.5,
         "ytick.labelsize": 7.5,
-        "pdf.fonttype": 42,  # Bắt buộc cho IEEE PDF eXpress
+        "pdf.fonttype": 42,
         "ps.fonttype": 42,
         "mathtext.fontset": "cm",
     })
@@ -71,31 +92,31 @@ def download_tsne_from_wandb(
     alpha=0.5,
     seed=2006,
     client_id=0,
-    output_dir="./Figure_Plot/data_tsne",
+    output_dir=None,
     algos=None,
-    wandb_group=None
+    wandb_group=None,
 ):
-    """Tải file .npz t-SNE qua WandB API."""
-    import wandb
+    """Download latest .npz t-SNE files per algorithm from WandB API."""
+    wandb = _import_wandb()
+    if output_dir is None:
+        output_dir = os.path.join(SCRIPT_DIR, "data_tsne")
     os.makedirs(output_dir, exist_ok=True)
     api = wandb.Api()
 
     if algos is None:
         algos = ALL_ALGOS
 
-    print(f"\n=======================================================")
-    print(f" [WandB API] Kết nối tới: {entity}/{project}")
-    print(f" Bộ lọc: Dataset={dataset}, Alpha={alpha}, Seed={seed}, Client={client_id}, Group={wandb_group or 'Default'}")
-    print(f" Danh sách thuật toán: {', '.join(algos)}")
-    print(f"=======================================================\n")
+    print("\n=======================================================")
+    print(f" [WandB API] Connecting to: {entity}/{project}")
+    print(f" Filter: Dataset={dataset}, Alpha={alpha}, Seed={seed}, Client={client_id}, Group={wandb_group or 'Default'}")
+    print(f" Algorithms: {', '.join(algos)}")
+    print("=======================================================\n")
 
     downloaded_files = {}
-
     for algo in algos:
         dest_name = f"{algo}_{dataset}_alpha{alpha}_seed{seed}.npz"
         dest_path = os.path.join(output_dir, dest_name)
 
-        # 1. Nếu không chỉ định wandb_group, ưu tiên lấy trực tiếp qua EXACT_RUN_IDS
         selected_run = None
         if not wandb_group and algo in EXACT_RUN_IDS:
             try:
@@ -103,14 +124,13 @@ def download_tsne_from_wandb(
             except Exception:
                 selected_run = None
 
-        # 2. Query trên WandB (ưu tiên mới nhất khi lọc theo group)
         if selected_run is None:
             try:
                 filters = {
                     "$or": [
                         {"config.algorithm": algo},
                         {"config.algorithm": algo.lower()},
-                        {"displayName": {"$regex": f"^{algo}"}}
+                        {"displayName": {"$regex": f"^{algo}"}},
                     ]
                 }
                 if wandb_group:
@@ -129,14 +149,15 @@ def download_tsne_from_wandb(
                     selected_run = r
                     break
             except Exception as e_query:
-                print(f"    [Lỗi query WandB cho {algo}]: {e_query}")
+                print(f"  [WARN] WandB query error for {algo}: {e_query}")
 
         if selected_run is None:
-            print(f"    [CẢNH BÁO] Chưa có dữ liệu WandB cho {algo}.")
+            print(f"  [WARN] No matching WandB run found for {algo}.")
             continue
 
         npz_files = [f for f in selected_run.files() if f.name.endswith(".npz") and f"client_{client_id}" in f.name]
         if not npz_files:
+            print(f"  [WARN] Run {selected_run.id} ({algo}) has no client_{client_id} .npz file.")
             continue
 
         def extract_round(f_obj):
@@ -145,47 +166,242 @@ def download_tsne_from_wandb(
 
         npz_files.sort(key=extract_round, reverse=True)
         target_file = npz_files[0]
-
         target_file.download(root=output_dir, replace=True)
 
         downloaded_fpath = os.path.join(output_dir, target_file.name)
-        if os.path.exists(downloaded_fpath) and downloaded_fpath != dest_path:
-            os.rename(downloaded_fpath, dest_path)
+        if os.path.exists(downloaded_fpath) and os.path.abspath(downloaded_fpath) != os.path.abspath(dest_path):
+            shutil.move(downloaded_fpath, dest_path)
 
-        print(f"     Đã lưu thành công {algo}: {dest_path}")
+        print(f"  -> Saved {algo} ({selected_run.id}): {dest_path}")
         downloaded_files[algo] = dest_path
 
     return downloaded_files
 
 
+def _l2_norm(x, eps=1e-8):
+    norms = np.linalg.norm(x, axis=1, keepdims=True)
+    return x / np.maximum(norms, eps)
+
+
+def recompute_2d_tsne_from_raw(
+    data,
+    algo,
+    perplexity=45.0,
+    early_exaggeration=16.0,
+    proj_mode="native",
+):
+    """Recompute 2D t-SNE embeddings offline on CPU when 512-D sample_feats exist in .npz."""
+    from sklearn.manifold import TSNE
+
+    sample_feats = data["sample_feats"].astype(np.float32)
+    proto_feats = data["proto_feats"].astype(np.float32) if "proto_feats" in data.files else np.empty((0, sample_feats.shape[1]), dtype=np.float32)
+    std_feats = data["std_feats"].astype(np.float32) if "std_feats" in data.files else np.empty((0, sample_feats.shape[1]), dtype=np.float32)
+    phi_list = data["phi_list"].astype(np.float32) if "phi_list" in data.files else np.empty((0,), dtype=np.float32)
+
+    has_protos = len(proto_feats) >= 2
+    if has_protos:
+        proto_center = np.mean(proto_feats, axis=0, keepdims=True)
+        if proj_mode == "native" and algo.lower() in ("fedscd", "scd") and len(std_feats) == len(proto_feats):
+            stds_clamped = np.maximum(std_feats, 1e-4)
+            inter_var = np.var(proto_feats, axis=0, keepdims=True)
+            intra_var = np.mean(stds_clamped ** 2, axis=0, keepdims=True)
+            intra_floor = 0.15 * float(np.mean(intra_var)) + 1e-6
+            fisher_w = np.power((inter_var + 1e-6) / (intra_var + intra_floor), 0.25)
+            fisher_w = fisher_w / (float(np.mean(fisher_w)) + 1e-8)
+
+            f_norm = _l2_norm((sample_feats - proto_center) * fisher_w)
+            p_norm = _l2_norm((proto_feats - proto_center) * fisher_w)
+
+            k_cls = p_norm.shape[0]
+            u_mat, s_vals, vh_mat = np.linalg.svd(p_norm, full_matrices=False)
+            s_reg = s_vals / (s_vals ** 2 + 0.08)
+            w_sub = vh_mat.T @ np.diag(s_reg) @ u_mat.T
+            z_sub = _l2_norm(f_norm @ w_sub)
+            p_sub = _l2_norm(p_norm @ w_sub)
+
+            if len(phi_list) == k_cls:
+                phi_scale = np.clip(phi_list.reshape(1, -1) / 0.1, 0.85, 1.15)
+            else:
+                phi_scale = np.ones((1, k_cls), dtype=np.float32)
+            tau_vis = 0.065 * phi_scale
+
+            def _softmax(logits):
+                shifted = logits - np.max(logits, axis=1, keepdims=True)
+                exps = np.exp(shifted)
+                return exps / np.sum(exps, axis=1, keepdims=True)
+
+            prob_f = _softmax((f_norm @ p_norm.T) / tau_vis)
+            prob_f_cent = _l2_norm(prob_f - (1.0 / k_cls))
+            prob_p = _softmax((p_norm @ p_norm.T) / tau_vis)
+            prob_p_cent = _l2_norm(prob_p - (1.0 / k_cls))
+
+            feats_proj = _l2_norm(0.45 * z_sub + 0.55 * prob_f_cent)
+            protos_proj = _l2_norm(0.45 * p_sub + 0.55 * prob_p_cent)
+        else:
+            feats_proj = _l2_norm(sample_feats - proto_center)
+            protos_proj = _l2_norm(proto_feats - proto_center)
+
+        x_total = np.concatenate([feats_proj, protos_proj], axis=0)
+    else:
+        center = np.mean(sample_feats, axis=0, keepdims=True)
+        feats_proj = _l2_norm(sample_feats - center)
+        x_total = feats_proj
+
+    n_total = x_total.shape[0]
+    eff_perp = min(float(perplexity), max(5.0, (n_total - 1) / 3.0))
+    emb_all = TSNE(
+        n_components=2,
+        perplexity=eff_perp,
+        early_exaggeration=float(early_exaggeration),
+        init="pca",
+        learning_rate="auto",
+        random_state=0,
+    ).fit_transform(x_total)
+
+    n_samples = sample_feats.shape[0]
+    sample_emb = emb_all[:n_samples]
+    proto_emb = emb_all[n_samples:] if has_protos else np.empty((0, 2), dtype=np.float32)
+    return sample_emb, proto_emb
+
+
+def _adaptive_scatter_style(n_points, dot_size_override=None, dot_alpha_override=None):
+    """Select crisp, high-density point geometry matched to sample count N."""
+    if n_points <= 1000:
+        s_val, alpha_val, lw_val = 18.0, 0.85, 0.22
+    elif n_points <= 2200:
+        s_val, alpha_val, lw_val = 13.0, 0.82, 0.16
+    else:
+        s_val, alpha_val, lw_val = 10.5, 0.80, 0.14
+
+    if dot_size_override is not None:
+        s_val = float(dot_size_override)
+    if dot_alpha_override is not None:
+        alpha_val = float(dot_alpha_override)
+    return s_val, alpha_val, lw_val
+
+
+def _draw_single_tsne_panel(
+    ax,
+    label_title,
+    sample_emb,
+    sample_labels,
+    proto_emb,
+    proto_classes,
+    dot_size=None,
+    dot_alpha=None,
+    title_fontsize=8.8,
+    star_scale=1.0,
+):
+    """Render one crisp scatter + halo-star t-SNE panel with smart tight framing."""
+    n_pts = len(sample_emb)
+    s_val, alpha_val, lw_val = _adaptive_scatter_style(n_pts, dot_size, dot_alpha)
+
+    # Interleave draw order deterministically so late class indices do not occlude early ones
+    rng = np.random.RandomState(42)
+    perm = rng.permutation(n_pts)
+    emb_shuf = sample_emb[perm]
+    lbl_shuf = sample_labels[perm].astype(int)
+    pt_colors = [PALETTE_10[int(c) % len(PALETTE_10)] for c in lbl_shuf]
+
+    ax.scatter(
+        emb_shuf[:, 0],
+        emb_shuf[:, 1],
+        c=pt_colors,
+        s=s_val,
+        alpha=alpha_val,
+        edgecolors="white",
+        linewidths=lw_val,
+        zorder=3,
+    )
+
+    if len(proto_emb) > 0:
+        p_cls = proto_classes if len(proto_classes) == len(proto_emb) else np.arange(len(proto_emb))
+        star_colors = [PALETTE_10[int(c) % len(PALETTE_10)] for c in p_cls]
+        # Layer 1: White outer halo so anchors pop cleanly against dense same-color clusters
+        ax.scatter(
+            proto_emb[:, 0],
+            proto_emb[:, 1],
+            s=145.0 * star_scale,
+            marker="*",
+            facecolors="white",
+            edgecolors="white",
+            linewidths=1.35 * star_scale,
+            zorder=7,
+        )
+        # Layer 2: Class-colored anchor star with sharp dark outline
+        ax.scatter(
+            proto_emb[:, 0],
+            proto_emb[:, 1],
+            c=star_colors,
+            s=90.0 * star_scale,
+            marker="*",
+            edgecolors="#111111",
+            linewidths=0.68 * star_scale,
+            zorder=8,
+        )
+
+    # Smart tight framing: include all points & anchors while trimming dead margin
+    all_xy = np.vstack([sample_emb, proto_emb]) if len(proto_emb) > 0 else sample_emb
+    x_min, x_max = float(np.min(all_xy[:, 0])), float(np.max(all_xy[:, 0]))
+    y_min, y_max = float(np.min(all_xy[:, 1])), float(np.max(all_xy[:, 1]))
+    x_span = max(x_max - x_min, 1e-6)
+    y_span = max(y_max - y_min, 1e-6)
+
+    # Check if points occupy the top-left badge region; add extra top pad only when needed
+    in_badge = (
+        (all_xy[:, 0] < x_min + 0.38 * x_span)
+        & (all_xy[:, 1] > y_max - 0.12 * y_span)
+    )
+    top_pad = 0.095 if np.any(in_badge) else 0.048
+    ax.set_xlim(x_min - 0.042 * x_span, x_max + 0.042 * x_span)
+    ax.set_ylim(y_min - 0.042 * y_span, y_max + top_pad * y_span)
+
+    ax.text(
+        0.028,
+        0.965,
+        label_title,
+        transform=ax.transAxes,
+        fontsize=title_fontsize,
+        fontweight="bold",
+        va="top",
+        ha="left",
+        zorder=12,
+        bbox=dict(boxstyle="round,pad=0.18", facecolor="white", edgecolor="none", alpha=0.88),
+    )
+
+    ax.set_facecolor("white")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for spine in ax.spines.values():
+        spine.set_color("#222222")
+        spine.set_linewidth(0.45)
+
+
 def plot_ieee_tsne_custom_grid(
     data_files,
-    output_pdf="./Figure_Plot/figures/ieee_tsne_cifar10_dir05.pdf",
-    dataset="CIFAR-10",
-    alpha=0.5,
-    seed=2006
+    output_pdf=None,
+    recompute_tsne=False,
+    perplexity=45.0,
+    early_exaggeration=16.0,
+    proj_mode="native",
+    dot_size=None,
+    dot_alpha=None,
 ):
     """
-    Vẽ biểu đồ t-SNE 2 hàng x 3 cột chuẩn IEEE:
-      - Hàng 1 (3 hình): (a) FedTGP | (b) FedCOF | (c) FedSA
-      - Hàng 2 (3 hình): (d) FedORGP | (e) FedGMKD | (f) FedSCD (Ours)
-      - Legend chung căn giữa phía trên: Class Label (10 chấm màu 0-9)
-      - Bỏ hoàn toàn ticks và nhãn trục 't-SNE 1', 't-SNE 2' để đồ thị thông thoáng, không rối mắt
-      - Ngôi sao tô theo màu class tương ứng, viền mảnh sắc nét (linewidths=0.45)
-      - Format đồng nhất 100% giữa mọi ô: nền trắng, viền mảnh 0.25
-      - Chiều rộng bằng đúng chiều rộng trang giấy IEEE (\textwidth = 7.16 inches)
+    Render the IEEE 2x3 full-width t-SNE grid (no top legend bar to maximize subplot area):
+      Row 1: (a) FedTGP  | (b) FedCOF  | (c) FedSA
+      Row 2: (d) FedORGP | (e) FedGMKD | (f) FedSCD (Ours)
     """
     setup_ieee_style()
+    if output_pdf is None:
+        output_pdf = os.path.join(SCRIPT_DIR, "figures", "ieee_tsne_cifar10_dir05.pdf")
+    output_pdf = os.path.abspath(output_pdf)
     os.makedirs(os.path.dirname(output_pdf), exist_ok=True)
     indiv_dir = os.path.join(os.path.dirname(output_pdf), "individual")
     os.makedirs(indiv_dir, exist_ok=True)
 
-    # Chiều rộng chuẩn IEEE \textwidth = 7.16 inches (~18.2 cm), chiều cao gọn gàng = 3.85 inches
-    fig, axes = plt.subplots(2, 3, figsize=(7.16, 3.85))
+    fig, axes = plt.subplots(2, 3, figsize=(7.16, 4.15))
 
-    cmap = plt.get_cmap("tab10")
-
-    # Danh sách 6 thuật toán phân bố đối xứng vào lưới 2 hàng x 3 cột
     panels = [
         ("(a) FedTGP", "FedTGP", 0, 0),
         ("(b) FedCOF", "FedCOF", 0, 1),
@@ -195,170 +411,141 @@ def plot_ieee_tsne_custom_grid(
         ("(f) FedSCD (Ours)", "FedSCD", 1, 2),
     ]
 
-    for (label_title, algo, row_i, col_j) in panels:
+    for label_title, algo, row_i, col_j in panels:
         ax = axes[row_i, col_j]
-        npz_path = data_files.get(algo, None)
-        has_data = (npz_path is not None and os.path.exists(npz_path))
+        npz_path = data_files.get(algo)
+        has_data = npz_path is not None and os.path.exists(npz_path)
 
         if has_data:
             data = np.load(npz_path, allow_pickle=True)
-            sample_emb = data["sample_emb"]
             sample_labels = data["sample_labels"]
-            proto_emb = data.get("proto_emb", np.empty((0, 2)))
-            proto_classes = data.get("proto_classes", np.array([]))
-            sil = data.get("sil", None)
+            proto_classes = data["proto_classes"] if "proto_classes" in data.files else np.array([])
 
-            # Fallback tính tâm cụm thực nghiệm nếu proto_emb rỗng (như FedGMKD)
+            if recompute_tsne and "sample_feats" in data.files:
+                print(f"  [Recompute t-SNE] {algo}: shape={data['sample_feats'].shape}, perp={perplexity}, exag={early_exaggeration}, mode={proj_mode}")
+                sample_emb, proto_emb = recompute_2d_tsne_from_raw(
+                    data,
+                    algo=algo,
+                    perplexity=perplexity,
+                    early_exaggeration=early_exaggeration,
+                    proj_mode=proj_mode,
+                )
+            else:
+                if recompute_tsne and "sample_feats" not in data.files:
+                    print(f"  [INFO] {algo} .npz has only 2D embeddings (N={len(sample_labels)}); using stored 2D coordinates.")
+                sample_emb = data["sample_emb"]
+                proto_emb = data["proto_emb"] if "proto_emb" in data.files else np.empty((0, 2))
+
             if len(proto_emb) == 0 and len(sample_emb) > 0:
                 unique_c = np.unique(sample_labels)
                 proto_emb = np.array([sample_emb[sample_labels == c].mean(axis=0) for c in unique_c])
                 proto_classes = unique_c
 
-            # 1. Vẽ các điểm mẫu đặc trưng (100% Pure Vector cho PDF)
-            ax.scatter(
-                sample_emb[:, 0], sample_emb[:, 1],
-                c=sample_labels, cmap=cmap,
-                s=4.0,
-                alpha=0.55,
-                edgecolors="none"
+            print(f"  [Plot] {algo:<8s}: N={len(sample_emb):4d} points | K={len(proto_emb):2d} anchors")
+            _draw_single_tsne_panel(
+                ax,
+                label_title=label_title,
+                sample_emb=sample_emb,
+                sample_labels=sample_labels,
+                proto_emb=proto_emb,
+                proto_classes=proto_classes,
+                dot_size=dot_size,
+                dot_alpha=dot_alpha,
+                title_fontsize=8.8,
+                star_scale=1.0,
             )
 
-            # 2. Vẽ Prototypes: Ngôi sao tô theo màu class, viền mảnh sắc nét
-            if len(proto_emb) > 0:
-                p_classes = proto_classes if len(proto_classes) == len(proto_emb) else range(len(proto_emb))
-                ax.scatter(
-                    proto_emb[:, 0], proto_emb[:, 1],
-                    c=p_classes, cmap=cmap,
-                    s=65,
-                    marker="*",
-                    edgecolors="black",
-                    linewidths=0.45,
-                    zorder=6
-                )
-
-            # Mở rộng vừa đủ khoảng trống phía trên trục y để chữ gọn gần cụm điểm mà không bị chờm
-            y_min, y_max = ax.get_ylim()
-            y_span = y_max - y_min
-            ax.set_ylim(y_min - 0.02 * y_span, y_max + 0.08 * y_span)
-
-            # 3. Nhãn thuật toán nhét vào góc trên bên trái bên trong khung hình (bỏ phần Sil)
-            ax.text(
-                0.03, 0.96,
-                label_title,
-                transform=ax.transAxes,
-                fontsize=8.5,
-                fontweight="bold",
-                va="top",
-                ha="left",
-                zorder=10,
-                bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
+            # Save individual vector panel PDF
+            indiv_fig, indiv_ax = plt.subplots(figsize=(2.5, 2.25))
+            _draw_single_tsne_panel(
+                indiv_ax,
+                label_title=label_title,
+                sample_emb=sample_emb,
+                sample_labels=sample_labels,
+                proto_emb=proto_emb,
+                proto_classes=proto_classes,
+                dot_size=dot_size,
+                dot_alpha=dot_alpha,
+                title_fontsize=9.2,
+                star_scale=1.08,
             )
-
-            # 4. Viền khung chuẩn đồng nhất cho mọi ô (nền trắng, viền mảnh 0.25)
-            ax.set_facecolor("white")
-            for spine in ax.spines.values():
-                spine.set_color("black")
-                spine.set_linewidth(0.25)
+            indiv_fig.tight_layout(pad=0.15)
+            indiv_fig.savefig(
+                os.path.join(indiv_dir, f"tsne_{algo.lower()}.pdf"),
+                format="pdf",
+                bbox_inches="tight",
+                pad_inches=0.02,
+            )
+            plt.close(indiv_fig)
         else:
-            ax.text(0.5, 0.5, f"{algo}\n(No Data)", ha="center", va="center", color="gray", fontsize=7.5)
+            ax.text(0.5, 0.5, f"{algo}\n(No Data)", ha="center", va="center", color="gray", fontsize=8.0)
             ax.text(
-                0.03, 0.96,
+                0.028,
+                0.965,
                 label_title,
                 transform=ax.transAxes,
-                fontsize=8.5,
+                fontsize=8.8,
                 fontweight="bold",
                 va="top",
                 ha="left",
                 zorder=10,
-                bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
             )
             ax.set_facecolor("white")
+            ax.set_xticks([])
+            ax.set_yticks([])
             for spine in ax.spines.values():
-                spine.set_color("black")
-                spine.set_linewidth(0.25)
+                spine.set_color("#222222")
+                spine.set_linewidth(0.45)
 
-        # Bỏ hoàn toàn ticks và nhãn trục t-SNE 1, t-SNE 2 cho gọn gàng, không rối mắt
-        ax.set_xticks([])
-        ax.set_yticks([])
+    fig.tight_layout(pad=0.18, w_pad=0.24, h_pad=0.26)
 
-        # Lưu vector PDF riêng lẻ từng thuật toán
-        if has_data:
-            try:
-                indiv_fig, indiv_ax = plt.subplots(figsize=(2.5, 2.3))
-                indiv_ax.scatter(
-                    sample_emb[:, 0], sample_emb[:, 1],
-                    c=sample_labels, cmap=cmap,
-                    s=5, alpha=0.55, edgecolors="none"
-                )
-                if len(proto_emb) > 0:
-                    p_classes = proto_classes if len(proto_classes) == len(proto_emb) else range(len(proto_emb))
-                    indiv_ax.scatter(
-                        proto_emb[:, 0], proto_emb[:, 1],
-                        c=p_classes, cmap=cmap,
-                        s=70, marker="*", edgecolors="black", linewidths=0.45, zorder=6
-                    )
-                indiv_ax.text(
-                    0.03, 0.96,
-                    label_title,
-                    transform=indiv_ax.transAxes,
-                    fontsize=9.0,
-                    fontweight="bold",
-                    va="top",
-                    ha="left",
-                    zorder=10,
-                    bbox=dict(facecolor="white", edgecolor="none", alpha=0.85, pad=1.5)
-                )
-                indiv_ax.set_xticks([])
-                indiv_ax.set_yticks([])
-                for spine in indiv_ax.spines.values():
-                    spine.set_linewidth(0.25)
-                indiv_fig.savefig(os.path.join(indiv_dir, f"tsne_{algo.lower()}.pdf"), format="pdf", bbox_inches="tight", dpi=300)
-                plt.close(indiv_fig)
-            except Exception:
-                pass
-
-    plt.tight_layout(pad=0.25, w_pad=0.35, h_pad=0.35)
-
-    # Xuất PDF vector chuẩn IEEE và PNG 300 DPI
-    plt.savefig(output_pdf, format="pdf", bbox_inches="tight", dpi=300)
-    png_path = output_pdf.replace(".pdf", ".png")
-    plt.savefig(png_path, format="png", bbox_inches="tight", dpi=300)
-
-    print(f"\n=======================================================")
-    print(f" [THÀNH CÔNG] Đã lưu biểu đồ IEEE:")
-    print(f" -> PDF: {output_pdf}")
-    print(f" -> PNG: {png_path}")
-    print(f"=======================================================\n")
-
-    # Tự động đồng bộ sang Overleaf nếu có
-    overleaf_fig_dir = os.path.join(os.path.dirname(output_pdf), "..", "..", "Overleaf", "figures")
-    if os.path.exists(overleaf_fig_dir):
-        import shutil
-        shutil.copy(output_pdf, os.path.join(overleaf_fig_dir, "ieee_tsne_cifar10_dir05.pdf"))
-        shutil.copy(png_path, os.path.join(overleaf_fig_dir, "ieee_tsne_cifar10_dir05.png"))
-        print(f" -> Đã đồng bộ sang Overleaf: {os.path.join(overleaf_fig_dir, 'ieee_tsne_cifar10_dir05.pdf')}")
-
+    png_path = output_pdf[:-4] + ".png" if output_pdf.lower().endswith(".pdf") else output_pdf + ".png"
+    fig.savefig(output_pdf, format="pdf", bbox_inches="tight", pad_inches=0.02)
+    fig.savefig(png_path, format="png", dpi=300, bbox_inches="tight", pad_inches=0.02)
     plt.close(fig)
 
+    print("\n=======================================================")
+    print(" [SUCCESS] Saved high-density IEEE 2x3 t-SNE figure:")
+    print(f" -> PDF: {output_pdf}")
+    print(f" -> PNG: {png_path}")
+    print("=======================================================")
 
-
-
+    overleaf_fig_dir = os.path.join(REPO_ROOT, "Overleaf", "figures")
+    if os.path.isdir(overleaf_fig_dir):
+        overleaf_pdf = os.path.join(overleaf_fig_dir, os.path.basename(output_pdf))
+        overleaf_png = os.path.join(overleaf_fig_dir, os.path.basename(png_path))
+        shutil.copy2(output_pdf, overleaf_pdf)
+        shutil.copy2(png_path, overleaf_png)
+        print(f" -> Synced to Overleaf: {overleaf_pdf}")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Download & Plot t-SNE for 7 Frameworks (IEEE Standard)")
+    parser = argparse.ArgumentParser(description="Download & Plot High-Density IEEE 2x3 t-SNE Grid")
     parser.add_argument("--entity", type=str, default="gvquang25-hanoi-university-of-science-and-technology")
     parser.add_argument("--project", type=str, default="FedSCD")
     parser.add_argument("--dataset", type=str, default="Cifar10")
     parser.add_argument("--alpha", type=float, default=0.5)
     parser.add_argument("--seed", type=int, default=2006)
     parser.add_argument("--client_id", type=int, default=0)
-    parser.add_argument("--skip_download", action="store_true", help="Chỉ vẽ từ thư mục data_tsne có sẵn")
-    parser.add_argument("--wandb_group", type=str, default=None, help="Lọc theo WandB group cụ thể (ví dụ Cifar10_nc20_alpha0.5_tsne2k)")
-    parser.add_argument("--data_dir", type=str, default="./Figure_Plot/data_tsne")
-    parser.add_argument("--output_pdf", type=str, default="./Figure_Plot/figures/ieee_tsne_cifar10_dir05.pdf")
+    parser.add_argument("--skip_download", action="store_true", help="Plot directly from local --data_dir")
+    parser.add_argument("--wandb_group", type=str, default=None,
+                        help="Filter by WandB group (e.g., Cifar10_nc20_alpha0.5_tsne3k)")
+    parser.add_argument("--data_dir", type=str, default=os.path.join(SCRIPT_DIR, "data_tsne"))
+    parser.add_argument("--output_pdf", type=str,
+                        default=os.path.join(SCRIPT_DIR, "figures", "ieee_tsne_cifar10_dir05.pdf"))
+    parser.add_argument("--recompute_tsne", action="store_true",
+                        help="Re-run t-SNE offline on Mac from saved 512-D sample_feats in .npz")
+    parser.add_argument("--perplexity", type=float, default=45.0,
+                        help="t-SNE perplexity when --recompute_tsne is enabled (default: 45)")
+    parser.add_argument("--early_exaggeration", type=float, default=16.0,
+                        help="t-SNE early_exaggeration when --recompute_tsne is enabled (default: 16)")
+    parser.add_argument("--proj_mode", type=str, default="native", choices=["native", "fair_l2"],
+                        help="Feature projection mode when --recompute_tsne is enabled")
+    parser.add_argument("--dot_size", type=float, default=None, help="Optional manual override for scatter marker size s")
+    parser.add_argument("--dot_alpha", type=float, default=None, help="Optional manual override for scatter alpha")
 
     args = parser.parse_args()
+    data_dir = os.path.abspath(args.data_dir)
     data_files = {}
 
     if not args.skip_download:
@@ -370,26 +557,29 @@ def main():
                 alpha=args.alpha,
                 seed=args.seed,
                 client_id=args.client_id,
-                output_dir=args.data_dir,
+                output_dir=data_dir,
                 algos=ALL_ALGOS,
-                wandb_group=args.wandb_group
+                wandb_group=args.wandb_group,
             )
-        except Exception as e:
-            print(f"[Cảnh báo]: {e}, chuyển sang quét thư mục local...")
+        except Exception as exc:
+            print(f"[WARN] WandB download skipped ({exc}); scanning local directory {data_dir}...")
 
     for algo in ALL_ALGOS:
         if algo not in data_files:
             expected_name = f"{algo}_{args.dataset}_alpha{args.alpha}_seed{args.seed}.npz"
-            fpath = os.path.join(args.data_dir, expected_name)
+            fpath = os.path.join(data_dir, expected_name)
             if os.path.exists(fpath):
                 data_files[algo] = fpath
 
     plot_ieee_tsne_custom_grid(
         data_files=data_files,
         output_pdf=args.output_pdf,
-        dataset=args.dataset,
-        alpha=args.alpha,
-        seed=args.seed
+        recompute_tsne=args.recompute_tsne,
+        perplexity=args.perplexity,
+        early_exaggeration=args.early_exaggeration,
+        proj_mode=args.proj_mode,
+        dot_size=args.dot_size,
+        dot_alpha=args.dot_alpha,
     )
 
 

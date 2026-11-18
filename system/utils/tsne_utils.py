@@ -293,12 +293,15 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 print(f"[Client {client.id}] Cảnh báo: Số lượng điểm n_total = {n_total} < 5, không đủ fit t-SNE.")
                 return None
 
-            # Tối ưu cấu hình t-SNE: init='pca', learning_rate='auto'
-            perplexity = min(35, max(5, (n_total - 1) // 3))
+            # Tối ưu cấu hình t-SNE theo mật độ điểm lớn (ví dụ N=3,000): init='pca', learning_rate='auto'
+            target_perp = 45 if n_total >= 2000 else 35
+            perplexity = min(target_perp, max(5, (n_total - 1) // 3))
             perplexity = min(perplexity, max(1, n_total - 1))
+            early_exag = 16.0 if n_total >= 1500 else 12.0
             X_emb = TSNE(
                 n_components=2,
                 perplexity=perplexity,
+                early_exaggeration=early_exag,
                 init='pca',
                 learning_rate='auto',
                 random_state=0
@@ -438,9 +441,25 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             save_path = os.path.join(save_dir, f"client_{client.id}_round_{round_idx}_tsne.pdf")
             fig.savefig(save_path, format="pdf", dpi=300, bbox_inches='tight')
 
-            # Lưu dữ liệu t-SNE dạng .npz để tái sử dụng và vẽ lại (replot) sau này
+            # Lưu dữ liệu t-SNE dạng .npz (bao gồm cả đặc trưng gốc 512-D dạng float16 để tinh chỉnh offline tức thì)
             npz_save_path = os.path.join(save_dir, f"client_{client.id}_round_{round_idx}_tsne.npz")
             try:
+                feat_dim_raw = int(sample_feats.size(1))
+                protos_raw_np = (
+                    torch.cat(proto_feats, dim=0).numpy().astype(np.float32)
+                    if has_protos and len(proto_feats) > 0
+                    else np.empty((0, feat_dim_raw), dtype=np.float32)
+                )
+                stds_raw_np = (
+                    torch.cat(std_feats, dim=0).numpy().astype(np.float32)
+                    if len(std_feats) > 0
+                    else np.empty((0, feat_dim_raw), dtype=np.float32)
+                )
+                phis_raw_np = (
+                    np.array(phi_list, dtype=np.float32)
+                    if len(phi_list) > 0
+                    else np.empty((0,), dtype=np.float32)
+                )
                 np.savez_compressed(
                     npz_save_path,
                     sample_emb=X_emb[:n_samples],
@@ -448,6 +467,10 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                     proto_emb=proto_emb if has_protos else np.empty((0, 2)),
                     proto_classes=np.array(proto_classes) if has_protos else np.empty((0,), dtype=int),
                     active_class_counts=np.array([active_class_counts.get(c, 0) for c in proto_classes]) if has_protos else np.empty((0,), dtype=int),
+                    sample_feats=sample_feats.numpy().astype(np.float16),
+                    proto_feats=protos_raw_np,
+                    std_feats=stds_raw_np,
+                    phi_list=phis_raw_np,
                     sil=float(sil) if sil is not None else np.nan,
                     client_id=int(client.id),
                     round_idx=int(round_idx),
