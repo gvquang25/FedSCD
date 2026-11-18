@@ -142,24 +142,26 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
             base_temp = float(getattr(client, 'infoNCET', 0.1) or 0.1)
 
             # Trích xuất Prototypes từ các thuộc tính đa dạng của các baseline (FedTGP, FedSA, FedCOF, FedORGP, v.v.)
+            def _valid_proto_source(v):
+                if v is None:
+                    return False
+                if torch.is_tensor(v):
+                    return v.numel() > 0
+                try:
+                    return len(v) > 0
+                except Exception:
+                    return False
+
             raw_protos_dict = None
-            if hasattr(client, 'global_prototypes') and client.global_prototypes:
-                raw_protos_dict = client.global_prototypes
-            elif hasattr(client, 'global_protos') and client.global_protos:
-                raw_protos_dict = client.global_protos
-            elif hasattr(client, 'anchors') and client.anchors:
-                raw_protos_dict = client.anchors
-            elif hasattr(client, 'cluster_protos') and client.cluster_protos:
-                raw_protos_dict = client.cluster_protos
-            elif hasattr(client, 'global_avg_protos') and client.global_avg_protos:
-                raw_protos_dict = client.global_avg_protos
-            elif hasattr(client, 'global_cluster_protos') and client.global_cluster_protos:
-                raw_protos_dict = client.global_cluster_protos
-            elif hasattr(client, 'global_features') and client.global_features is not None:
-                raw_protos_dict = client.global_features
-            elif hasattr(client, 'local_features') and client.local_features:
-                raw_protos_dict = client.local_features
-            elif hasattr(client, 'local_stats') and isinstance(client.local_stats, dict) and 'class_means' in client.local_stats:
+            for attr in ['global_prototypes', 'global_protos', 'anchors', 'cluster_protos', 
+                         'global_avg_protos', 'global_cluster_protos', 'global_features', 
+                         'local_features']:
+                if hasattr(client, attr):
+                    val = getattr(client, attr)
+                    if _valid_proto_source(val):
+                        raw_protos_dict = val
+                        break
+            if raw_protos_dict is None and hasattr(client, 'local_stats') and isinstance(client.local_stats, dict) and 'class_means' in client.local_stats:
                 raw_protos_dict = client.local_stats['class_means']
 
             if raw_protos_dict is not None:

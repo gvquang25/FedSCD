@@ -29,7 +29,7 @@ class FedSCD(Server):
         self.set_clients(clientSCD)
 
         # Tham số Momentum EMA và nhiệt độ cơ sở của SCD
-        self.scd_momentum = getattr(args, 'proto_momentum', 0.1)
+        self.scd_momentum = getattr(args, 'proto_momentum', 0.6)
         self.pcl_momentum = self.scd_momentum
         self.base_temperature = getattr(args, 'infoNCET', 0.1)
         self.phi_range = getattr(args, 'phi_range', 0.1)
@@ -129,7 +129,7 @@ class FedSCD(Server):
     aggregate_prototypes_and_stds = proto_aggregation
 
 
-def proto_aggregation_scd(local_stats_list, prev_global_stats=None, momentum=0.1, base_tau=0.1, phi_range=0.1):
+def proto_aggregation_scd(local_stats_list, prev_global_stats=None, momentum=0.6, base_tau=0.1, phi_range=0.1):
     """
     Thuật toán E-Step phân tán tổng hợp Prototype và ước lượng nồng độ cụm theo FedSCD:
     1. Weighted Mean & Pooled Variance từ local_stats của các client tải lên:

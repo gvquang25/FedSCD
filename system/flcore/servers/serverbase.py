@@ -88,7 +88,7 @@ class Server(object):
         self.writer = None
         
         if getattr(self.args, 'log', False) or getattr(self.args, 'use_wandb', False):
-            args.run_name = f"{args.algorithm}__{args.dataset}__{args.num_clients}__run_{times}__{int(time.time())}"
+            args.run_name = getattr(args, 'wandb_name', None) or f"{args.algorithm}__{args.dataset}__{args.num_clients}__run_{times}__{int(time.time())}"
             self.save_dir = f"runs/{args.run_name}"
             
             if SummaryWriter is not None:

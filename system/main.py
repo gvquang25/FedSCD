@@ -245,13 +245,13 @@ if __name__ == "__main__":
     parser.add_argument('-data', "--dataset", type=str, default="mnist")
     parser.add_argument('-nb', "--num_classes", type=int, default=10)
     parser.add_argument('-m', "--model", type=str, default="cnn")
-    parser.add_argument('-lbs', "--batch_size", type=int, default=10)
-    parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
+    parser.add_argument('-lbs', "--batch_size", type=int, default=32)
+    parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.01,
                         help="Local learning rate")
     parser.add_argument('-tbs', '--test_batch_size', type=int, default=512, help="Test batch size")
     parser.add_argument('-ld', "--learning_rate_decay", type=bool, default=False)
     parser.add_argument('-ldg', "--learning_rate_decay_gamma", type=float, default=0.99)
-    parser.add_argument('-gr', "--global_rounds", type=int, default=2000)
+    parser.add_argument('-gr', "--global_rounds", type=int, default=100)
     parser.add_argument('-ls', "--local_epochs", type=int, default=1, 
                         help="Multiple update steps in one local epoch.")
     parser.add_argument('-algo', "--algorithm", type=str, default="FedSCD",
@@ -286,6 +286,8 @@ if __name__ == "__main__":
                         help="WandB entity/username/team name")
     parser.add_argument('--wandb_group', type=str, default=None,
                         help="WandB group name")
+    parser.add_argument('--wandb_name', type=str, default=None,
+                        help="WandB run name")
 
     # Data partitioning
     parser.add_argument("--noniid", action='store_true')
@@ -305,7 +307,7 @@ if __name__ == "__main__":
                         help="The threthold for droping slow clients")
 
     # Regularization weight
-    parser.add_argument('-lam', '-lamda', '--lam', '--lamda', dest='lamda', type=float, default=0.1,
+    parser.add_argument('-lam', '-lamda', '--lam', '--lamda', dest='lamda', type=float, default=0.3,
                         help="Regularization weight / prototype regularization weight")
 
     # FedSCD Hyperparameters
@@ -331,9 +333,9 @@ if __name__ == "__main__":
                         help="Use identical feature normalization/projection across all algorithms for t-SNE")
     parser.add_argument('--save_tsne_ckpt', action='store_true', default=False,
                         help="Save client 0 checkpoint at final round for fast t-SNE replotting")
-    parser.add_argument('--proto_momentum', type=float, default=0.1,
+    parser.add_argument('--proto_momentum', type=float, default=0.6,
                         help="Momentum EMA coefficient for prototype update")
-    parser.add_argument('--lamda_ins', type=float, default=0.05,
+    parser.add_argument('--lamda_ins', type=float, default=0.75,
                         help="Weight for intra-batch instance contrastive loss in FedSCD")
     parser.add_argument('--lamda_nce', type=float, default=1.0,
                         help="Scaling factor for the ProtoNCE term")
@@ -341,9 +343,9 @@ if __name__ == "__main__":
                         help="Projection hypersphere mode: class-specific or shared")
     parser.add_argument('--phi_range', type=float, default=0.1,
                         help="Dynamic temperature clipping range")
-    parser.add_argument('--lamda_virt_local', type=float, default=0.0,
+    parser.add_argument('--lamda_virt_local', type=float, default=0.3,
                         help="Local virtual feature regularization weight")
-    parser.add_argument('--lamda_virt_global', type=float, default=0.05,
+    parser.add_argument('--lamda_virt_global', type=float, default=0.3,
                         help="Global virtual feature regularization weight")
     parser.add_argument('--scd_aug', '--pcl_aug', dest='scd_aug', type=int, default=1,
                         help="Enable GPU contrastive view augmentation (1: True, 0: False)")

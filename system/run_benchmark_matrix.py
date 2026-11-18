@@ -102,8 +102,8 @@ def parse_args():
     parser.add_argument("--device_id", "-did", type=int, default=0, help="CUDA device ID")
     parser.add_argument("--times", "-t", type=int, default=1, help="Independent runs/seeds (default: 1)")
     parser.add_argument("--seed", "-sd", type=int, default=2006, help="Random seed for model initialization and training (default: 2006)")
-    parser.add_argument("--tsne_gap", type=int, default=20, help="Interval for t-SNE visualization (default: 20)")
-    parser.add_argument("--no_tsne", action="store_true", default=False, help="Disable t-SNE visualization")
+    parser.add_argument("--tsne_gap", type=int, default=20, help="Interval for t-SNE visualization for alpha=0.5 (default: 20)")
+    parser.add_argument("--no_tsne", action="store_true", default=False, help="Disable t-SNE completely (note: t-SNE is automatically enabled ONLY for alpha=0.5)")
     parser.add_argument("--wandb_project", type=str, default="FedSCD", help="WandB project name")
     parser.add_argument("--wandb_entity", type=str, default="gvquang25-hanoi-university-of-science-and-technology", help="WandB entity")
     parser.add_argument("--skip_completed", action="store_true", default=True,
@@ -125,6 +125,7 @@ def main():
     print(f"Clients              : {args.num_clients} (Join Ratio: {args.join_ratio})")
     print(f"WandB Project        : {args.wandb_entity} / {args.wandb_project}")
     print(f"Skip Completed Runs  : {skip_completed}")
+    print("t-SNE Policy         : Enabled ONLY for Dirichlet alpha=0.5 (disabled for other alphas)")
     print("=" * 85)
 
     # Build execution matrix
@@ -189,7 +190,9 @@ def main():
             "--wandb_group", wandb_group
         ]
 
-        if args.no_tsne:
+        # t-SNE policy: Chỉ giữ lại t-SNE cho Dirichlet alpha = 0.5, tất cả alpha khác (0.1, 1.0) tắt (--no_tsne)
+        is_dir_05 = abs(float(alpha) - 0.5) < 1e-4
+        if not is_dir_05 or args.no_tsne:
             cmd.append("--no_tsne")
         elif args.tsne_gap is not None:
             cmd.extend(["--tsne_gap", str(args.tsne_gap)])

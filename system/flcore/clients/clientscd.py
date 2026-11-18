@@ -34,9 +34,9 @@ class clientSCD(DecoupledClient):
         self.local_stats = {}
         self.loss_mse = nn.MSELoss()
 
-        # Đồng bộ trọng số điều chuẩn prototype theo -lam 0.1
+        # Đồng bộ trọng số điều chuẩn prototype theo -lam 0.3
         raw_lamda = getattr(args, 'lamda', None)
-        self.lamda = float(raw_lamda) if raw_lamda is not None else 0.1
+        self.lamda = float(raw_lamda) if raw_lamda is not None else 0.3
 
         v_proto = getattr(args, 'lamda_proto', None)
         if v_proto is not None and float(v_proto) != 1.0:
@@ -50,13 +50,13 @@ class clientSCD(DecoupledClient):
 
         self.proto_warmup = 1 if getattr(args, 'proto_warmup', None) is None else int(args.proto_warmup)
         self.proto_rampup = 5 if getattr(args, 'proto_rampup', None) is None else max(1, int(args.proto_rampup))
-        self.lamda_ins = 0.05 if getattr(args, 'lamda_ins', None) is None else float(args.lamda_ins)
+        self.lamda_ins = 0.75 if getattr(args, 'lamda_ins', None) is None else float(args.lamda_ins)
 
-        v_virt_local = getattr(args, 'lamda_virt_local', 0.0)
-        self.lamda_virt_local = 0.0 if v_virt_local is None else float(v_virt_local)
+        v_virt_local = getattr(args, 'lamda_virt_local', 0.3)
+        self.lamda_virt_local = 0.3 if v_virt_local is None else float(v_virt_local)
 
-        v_virt_global = getattr(args, 'lamda_virt_global', 0.05)
-        self.lamda_virt_global = 0.05 if v_virt_global is None else float(v_virt_global)
+        v_virt_global = getattr(args, 'lamda_virt_global', 0.3)
+        self.lamda_virt_global = 0.3 if v_virt_global is None else float(v_virt_global)
 
         self.proj_mode = getattr(args, 'proj_mode', 'shared')
         self.use_scd_aug = bool(getattr(args, 'scd_aug', getattr(args, 'pcl_aug', True)))

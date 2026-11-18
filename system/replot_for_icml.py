@@ -64,10 +64,11 @@ def replot_tsne(
     n_samples = len(sample_emb)
     unique_classes = np.unique(sample_labels)
     n_classes = len(unique_classes)
+    num_classes = int(data.get("num_classes", np.max(sample_labels) + 1))
 
     fig, ax = plt.subplots(figsize=figsize)
 
-    cmap_name = "tab10" if n_classes <= 10 else "tab20"
+    cmap_name = "tab10" if num_classes <= 10 else ("tab20" if num_classes <= 20 else "gist_ncar")
     cmap = plt.get_cmap(cmap_name)
 
     # 1. Vẽ các điểm mẫu dữ liệu
@@ -76,6 +77,8 @@ def replot_tsne(
         sample_emb[:, 1],
         c=sample_labels,
         cmap=cmap,
+        vmin=0,
+        vmax=max(1, num_classes - 1),
         alpha=0.68,
         s=point_size,
         edgecolors="white",
@@ -93,11 +96,11 @@ def replot_tsne(
             cbar.set_ticklabels(CIFAR10_CLASSES)
     elif legend_mode == "legend":
         handles = []
-        for c in range(min(10, n_classes)):
+        for c in unique_classes[:10]:
             lbl = CIFAR10_CLASSES[c] if use_class_names else f"Class {c}"
             handles.append(
                 Line2D([0], [0], marker="o", color="w", label=lbl,
-                       markerfacecolor=cmap(c / max(1, n_classes - 1)), markersize=6)
+                       markerfacecolor=cmap(c / max(1, num_classes - 1)), markersize=6)
             )
         ax.legend(handles=handles, loc="upper right", framealpha=0.85, fontsize=8)
 
@@ -231,12 +234,15 @@ def compare_tsne(
         sil = data.get("sil", np.nan)
         algo = str(data.get("algorithm", os.path.basename(npz_path).split("_")[0]))
         round_idx = data.get("round_idx", 99)
+        num_classes = int(data.get("num_classes", np.max(sample_labels) + 1))
 
         sc = ax.scatter(
             sample_emb[:, 0],
             sample_emb[:, 1],
             c=sample_labels,
-            cmap=cmap,
+            cmap="tab10" if num_classes <= 10 else ("tab20" if num_classes <= 20 else "gist_ncar"),
+            vmin=0,
+            vmax=max(1, num_classes - 1),
             alpha=0.68,
             s=point_size,
             edgecolors="white",

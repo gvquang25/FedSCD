@@ -16,6 +16,7 @@ param(
     [int]$Times = 1,
     [int]$Seed = 2006,
     [int]$TsneGap = 20,
+    [int]$Seed = 2006,
     [switch]$NoTsne,
     [switch]$ForceAll,
     [string]$Algorithm = "",
@@ -62,8 +63,9 @@ $CompletedRuns = @{
 Write-Host "==========================================================================" -ForegroundColor Cyan
 Write-Host " HE THONG TU DONG CHAY BENCHMARK BANG 4 (7 THUAT TOAN x 4 DATASET x 3 ALPHA)" -ForegroundColor Cyan
 Write-Host " Phien ban Windows GPU NVIDIA RTX 4050 (-dev $Device -did $DeviceId)" -ForegroundColor Cyan
-Write-Host " Rounds: $GlobalRounds | Batch: $BatchSize | LR: $LocalLearningRate | Clients: $NumClients" -ForegroundColor Cyan
+Write-Host " Rounds: $GlobalRounds | Seed: $Seed | Batch: $BatchSize | LR: $LocalLearningRate | Clients: $NumClients" -ForegroundColor Cyan
 Write-Host " WandB: $WandbEntity / $WandbProject" -ForegroundColor Cyan
+Write-Host " t-SNE: Chi bat cho Dirichlet alpha=0.5 (tat cho alpha 0.1, 1.0 de toi uu toc do)" -ForegroundColor Cyan
 Write-Host "==========================================================================" -ForegroundColor Cyan
 
 $TotalPlanned = 84
@@ -158,7 +160,9 @@ foreach ($ds in $Datasets) {
                 "--wandb_group", $WandbGroup
             ) + $ExtraArgs
 
-            if ($NoTsne) {
+            # Chinh sach t-SNE: Chi giu t-SNE khi Dirichlet alpha = 0.5, cac muc alpha khac (0.1, 1.0) tat de toi uu toc do
+            $isDir05 = [Math]::Abs($alpha - 0.5) -lt 1e-4
+            if (-Not $isDir05 -or $NoTsne) {
                 $cmdArgs += "--no_tsne"
             } elseif ($TsneGap -gt 0) {
                 $cmdArgs += @("--tsne_gap", $TsneGap)
