@@ -22,10 +22,10 @@ cd system
 
 ## 2. Tham số nền dùng chung (CIFAR-10, $\alpha = 0.5$)
 
-Cấu hình chuẩn theo `system/run_target_experiments.ps1` và `system/main.py`:
+Cấu hình chuẩn khớp 100% với bản thảo `Overleaf/ieee2026.tex` (run tham chiếu `c7tds897`, đạt **76.66%** trên CIFAR-10, $\alpha = 0.5$):
 
 ```powershell
-$BASE = "-u main.py -algo FedSCD -data Cifar10 -m cnn -nc 20 -nb 10 -gr 100 -ls 1 -lbs 32 -lr 0.01 -jr 1.0 --noniid --alpha_dirich 0.5 -dev cuda -did 0 -t 1 -sd 2006 -lam 0.1 -nct 0.1 --phi_range 0.1 --proto_momentum 0.1 --bayes_shrink 0.25 --lamda_ins 0.05 --lamda_virt_global 0.05 --proto_warmup 1 --proto_rampup 5 -log --wandb_project FedSCD --wandb_entity gvquang25-hanoi-university-of-science-and-technology --wandb_group Cifar10_ablation_alpha0.5"
+$BASE = "-u main.py -algo FedSCD -data Cifar10 -m cnn -nc 20 -nb 10 -gr 100 -ls 1 -lbs 32 -lr 0.01 -jr 1.0 --noniid --alpha_dirich 0.5 -dev cuda -did 0 -t 1 -sd 2006 -lam 0.3 -nct 0.1 --phi_range 0.1 --proto_momentum 0.6 --bayes_shrink 0.25 --lamda_ins 0.75 --lamda_virt_local 0.3 --lamda_virt_global 0.3 --proto_warmup 1 --proto_rampup 5 --mixup_alpha 0.2 --scd_aug 1 --proj_mode shared --no_tsne -log --wandb_project FedSCD --wandb_entity gvquang25-hanoi-university-of-science-and-technology --wandb_group Cifar10_ablation_alpha0.5"
 ```
 
 ---
@@ -83,15 +83,20 @@ $BaseArgs = @(
     "-did", "0",
     "-t", "1",
     "-sd", "2006",
-    "-lam", "0.1",
+    "-lam", "0.3",
     "-nct", "0.1",
     "--phi_range", "0.1",
-    "--proto_momentum", "0.1",
+    "--proto_momentum", "0.6",
     "--bayes_shrink", "0.25",
-    "--lamda_ins", "0.05",
-    "--lamda_virt_global", "0.05",
+    "--lamda_ins", "0.75",
+    "--lamda_virt_local", "0.3",
+    "--lamda_virt_global", "0.3",
     "--proto_warmup", "1",
     "--proto_rampup", "5",
+    "--mixup_alpha", "0.2",
+    "--scd_aug", "1",
+    "--proj_mode", "shared",
+    "--no_tsne",
     "-log",
     "--wandb_project", "FedSCD",
     "--wandb_entity", "gvquang25-hanoi-university-of-science-and-technology",
@@ -115,3 +120,31 @@ foreach ($r in $Runs) {
     & $Python ($BaseArgs + $r.Extra + @("-go", $r.Name))
 }
 ```
+
+---
+
+## 6. Chạy Hyperparameter Sensitivity (Figure 4 — Lưới 2×3, 18 Runs)
+
+Khảo sát one-factor-at-a-time cho **6 siêu tham số** ($\lambda$, $\lambda_{\mathrm{ins}}$, $\lambda_{\mathrm{virt}}$, $\beta$, $\rho$, $\tau$) trên **CIFAR-10 ($\alpha = 0.5$, seed `2006`)**, giữ cố định các tham số còn lại theo run chuẩn `c7tds897` (`76.66%`) và đồng bộ lên nhóm WandB `Cifar10_hyperparam_alpha0.5`.
+
+### 6.1. Chạy tự động 1-click trên Windows GPU (RTX 4050)
+
+```powershell
+cd system
+.\run_hyperparam_sensitivity.ps1
+```
+
+*Các tùy chọn hữu ích:*
+- Kiểm tra danh sách lệnh trước khi chạy: `.\run_hyperparam_sensitivity.ps1 -DryRun`
+- Chỉ chạy riêng 1 siêu tham số (ví dụ `lam`, `ins`, `virt`, `beta`, `rho`, `tau`): `.\run_hyperparam_sensitivity.ps1 -OnlyParam lam`
+- Chạy lại toàn bộ kể cả các run đã hoàn thành: `.\run_hyperparam_sensitivity.ps1 -ForceAll`
+
+*(Script tự động bỏ qua các run đã có marker `.done` trong `logs/hyperparam_sensitivity/` hoặc đã ở trạng thái `finished` trên WandB, và tự động gọi `Figure_Plot\plot_hyperparam_sensitivity.py --fetch` sau khi xong.)*
+
+### 6.2. Cập nhật lại biểu đồ Figure 4 từ WandB (khi chạy riêng bước vẽ)
+
+```bash
+python Figure_Plot/plot_hyperparam_sensitivity.py --fetch
+```
+
+Script sẽ tải đủ 18 run mới + run mặc định `c7tds897`, lưu CSV về `Figure_Plot/data_hyperparam_alpha05/` và xuất đồng thời `Figure_Plot/figures/hyperparam_sensitivity_6params.pdf` lẫn `Overleaf/figures/hyperparam_sensitivity_6params.pdf`.
