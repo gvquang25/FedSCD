@@ -110,7 +110,7 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 all_labels.append(y.cpu())
 
             if not all_reps:
-                print(f"[Client {client.id}] Cảnh báo: Tập kiểm thử rỗng, bỏ qua visualize_tsne.")
+                print(f"[Client {client.id}] Warning: Empty test set, skipping visualize_tsne.")
                 return None
 
             sample_feats = torch.cat(all_reps, dim=0).float()
@@ -278,7 +278,7 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                 try:
                     sil = float(silhouette_score(feats_proj_np, sample_labels_np, metric='cosine'))
                 except Exception as e:
-                    print(f"[Client {client.id}] Cảnh báo tính Silhouette: {e}")
+                    print(f"[Client {client.id}] Silhouette warning: {e}")
                     sil = None
 
             print(f"[Client {client.id}] Round {round_idx} - Silhouette: {sil}")
@@ -292,7 +292,7 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
 
             n_total = X_total.shape[0]
             if n_total < 5:
-                print(f"[Client {client.id}] Cảnh báo: Số lượng điểm n_total = {n_total} < 5, không đủ fit t-SNE.")
+                print(f"[Client {client.id}] Warning: n_total = {n_total} < 5, insufficient points for t-SNE.")
                 return None
 
             # Tối ưu cấu hình t-SNE theo mật độ điểm lớn (ví dụ N=3,000): init='pca', learning_rate='auto'
@@ -479,7 +479,7 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                     algorithm=algo_name
                 )
             except Exception as e_npz:
-                print(f"[{algo_name} Client {client.id}] Cảnh báo lưu file t-SNE .npz: {e_npz}")
+                print(f"[{algo_name} Client {client.id}] Warning saving t-SNE .npz: {e_npz}")
 
             # Lưu checkpoint Client 0 ở round cuối nếu bật --save_tsne_ckpt
             global_rounds = int(getattr(client.args, 'global_rounds', 100) or 100)
