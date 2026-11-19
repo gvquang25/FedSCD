@@ -394,7 +394,7 @@ class Server(object):
                         tsne_max = int(getattr(self.args, 'tsne_max_samples', 1000) or 1000)
                         self.clients[0].visualize_tsne(round_idx=self.current_round, max_samples=tsne_max)
                     except Exception as e_tsne:
-                        print(f"[{self.algorithm}] Cảnh báo t-SNE: {e_tsne}")
+                        print(f"[{self.algorithm}] t-SNE warning: {e_tsne}")
         
         # self.evaluate_global() disabled for PFL
         self.current_round += 1

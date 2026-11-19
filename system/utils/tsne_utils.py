@@ -513,9 +513,9 @@ def plot_client_tsne(client, round_idx=0, max_samples=1000, save_dir="./tsne_res
                         },
                         ckpt_path,
                     )
-                    print(f"[{algo_name} Client {client.id}] Đã lưu checkpoint t-SNE: {ckpt_path}")
+                    print(f"[{algo_name} Client {client.id}] Saved t-SNE checkpoint: {ckpt_path}")
                 except Exception as e_ckpt:
-                    print(f"[{algo_name} Client {client.id}] Cảnh báo lưu checkpoint .pt: {e_ckpt}")
+                    print(f"[{algo_name} Client {client.id}] Warning saving .pt checkpoint: {e_ckpt}")
 
             # Ghi log WandB an toàn:
             # - wandb.Image(fig) hiển thị trực tiếp trên web UI

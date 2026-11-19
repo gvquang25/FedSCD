@@ -265,13 +265,13 @@ def recompute_2d_tsne_from_raw(
 
 
 def _adaptive_scatter_style(n_points, dot_size_override=None, dot_alpha_override=None):
-    """Select crisp, high-density point geometry matched to sample count N."""
+    """Match the original soft-dot + crisp-star IEEE template across sample densities."""
     if n_points <= 1000:
-        s_val, alpha_val, lw_val = 18.0, 0.85, 0.22
+        s_val, alpha_val, lw_val = 4.0, 0.55, 0.0
     elif n_points <= 2200:
-        s_val, alpha_val, lw_val = 13.0, 0.82, 0.16
+        s_val, alpha_val, lw_val = 4.0, 0.55, 0.0
     else:
-        s_val, alpha_val, lw_val = 10.5, 0.80, 0.14
+        s_val, alpha_val, lw_val = 3.8, 0.55, 0.0
 
     if dot_size_override is not None:
         s_val = float(dot_size_override)
@@ -296,48 +296,41 @@ def _draw_single_tsne_panel(
     n_pts = len(sample_emb)
     s_val, alpha_val, lw_val = _adaptive_scatter_style(n_pts, dot_size, dot_alpha)
 
+    cmap = plt.get_cmap("tab10")
+
     # Interleave draw order deterministically so late class indices do not occlude early ones
     rng = np.random.RandomState(42)
     perm = rng.permutation(n_pts)
     emb_shuf = sample_emb[perm]
     lbl_shuf = sample_labels[perm].astype(int)
-    pt_colors = [PALETTE_10[int(c) % len(PALETTE_10)] for c in lbl_shuf]
 
     ax.scatter(
         emb_shuf[:, 0],
         emb_shuf[:, 1],
-        c=pt_colors,
+        c=lbl_shuf,
+        cmap=cmap,
+        vmin=0,
+        vmax=9,
         s=s_val,
         alpha=alpha_val,
-        edgecolors="white",
-        linewidths=lw_val,
+        edgecolors="none",
         zorder=3,
     )
 
     if len(proto_emb) > 0:
         p_cls = proto_classes if len(proto_classes) == len(proto_emb) else np.arange(len(proto_emb))
-        star_colors = [PALETTE_10[int(c) % len(PALETTE_10)] for c in p_cls]
-        # Layer 1: White outer halo so anchors pop cleanly against dense same-color clusters
         ax.scatter(
             proto_emb[:, 0],
             proto_emb[:, 1],
-            s=145.0 * star_scale,
+            c=p_cls,
+            cmap=cmap,
+            vmin=0,
+            vmax=9,
+            s=65.0 * star_scale,
             marker="*",
-            facecolors="white",
-            edgecolors="white",
-            linewidths=1.35 * star_scale,
-            zorder=7,
-        )
-        # Layer 2: Class-colored anchor star with sharp dark outline
-        ax.scatter(
-            proto_emb[:, 0],
-            proto_emb[:, 1],
-            c=star_colors,
-            s=90.0 * star_scale,
-            marker="*",
-            edgecolors="#111111",
-            linewidths=0.68 * star_scale,
-            zorder=8,
+            edgecolors="black",
+            linewidths=0.45 * star_scale,
+            zorder=6,
         )
 
     # Smart tight framing: include all points & anchors while trimming dead margin
@@ -373,8 +366,8 @@ def _draw_single_tsne_panel(
     ax.set_xticks([])
     ax.set_yticks([])
     for spine in ax.spines.values():
-        spine.set_color("#222222")
-        spine.set_linewidth(0.45)
+        spine.set_color("black")
+        spine.set_linewidth(0.25)
 
 
 def plot_ieee_tsne_custom_grid(
@@ -400,7 +393,7 @@ def plot_ieee_tsne_custom_grid(
     indiv_dir = os.path.join(os.path.dirname(output_pdf), "individual")
     os.makedirs(indiv_dir, exist_ok=True)
 
-    fig, axes = plt.subplots(2, 3, figsize=(7.16, 4.15))
+    fig, axes = plt.subplots(2, 3, figsize=(7.16, 3.85))
 
     panels = [
         ("(a) FedTGP", "FedTGP", 0, 0),
@@ -497,7 +490,7 @@ def plot_ieee_tsne_custom_grid(
                 spine.set_color("#222222")
                 spine.set_linewidth(0.45)
 
-    fig.tight_layout(pad=0.18, w_pad=0.24, h_pad=0.26)
+    fig.tight_layout(pad=0.25, w_pad=0.35, h_pad=0.35)
 
     png_path = output_pdf[:-4] + ".png" if output_pdf.lower().endswith(".pdf") else output_pdf + ".png"
     fig.savefig(output_pdf, format="pdf", bbox_inches="tight", pad_inches=0.02)

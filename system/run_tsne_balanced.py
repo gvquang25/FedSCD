@@ -148,13 +148,18 @@ def main():
         t0 = time.time()
 
         try:
+            env = os.environ.copy()
+            env["PYTHONIOENCODING"] = "utf-8"
             with open(log_file, "w", encoding="utf-8") as f_log:
                 proc = subprocess.Popen(
                     cmd,
                     cwd=SCRIPT_DIR,
+                    env=env,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
+                    encoding="utf-8",
+                    errors="replace",
                     bufsize=1,
                 )
                 for line in proc.stdout:
