@@ -20,6 +20,7 @@ import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import ConnectionPatch, Rectangle
 import numpy as np
 import pandas as pd
 
@@ -105,11 +106,11 @@ PARAM_SPECS = [
 ]
 
 NON_DEFAULT_STYLES = [
-    {"color": "#2563EB", "linestyle": "--", "linewidth": 1.2, "zorder": 6},
-    {"color": "#059669", "linestyle": "-.", "linewidth": 1.2, "zorder": 7},
-    {"color": "#D97706", "linestyle": ":", "linewidth": 1.35, "zorder": 5},
+    {"color": "#2563EB", "linestyle": "-", "linewidth": 1.0, "zorder": 6},
+    {"color": "#059669", "linestyle": "-", "linewidth": 1.0, "zorder": 7},
+    {"color": "#D97706", "linestyle": "-", "linewidth": 1.0, "zorder": 5},
 ]
-DEFAULT_STYLE = {"color": "#D90429", "linestyle": "-", "linewidth": 1.75, "zorder": 10}
+DEFAULT_STYLE = {"color": "#D90429", "linestyle": "-", "linewidth": 1.0, "zorder": 10}
 
 
 def _import_wandb():
@@ -130,6 +131,7 @@ def setup_ieee_style():
     plt.rcParams.update({
         "font.family": "serif",
         "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
+        "mathtext.fontset": "cm",
         "font.size": 8.4,
         "axes.titlesize": 9.2,
         "axes.labelsize": 8.8,
@@ -356,41 +358,67 @@ def _render_panel(ax, df, spec, styles, show_xlabel=False, show_ylabel=False, pl
     if has_inset:
         leg = ax.legend(
             loc="lower left",
-            bbox_to_anchor=(0.13, 0.02),
+            bbox_to_anchor=(0.055, 0.02),
             ncol=1,
             frameon=True,
-            fontsize=6.8,
-            handlelength=1.45,
-            handletextpad=0.35,
-            borderpad=0.32,
-            labelspacing=0.22,
+            fontsize=6.2,
+            handlelength=1.15,
+            handletextpad=0.30,
+            borderpad=0.28,
+            labelspacing=0.20,
         )
-        axins = ax.inset_axes([0.57, 0.11, 0.40, 0.37])
-        tail = df[df["Step"] >= 75]
-        tail_vals = []
+        axins = ax.inset_axes([0.58, 0.10, 0.39, 0.38])
+        zoom_x0, zoom_x1 = 80, 100
+        zoom_y0, zoom_y1 = 74.2, 77.0
         for val in spec["values"]:
             col = _val_col(val)
             st = styles[val]
-            sub_t = tail[["Step", col]].dropna()
+            sub_t = df[(df["Step"] >= zoom_x0) & df[col].notna()]
             axins.plot(
                 sub_t["Step"],
                 sub_t[col],
                 color=st["color"],
                 linestyle=st["linestyle"],
-                linewidth=max(0.95, st["linewidth"] * 0.8),
+                linewidth=1.0,
                 zorder=st["zorder"],
             )
-            tail_vals.extend(sub_t[col].tolist())
-        t_min, t_max = min(tail_vals), max(tail_vals)
-        pad_y = max(0.5, 0.18 * (t_max - t_min))
-        axins.set_xlim(75, 100)
-        axins.set_ylim(t_min - pad_y, t_max + pad_y)
+        axins.set_xlim(zoom_x0, zoom_x1)
+        axins.set_ylim(zoom_y0, zoom_y1)
         axins.set_xticks([80, 90, 100])
+        axins.set_yticks([75, 76, 77])
         axins.tick_params(axis="both", labelsize=6.2, length=2.0, pad=1.2)
         axins.grid(True, linestyle="--", linewidth=0.4, alpha=0.35)
+        axins.set_facecolor("white")
         for sp in axins.spines.values():
             sp.set_linewidth(0.65)
-            sp.set_edgecolor("#666666")
+            sp.set_edgecolor("#555555")
+
+        # Draw zoom region box on main axes and crisp dashed connectors to inset top corners
+        rect = Rectangle(
+            (zoom_x0, zoom_y0),
+            zoom_x1 - zoom_x0,
+            zoom_y1 - zoom_y0,
+            fill=False,
+            edgecolor="#555555",
+            linewidth=0.65,
+            linestyle="--",
+            zorder=11,
+            clip_on=False,
+        )
+        ax.add_patch(rect)
+        for x_pt in (zoom_x0, zoom_x1):
+            con = ConnectionPatch(
+                xyA=(x_pt, zoom_y0),
+                coordsA=ax.transData,
+                xyB=(x_pt, zoom_y1),
+                coordsB=axins.transData,
+                color="#666666",
+                linewidth=0.55,
+                linestyle="--",
+                alpha=0.75,
+                zorder=4,
+            )
+            ax.add_artist(con)
     else:
         leg = ax.legend(
             loc="lower right",
