@@ -62,12 +62,12 @@ RUN_IDS_ALPHA01 = {
 }
 
 ALGOS = [
-    {"key": "FedSCD", "label": "FedSCD (Ours)", "color": "#D90429", "width": 1.55, "zorder": 10},
-    {"key": "FedTGP", "label": "FedTGP", "color": "#F97316", "width": 1.0, "zorder": 6},
-    {"key": "FedCOF", "label": "FedCOF", "color": "#059669", "width": 1.0, "zorder": 7},
-    {"key": "FedSA", "label": "FedSA", "color": "#7C3AED", "width": 1.0, "zorder": 5},
-    {"key": "FedORGP", "label": "FedORGP", "color": "#EAB308", "width": 1.0, "zorder": 5},
-    {"key": "FedGMKD", "label": "FedGMKD", "color": "#2563EB", "width": 1.0, "zorder": 4},
+    {"key": "FedSCD", "label": "FedSCD (Ours)", "color": "#D90429", "width": 1, "zorder": 10},
+    {"key": "FedTGP", "label": "FedTGP", "color": "#F97316", "width": 0.6, "zorder": 6},
+    {"key": "FedCOF", "label": "FedCOF", "color": "#059669", "width": 0.6, "zorder": 7},
+    {"key": "FedSA", "label": "FedSA", "color": "#7C3AED", "width": 0.6, "zorder": 5},
+    {"key": "FedORGP", "label": "FedORGP", "color": "#EAB308", "width": 0.6, "zorder": 5},
+    {"key": "FedGMKD", "label": "FedGMKD", "color": "#2563EB", "width": 0.6, "zorder": 4},
 ]
 
 PANELS = [

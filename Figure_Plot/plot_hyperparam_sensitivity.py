@@ -106,11 +106,11 @@ PARAM_SPECS = [
 ]
 
 NON_DEFAULT_STYLES = [
-    {"color": "#2563EB", "linestyle": "-", "linewidth": 1.0, "zorder": 6},
-    {"color": "#059669", "linestyle": "-", "linewidth": 1.0, "zorder": 7},
-    {"color": "#D97706", "linestyle": "-", "linewidth": 1.0, "zorder": 5},
+    {"color": "#2563EB", "linestyle": "-", "linewidth": 0.6, "zorder": 6},
+    {"color": "#059669", "linestyle": "-", "linewidth": 0.6, "zorder": 7},
+    {"color": "#D97706", "linestyle": "-", "linewidth": 0.6, "zorder": 5},
 ]
-DEFAULT_STYLE = {"color": "#D90429", "linestyle": "-", "linewidth": 1.0, "zorder": 10}
+DEFAULT_STYLE = {"color": "#D90429", "linestyle": "-", "linewidth": 0.6, "zorder": 10}
 
 
 def _import_wandb():
@@ -379,7 +379,7 @@ def _render_panel(ax, df, spec, styles, show_xlabel=False, show_ylabel=False, pl
                 sub_t[col],
                 color=st["color"],
                 linestyle=st["linestyle"],
-                linewidth=1.0,
+                linewidth=st["linewidth"],
                 zorder=st["zorder"],
             )
         axins.set_xlim(zoom_x0, zoom_x1)
