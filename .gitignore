@@ -28,3 +28,14 @@ Thumbs.db
 
 # Nested duplicate directories
 Figure_Plot/Figure_Plot/
+
+# Local-only guides, reports, and drafts
+ABLATION_RUN_GUIDE.md
+BENCHMARK_RUN_GUIDE.md
+IEEE2026_AUDIT_REPORT_VI.md
+New_IEEEtran_how-to.tex
+PAPER_REVIEW_REPORT.md
+PAPER_REVIEW_REPORT_VI.md
+framework_v3_draft.pdf
+review_report.md
+
